@@ -1,0 +1,58 @@
+<% layout('layouts/boilerplate') %>
+    <div class="card shadow  py-3 px-3 mb-3">
+        <div class="card-header bg-white">
+            <h4>Manage Users</h4>
+        </div>
+        <div class="card-body">
+            <table id="users" class="table-striped table table-hover">
+                <thead>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Firstname</th>
+                    <th scope="col">E-mail Address</th>
+                    <th scope="col">Role</th>
+                    <th scope="col"></th>
+                </thead>
+                <tbody>
+                    <% for (user of users) { %>
+                        <tr>
+                            <td scope="row">
+                                <%= user.surname %>
+                            </td>
+                            <td scope="row">
+                                <%= user.firstname %>
+                            </td>
+                            <td scope="row">
+                                <%= user.username %>
+                            </td>
+                            <td scope="row">
+                                <%
+                        switch (user.role){
+                            case 'user':
+                                %>Player
+                                    <%
+                            break;
+                            case 'eventHost': %>Event Host
+                                        <%
+                            break;
+                            case 'admin': %>Administrator
+                                            <%
+                            break;
+                            case 'superAdmin': %>Super Administrator
+                                                <%
+                        } %>
+                            </td>
+                            <td scope="row"><a href="/admin/users/<%= user._id %>" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>
+                        </tr>
+                        <% } %>
+                </tbody>
+            </table>
+            <ul id="usersNavPosition" class="pagination pager-nav justify-content-center"></ul>
+            <script src="/js/pagination.js"></script>
+            <script>
+                const usersPager = new Pager('users', 15);
+                usersPager.init();
+                usersPager.showPageNav('eventsPager', 'usersNavPosition');
+                usersPager.showPage(1);
+            </script>
+        </div>
+    </div>

@@ -1,0 +1,23 @@
+<% if(success && success.length) {%>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <% } %>
+
+        <% if(error && error.length) {%>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+
+                <% if(warn && warn.length > 0) {%>
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading">Missing Player ID</h4>
+                        <p>In order to fully use this website we need your Lorien Trust Player ID.</p>
+                        <p>If you do not know your Player ID you can find it in the top right corner of your Lorien Trust Character Card, or by logging into your account on the <a href="https://www.lorientrust.com" class="alert-link">Lorien Trust website</a></p>
+                        <hr>
+                        <p class="mb-0">If you have not attended a Lorien Trust event before, please <a class="alert-link" data-bs-dismiss="alert" onclick="document.getElementById('playerId').value = 0;return false;" href="">click here.</a></p>
+                    </div>
+                    <% } %>

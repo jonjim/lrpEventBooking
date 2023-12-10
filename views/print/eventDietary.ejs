@@ -1,0 +1,42 @@
+<% layout('layouts/print') %>
+    <% const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; 
+    function toTitleCase(str) {
+        if (typeof str == 'undefined') return '';
+        return str.replace(/\w\S*/g, function(txt){
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    };%>
+        <h1 class="display-3 mt-5">
+            <%= event.name %>
+        </h1>
+        <p class="lead mb-0">
+            Hosted By the
+            <%= event.eventHost.name %>
+        </p>
+        <p class="lead mt-0 mb-5">
+            <small><%= new Date(event.eventStart).toLocaleDateString() %>
+                <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+                    <%= new Date(event.eventEnd).toLocaleDateString() %>
+                        <% } %>
+                </small></p>
+        <p class="display-5 text-danger mt-5 pt-5" style="page-break-after:always;">Dietary Details: Confidential</p>
+        <table class="table table-striped">
+            <thead>
+                <th scope="col">Player Name</th>
+                <th scope="col">Dietary Details</th>
+            </thead>
+            <tbody>
+                <% for (attendee of event.attendees.sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))){ %>
+                    <% if (attendee.user.allergyDietary && attendee.user.allergyDietary != '') { %>
+                        <tr scope="row">
+                            <td width="250px">
+                                <%= toTitleCase(attendee.surname) %>,
+                                    <%= toTitleCase(attendee.firstname) %>
+                            </td>
+                            <td class="ms-0">
+                                <%= attendee.user.allergyDietary %>
+                            </td>
+                        </tr>
+                        <% }}  %>
+            </tbody>
+        </table>

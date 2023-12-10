@@ -1,0 +1,77 @@
+<% layout('layouts/boilerplate') %>
+    <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <h2>Create a new event</h2>
+    <div class="card shadow py-3 px-3 mb-3">
+        <form action="/admin/events/new" method="POST">
+            <div class="row">
+                <div class="col border-end">
+                    <div class="mb-3">
+                        <label for="eventName">Event Name</label>
+                        <div class="input-group">
+                            <input class="form-control" type="text" id="eventName" name="event[name]">
+                            <button class="btn btn-outline-secondary" type="button" onclick="setLtHost()" id="button-addon1">Lorien Trust Event</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="eventStartDate">Start Date</label>
+                                <input class="form-control" type="date" id="eventStartDate" name="event[eventStart]">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="eventEndDate">End Date</label>
+                                <input class="form-control" type="date" id="eventEndDate" name="event[eventEnd]">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventLocation">Event Location</label>
+                        <input class="form-control" type="text" id="eventLocation" name="event[location]">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <select class="form-select" aria-label="Default select example" onchange="setHostImageUrl(this)" id="eventHost" name="event[eventHost]">
+                                    <option >Select an Event Host</option>
+                                    <% if (['admin','superAdmin'].includes(currentUser.role)) { %>
+                                    <option  value="Lorien Trust">Lorien Trust</option>
+                                    <% } %>
+                                    <% for (host of eventHosts.sort((a, b) => a.eventSystem.name.localeCompare(b.eventSystem.name) || a.name.localeCompare(b.name))) { %>
+                                        <% if ((currentUser.role == 'eventHost' && currentUser.eventHosts.filter(a => a._id.equals(host._id)).length > 0) || ['admin','superAdmin'].includes(currentUser.role)) { %>
+                                        <option data-img="<%= host.img %>" value="<%= host._id %>"><%= host.eventSystem.name %>
+                                            <%= host.display ? ` - ${host.name}` : '' %></option>
+                                        <% } %>
+                                    <% } %>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col text-center">
+                            <img src="" id="eventImg" alt="" class="img-fluid mx-auto">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="eventPromoDescription">Promo Description</label>
+                        <textarea class="form-control" name="event[promoDescription]" id="eventPromoDescription" cols="30" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventIcInvitation">IC Invitation</label>
+                        <textarea class="form-control" name="event[icInvitation]" id="eventIcInvitation" cols="30" rows="8"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDescription">Event Description</label>
+                        <textarea class="form-control" name="event[fullDescription]" id="eventDescription" cols="30" rows="8"></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <button class="btn btn-success">Create Event</button>
+        </form>
+    </div>
+    </div>
+    <script src="/js/events.js"></script>

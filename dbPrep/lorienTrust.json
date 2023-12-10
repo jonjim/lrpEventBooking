@@ -1,0 +1,89 @@
+[{
+        "name": "Alchemists",
+        "img": "/img/hosts/alchemists.jpg"
+    },
+    {
+        "name": "Armourers",
+        "img": "/img/hosts/armourers.jpg"
+    },
+    {
+        "name": "Bank",
+        "img": "/img/hosts/bank.jpg"
+    },
+    {
+        "name": "Bards",
+        "img": "/img/hosts/bards.jpg"
+    },
+    {
+        "name": "Bears",
+        "img": "/img/hosts/bears.jpg"
+    },
+    {
+        "name": "Casino",
+        "img": "/img/hosts/casino.jpg"
+    },
+    {
+        "name": "Corruptors",
+        "img": "/img/hosts/corruptors.jpg"
+    },
+    {
+        "name": "Dragons",
+        "img": "/img/hosts/dragons.jpg"
+    },
+    {
+        "name": "Gryphons",
+        "img": "/img/hosts/gryphons.jpg"
+    },
+    {
+        "name": "Harts",
+        "img": "/img/hosts/harts.jpg"
+    },
+    {
+        "name": "Healers",
+        "img": "/img/hosts/healers.jpg"
+    },
+    {
+        "name": "Incantors",
+        "img": "/img/hosts/incantors.jpg"
+    },
+    {
+        "name": "Jackals",
+        "img": "/img/hosts/jackals.jpg"
+    },
+    {
+        "name": "Lions",
+        "img": "/img/hosts/lions.jpg"
+    },
+    {
+        "name": "Mages",
+        "img": "/img/hosts/mages.jpg"
+    },
+    {
+        "name": "Militia",
+        "img": "/img/hosts/militia.jpg"
+    },
+    {
+        "name": "Rangers",
+        "img": "/img/hosts/rangers.jpg"
+    },
+    {
+        "name": "Scouts",
+        "img": "/img/hosts/scouts.jpg"
+    },
+    {
+        "name": "Tarantulas",
+        "img": "/img/hosts/tarantulas.jpg"
+    },
+    {
+        "name": "Unicorns",
+        "img": "/img/hosts/unicorns.jpg"
+    },
+    {
+        "name": "Vipers",
+        "img": "/img/hosts/vipers.jpg"
+    },
+    {
+        "name": "Wolves",
+        "img": "/img/hosts/wolves.jpg"
+    }
+]

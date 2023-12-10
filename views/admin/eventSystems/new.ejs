@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate') %>
+    <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/admin/systems" class="link-dark">Manage Event Systems</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                New Event System
+            </li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col col-md-8 offset-md-2">
+            <div class="card shadow  py-3 px-3 mb-3">
+                <div class="card-header bg-white">
+                    <h4>New Event System</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/systems/" method="POST" class="validated-form" novalidate>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="systemName">Name</label>
+                                    <input required type="text" id="systemName" name="name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="systemImg">Image</label>
+                                    <input required type="text" id="systemImg" name="img" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="systemWebsite">Website</label>
+                            <input type="url" id="systemWebsite" name="website" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="systemName">Description</label>
+                            <textarea required class="form-control" name="description" id="systemDescription" cols="30" rows="10">
+                        </textarea>
+                        </div>
+                        <div class="text-end">
+                            <button class="btn btn-success">Create Event System</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/adminAbout.js"></script>

@@ -1,0 +1,146 @@
+<% layout('layouts/boilerplate') %>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
+        <li class="breadcrumb-item"><a href="/admin/events/<%= event._id %>/manage" class="link-dark"><%= event.name %></a></li>
+    </ol>
+</nav>
+<div class="card shadow py-3 px-3 mb-3">
+    <div class="card-header bg-white">
+        <h4>Manage Waiting List - <%= event.name %></h4>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-info"><p>These bookings are listed by the date a booking was made (oldest first).</p><p>When releasing bookings from the waiting list we expect you to honour the order of the list and release the oldest bookings first.</p></div>
+        <div class="row">
+            <% if (event.limits.playerLimit > 0){ %>
+                <div class="col">
+                    <h4 class="text-center">Player Bookings</h4>
+                    <table  id="playerBookings" class="table table-sm table-hover mt-3 players">
+                        <thead>
+                            <th class="players" scope="col">
+                                <div class="row">
+                                    <div class="col-auto">Name</div>
+                                    <div class="col"><input id="playerSearch"  type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+                                </div> </th>
+                            <th scope="col-1">Paid</th>
+                            <th scope="col-1"></th>
+                        </thead>
+                        <tbody class="players">
+                            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['player','playerchild'].includes(t.ticketType))).sort((a,b) => new Date(a) - new Date(b))) { %>
+                                <tr class="players">
+                                    <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
+                                        <% if (booking._doc.eventTickets.find(t => t.ticketType == 'playerbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
+                                            <% } %>
+                                                <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
+                                                    <% } %>
+                                    </td>
+                                    <td scope="row">
+                                        <% if (booking.paid){ %>
+                                            <% if (booking.paypalPaymentId) { %>
+                                                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                                                <% } else {%>
+                                                    <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                                                    <% }} else if (booking.payOnGate) { %>
+                                                        <i class="bi bi-door-open-fill"></i>
+                                                        <% } else if (booking.inQueue){ %>
+                                                            <i class="bi bi-person-lines-fill text-primary"></i>
+                                                            <% } else { %>
+                                                                <i class="bi bi-x-circle text-danger"></i>
+                                                                <% } %>
+                                    </td>
+                                    <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>?waitinglist=true"><i class="bi bi-pencil-square"></i></a></td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+                    <% if (event.limits.monsterLimit > 0){ %>
+                        <div class="col">
+                            <h4 class="text-center">Monster Bookings</h4>
+                            <table id="monsterBookings" class="table table-sm table-hover mt-3 monsters">
+                                <thead>
+                                    <th class="monsters" scope="col">
+                                        <div class="row">
+                                            <div class="col-auto">Name</div>
+                                            <div class="col"><input id="monsterSearch"  type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+                                        </div> </th>
+                                    <th scope="col-1">Paid</th>
+                                    <th scope="col-1"></th>
+                                </thead>
+                                <tbody class="monsters">
+                                    <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['monster','monsterchild'].includes(t.ticketType))).sort((a,b) => new Date(a) - new Date(b))) {%>
+                                        <tr class="monsters">
+                                            <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
+                                                <% if (booking._doc.eventTickets.find(t => t.ticketType == 'monsterbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
+                                                    <% } %>
+                                                        <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
+                                                            <% } %>
+                                            </td>
+                                            <td scope="row">
+                                                <% if (booking.paid){ %>
+                                                    <% if (booking.paypalPaymentId) { %>
+                                                        <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                                                        <% } else {%>
+                                                            <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                                                            <% }} else if (booking.payOnGate) { %>
+                                                                <i class="bi bi-door-open-fill"></i>
+                                                                <% } else if (booking.inQueue){ %>
+                                                                    <i class="bi bi-person-lines-fill text-primary"></i>
+                                                                    <% } else { %>
+                                                                        <i class="bi bi-x-circle text-danger"></i>
+                                                                        <% } %>
+                                            </td>
+                                            <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>?waitinglist=true"><i class="bi bi-pencil-square"></i></a></td>
+                                        </tr>
+                                        <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+                            <% if (event.limits.staffLimit > 0){ %>
+                                <div class="col">
+                                    <h4 class="text-center">Staff Bookings</h4>
+                                    <table id="staffBookings" class="table table-sm table-hover mt-3 staff">
+                                        <thead>
+                                            <th class="staff" scope="col">
+                                                <div class="row">
+                                                    <div class="col-auto">Name</div>
+                                                    <div class="col"><input id="staffSearch"  type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+                                                </div> </th>
+                                            <th scope="col-1">Paid</th>
+                                            <th scope="col-1"></th>
+                                        </thead>
+                                        <tbody class="staff">
+                                            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['staff'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
+                                                <tr class="staff">
+                                                    <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
+                                                        <% if (booking._doc.eventTickets.find(t => t.ticketType == 'staffbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
+                                                            <% } %>
+                                                                <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
+                                                                    <% } %>
+                                                    </td>
+                                                    <td scope="row">
+                                                        <% if (booking.paid){ %>
+                                                            <% if (booking.paypalPaymentId) { %>
+                                                                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                                                                <% } else {%>
+                                                                    <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                                                                    <% }} else if (booking.payOnGate) { %>
+                                                                        <i class="bi bi-door-open-fill"></i>
+                                                                        <% } else if (booking.inQueue){ %>
+                                                                            <i class="bi bi-person-lines-fill text-primary"></i>
+                                                                            <% } else { %>
+                                                                                <i class="bi bi-x-circle text-danger"></i>
+                                                                                <% } %></td>
+                                                    <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>?waitinglist=true"><i class="bi bi-pencil-square"></i></a></td>
+                                                </tr>
+                                                <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } %>
+        </div>
+    </div>
+</div>
+<script src="/js/manageEvent.js"></script>

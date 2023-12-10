@@ -1,0 +1,40 @@
+<% layout('layouts/boilerplate') %>
+    <div class="row">
+        <div class="col col-md-8 offset-md-2">
+            <div class="card shadow  py-3 px-3 mb-3">
+                <div class="card-header bg-white">
+                    <h4>Manage Event Systems</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-end ms-auto">
+                        <a href="/admin/systems/new" class="btn btn-secondary"><i class="bi bi-plus-circle"></i> Add Event System</a>
+                    </div>
+                    <table id="eventSystems" class="table-striped table table-hover">
+                        <thead>
+                            <th scope="col">Name</th>
+                            <th scope="col"></th>
+                        </thead>
+                        <tbody>
+                            <% for (eventSystem of eventSystems) { %>
+                                <tr>
+                                    <td scope="row">
+                                        <%= eventSystem.name %>
+                                    </td>
+                                    </td>
+                                    <td scope="row"><a href="/admin/systems/<%= eventSystem._id %>" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                    <ul id="systemsNavPosition" class="pagination pager-nav justify-content-center"></ul>
+                    <script src="/js/pagination.js"></script>
+                    <script>
+                        const systemsPager = new Pager('eventSystems', 15);
+                        systemsPager.init();
+                        systemsPager.showPageNav('systemsPager', 'systemsNavPosition');
+                        systemsPager.showPage(1);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>

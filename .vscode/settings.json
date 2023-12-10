@@ -1,0 +1,9 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/2913e659-b7a4-4a32-9505-3cc38a7377bd/resourceGroups/ltSanctionedEvents/providers/Microsoft.Web/sites/ltSanctionedEvents",
+    "appService.deploySubpath": ".",
+    "git.ignoreLimitWarning": true
+}

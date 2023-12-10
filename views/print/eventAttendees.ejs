@@ -1,0 +1,98 @@
+<% layout('layouts/print') %>
+    <% const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; 
+    function toTitleCase(str) {
+        if (typeof str == 'undefined') return '';
+        return str.replace(/\w\S*/g, function(txt){
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    }; %>
+        <h1 class="display-3 mt-5">
+            <%= event.name %>
+        </h1>
+        <p class="lead mb-0">
+            Hosted By the
+            <%= event.eventHost.name %>
+        </p>
+        <p class="lead mt-0 mb-5">
+            <small><%= new Date(event.eventStart).toLocaleDateString() %>
+                <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+                    <%= new Date(event.eventEnd).toLocaleDateString() %>
+                        <% } %>
+                </small></p>
+        <p class="display-5 text-danger mt-5 pt-5" style="page-break-after:always;">Event Attendees: Confidential</p>
+        <table class="table table-striped">
+            <thead>
+                <th scope="col">Player Name</th>
+                <th scope="col">Details</th>
+            </thead>
+            <tbody>
+                <% for (attendee of event.attendees.sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))){ %>
+                        <tr scope="row">
+                            <td width="250px">
+                                <%= toTitleCase(attendee.surname) %>,
+                                    <%= toTitleCase(attendee.firstname) %>
+                            </td>
+                            <td class="ms-0">
+                                <div class="row mb-3">
+                                    <div class="col">Player ID: <i><%= attendee.user?.playerId %></i></div>
+                                    <div class="col"><b><%= toTitleCase(attendee.ticketType) %></b></div>
+                                </div>
+                                <% if (attendee.user?.emergencyContactName) { %>
+                                <div class="row">
+                                    <div class="col">
+                                        <b>Emergency Contact</b><br/>
+                                        <%= toTitleCase(attendee.user?.emergencyContactName) %> <i>(<%= toTitleCase(attendee.user?.emergencyContactRelation) %>)</i><br/>
+                                        <%= attendee.user?.emergencyContactNumber %>
+                                    </div>
+                                </div>
+                                <% } %>
+                                <% if (attendee.ticketType == 'player' && attendee.user) { %>
+                                    <hr>
+                                    <b>Character Details</b>
+                                    <h6 class="text-center"><%= attendee.user?.character.characterName %></h6>
+                                    <p id="characterRace" class="text-center mb-0">
+                                        <%= attendee.user?.character.race %>
+                                    </p>
+                                    <p class="text-center mb-0">
+                                        <%= attendee.user?.character.faction %>
+                                    </p>
+                                    <p id="characterGroup" class="text-center mb-0">
+                                        <%= attendee.user?.character.groupname %>
+                                    </p>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <small>
+                                            <ul class="list-unstyled" id="characterCS">
+                                                <% if (currentUser.character) { for (var i=0; i < currentUser.character.characterSkills.length; i++){ %>
+                                                    <li class="small">
+                                                        <%= attendee.user?.character.characterSkills[i].name %>
+                                                    </li>
+                                                    <% } %>
+            
+                                                        <br>
+                                                        <% for (var i=0; i <attendee.user?.character.occupationalSkills.length;i++){ if (attendee.user?.character.occupationalSkills[i].script) { %>
+                                                            <li class="small">
+                                                                <%= attendee.user?.character.occupationalSkills[i].name %>
+                                                            </li>
+                                                            <% }}} %>
+                                            </ul>
+                                        </small>
+                                        </div>
+                                        <div class="col">
+                                            <small>
+                                            <ul class="list-unstyled" id="characterOS">
+                                                <% if (attendee.user?.character) { for (var i=0; i < attendee.user?.character.occupationalSkills.length;i++){ if(!attendee.user?.character.occupationalSkills[i].script) { %>
+                                                    <li class="small">
+                                                        <%= attendee.user?.character.occupationalSkills[i].name %>
+                                                    </li>
+                                                    <% }}} %>
+                                            </ul>
+                                        </small>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }  %>
+            </tbody>
+        </table>

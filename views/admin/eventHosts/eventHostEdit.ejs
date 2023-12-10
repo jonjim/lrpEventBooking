@@ -1,0 +1,60 @@
+<% layout('layouts/boilerplate') %>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/admin/hosts" class="link-dark">Manage Event Hosts</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <%= host.eventSystem.name %> -
+                    <%= host.name %>
+            </li>
+        </ol>
+    </nav>
+    <div class="card shadow  py-3 px-3 mb-3">
+        <div class="card-header bg-white mb-3">
+            <h4>Edit Event Host</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <form action="/admin/hosts/<%= host._id %>" method="POST">
+                        <% if (adminGroups.includes(currentUser.role)) { %>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="hostName">Name</label>
+                                    <input class="form-control" type="text" id="hostName" name="name" value="<%= host.name %>">
+                                </div>
+                                <div class="col">
+                                    <label for="eventSystem">Event System</label>
+                                    <select class="form-select" name="eventSystem" id="eventSystem">
+                                <% for (eventSystem of eventSystems.sort((a,b) => a.name.localeCompare(b.name))){ %>
+                                    <option <%= eventSystem._id.equals(host.eventSystem._id) ? 'selected' : '' %> value="<%= eventSystem._id %>"><%= eventSystem.name %></option>
+                                <% } %>
+                            </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="hostImg">Image</label>
+                                <input type="text" class="form-control" id="hostImg" name="img" value="<%= host.img %>">
+                            </div>
+                            <% } %>
+                                <div title="Contact details for event queries" class="mb-3">
+                                    <label for="hostEmailAddress">Contact E-mail Address</label>
+                                    <input type="text" id="hostEmailAddress" name="contactAddress" value="<%= host.contactAddress %>" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="hostPaypalAddress">Paypal E-mail Address</label>
+                                    <input type="text" id="hostPaypalAddress" name="paypalAddress" value="<%= host.paypalAddress %>" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn btn-success">Update</button>
+                                </div>
+                    </form>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <span class="align-middle"><img id="eventImg" src="<%= host.img %>"
+                        class="img-fluid rounded-start py-3 px-3" alt="..."></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

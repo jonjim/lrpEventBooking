@@ -1,0 +1,40 @@
+<% layout('layouts/boilerplate') %>
+    <div class="row">
+        <div class="col col-md-8 offset-md-2">
+            <div class="card shadow py-3 px-3 mb-3">
+                <div class="card-header bg-white">
+                    <h4>Event fully booked!</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row h-100 g-0">
+                        <div class="col-md-4">
+                            <span class="align-middle"><img id="eventImg" src="<%= eventBooking.event.hostImg %>"
+            class="img-fluid rounded-start py-3 px-3" alt="..."></span>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <p class="display-6">Pay for
+                                        <%= currentUser && currentUser.equals(eventBooking.user) ? 'your' : 'another' %> booking</p>
+                                    <a class="link-dark" href="/events/<%= eventBooking.event._id %>">
+                                        <%= eventBooking.event.name %>
+                                    </a>
+                                </h4>
+                                <p class="card-text">
+                                    <i>
+                <%= new Date(eventBooking.event.eventStart).toLocaleDateString() %> -
+                    <%= new Date(eventBooking.event.eventEnd).toLocaleDateString() %><br /><small>
+                        <a class="link-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(eventBooking.event.location) %>"><%= eventBooking.event.location.split(',')[0] %></a>
+                        </small>
+                    </i>
+                                </p>
+                                <div class="alert alert-danger">
+                                    <p>We're sorry to say that the event you're trying to pay for has sold out since you began your booking.</p>
+                                    <p>You have automatically been added to the waiting list for this event.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

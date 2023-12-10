@@ -1,0 +1,19 @@
+<% layout('layouts/boilerplate') %>
+    <div class="card shadow  py-3 px-3 mb-3">
+        <div class="card-header bg-white mb-3">
+            <h4>Frequently Asked Questions</h4>
+        </div>
+        <div class="card-body">
+            <div class="card-body">
+                <% for (q of faq) { %>
+                    <div class="lead mb-1">
+                        <%= q.question %>
+                    </div>
+                    <div class="mb-3">
+                        <%- q.answer %>
+                    </div>
+                    <hr>
+                    <% } %>
+            </div>
+        </div>
+    </div>

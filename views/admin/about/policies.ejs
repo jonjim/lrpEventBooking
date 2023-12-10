@@ -1,0 +1,31 @@
+<% layout('layouts/boilerplate') %>
+    <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <form action="/admin/policies" method="POST">
+        <div class="row">
+
+            <div class="col">
+                <div class="card shadow  py-3 px-3 mb-3">
+                    <div class="card-header bg-white">
+                        <h4>Privacy Policy</h4>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" name="privacyPolicy" id="privacyPolicy" cols="30" rows="2"><%= config.privacyPolicy %></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow  py-3 px-3 mb-3">
+                    <div class="card-header bg-white">
+                        <h4>Terms & Conditions</h4>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" name="terms" id="terms" cols="30" rows="2"><%= config.terms %></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+
+
+        </div>
+    </form>
+    <script src="/js/adminAbout.js"></script>

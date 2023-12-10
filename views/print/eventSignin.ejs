@@ -1,0 +1,65 @@
+<% layout('layouts/print') %>
+    <% const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    function toTitleCase(str) {
+    if (typeof str == 'undefined') return '';
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}; %>
+        <h1 class="display-6 mt-5">
+            <%= event.name %>
+        </h1>
+        <table class="table table-striped">
+            <thead>
+                <th scope="col">Player Name</th>
+                <th scope="col">Booked As</th>
+                <th scope="col">Sign-in</th>
+                <th scope="col">Sign-out</th>
+            </thead>
+            <tbody>
+                <% for (attendee of event.attendees.sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))){ %>
+                    <tr scope="row">
+                        <td>
+                            <%= toTitleCase(attendee.surname) %>,
+                                <%= toTitleCase(attendee.firstname) %><br>
+                                    <small class="ms-4"><i>Vehicle Reg: </i></small>
+                        </td>
+                        <td class="ms-0" width="130px">
+                            <%= toTitleCase(attendee.ticketType) %>
+                        </td>
+                        <td class="ms-0" width="120px">
+                            <div class="row gx-1">
+                                <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                                    <div class="col text-center">
+                                        <small><%=  dayNames[new Date(d).getDay()] %></small>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <div class="row gx-1">
+                                <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                                    <div class="col text-center">
+                                        <small><input type="checkbox"></small>
+                                    </div>
+                                    <% } %>
+                            </div>
+                        </td>
+                        <td width="120px">
+                            <div class="row gx-1">
+                                <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                                    <div class="col text-center">
+                                        <small><%= dayNames[new Date(d).getDay()] %></small>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <div class="row gx-1">
+                                <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                                    <div class="col text-center">
+                                        <small><input type="checkbox"></small>
+                                    </div>
+                                    <% } %>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>

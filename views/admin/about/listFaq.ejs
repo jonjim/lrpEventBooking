@@ -1,0 +1,18 @@
+<% layout('layouts/boilerplate') %>
+    <div class="card shadow py-3 px-3 mb-3">
+        <div class="card-header bg-white">
+            <h4>Manage FAQ</h4>
+        </div>
+        <div class="card-body">
+            <div class="text-end"><a class="btn btn-success" href="/admin/faq/new">Add new FAQ</a></div>
+            <% for (q of faq) { %>
+                <div class="lead mb-1">
+                    <%= q.question %> <small><a class="link-dark" title="Edit FAQ" href="/admin/faq/<%=q._id %>"><i class="bi bi-pencil-square"></i></a></small>
+                </div>
+                <div class="mb-3">
+                    <%- q.answer %>
+                </div>
+                <hr>
+                <% } %>
+        </div>
+    </div>

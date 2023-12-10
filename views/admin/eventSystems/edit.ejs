@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate') %>
+    <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/admin/systems" class="link-dark">Manage Event Systems</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <%= eventSystem.name %>
+            </li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col col-md-8 offset-md-2">
+            <div class="card shadow  py-3 px-3 mb-3">
+                <div class="card-header bg-white">
+                    <h4>Edit Event System</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/systems/<%= eventSystem._id %>" method="POST" class="validated-form" novalidate>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="systemName">Name</label>
+                                    <input required type="text" id="systemName" name="name" class="form-control" value="<%= eventSystem.name %>">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="systemImg">Image</label>
+                                    <input required type="text" id="systemImg" name="img" class="form-control" value="<%= eventSystem.img %>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="systemWebsite">Website</label>
+                            <input type="url" id="systemWebsite" name="website" class="form-control" value="<%= eventSystem.website %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="systemName">Description</label>
+                            <textarea required class="form-control" name="description" id="systemDescription" cols="30" rows="10">
+                            <%= eventSystem.description %>
+                        </textarea>
+                        </div>
+                        <div class="text-end">
+                            <button class="btn btn-success">Save Changes</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/adminAbout.js"></script>

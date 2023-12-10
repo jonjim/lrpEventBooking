@@ -1,0 +1,240 @@
+<% layout('layouts/boilerplate'); 
+function toTitleCase(str) {
+    if (typeof str == 'undefined') return '';
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+};
+%>
+    <div class="row">
+        <div class="col d-md-none">
+            <% if (event.ticketsAvailable && !event.externalBooking && event.allowBookings && event.eventApproved) { %>
+                <div class="d-grid gap-2 mb-3">
+                    <a href="/events/<%= event._id %>/book" class="btn btn-success">
+                        <h3 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book Tickets</h3>
+                    </a>
+                </div>
+                <% } else if (event.externalBooking && event.allowBookings && event.eventApproved) { %>
+                    <div class="d-grid gap-2 mb-3">
+                        <a href="<%= event.externalBooking %>" data-bs-toggle="modal" data-bs-target="#externalBookingModal" class="btn btn-success">
+                            <h3 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book Tickets</h3>
+                        </a>
+                    </div>
+                    <% } %>
+        </div>
+        <div class="col-md-9">
+            <div class="card shadow py-3 px-3 mb-3">
+                <div class="card-header bg-white">
+                    <h2>
+                        <%= event.name %>
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center px-5 py-3">
+                        <i>
+                        <%- event.icInvitation %>
+                        </i>
+                    </div>
+                    <ul class="nav nav-tabs" id="eventTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link link-dark active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true"><h4>Event Information</h4</button>
+                        </li>
+                        <% if (event.attendees.length > 0) { %>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link link-dark" id="attendees-tab" data-bs-toggle="tab" data-bs-target="#attendees-tab-pane" type="button" role="tab" aria-controls="attendees-tab-pane" aria-selected="false"><h4>Attendees</h4></button>
+                            </li>
+                            <% } %>
+                    </ul>
+                    <div class="tab-content" id="eventTabsContent">
+                        <div class="tab-pane fade show active mt-3" id="info-tab-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
+                            <%- event.fullDescription %>
+                        </div>
+                        <% if (event.attendees.length > 0 && currentUser) { %>
+                            <div class="tab-pane fade mt-3" id="attendees-tab-pane" role="tabpanel" aria-labelledby="attendees-tab" tabindex="0">
+                                <div class="row">
+                                    <div class="col col-md-7">
+                                        <h5>Players</h5>
+                                        <table class="table table-sm table-hover table-borderless">
+                                            <thead>
+                                                <th scope="row">Player Name</th>
+                                                <th scope="row">Character</th>
+                                                <th scope="row">Faction</th>
+                                            </thead>
+                                            <tbody>
+                                                <% for (attendee of event.attendees.filter(f => f.ticketType == 'player' && f.display).sort((a,b) => a.surname.localeCompare(b.surname) || a.firstname.localeCompare(b.firstname) )){ %>
+                                                    <tr>
+                                                        <td scope="col">
+                                                            <%= toTitleCase(attendee.firstname) %>
+                                                                <%= toTitleCase(attendee.surname) %>
+                                                        </td>
+                                                        <td scope="col">
+                                                            <%= toTitleCase(attendee.icName) %>
+                                                        </td>
+                                                        <td scope="col">
+                                                            <%= toTitleCase(attendee.faction) %>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                            </tbody>
+                                        </table>
+                                        <hr class="d-md-none">
+                                    </div>
+                                    <div class="col col-md-5">
+                                        <h5>Event Crew</h5>
+                                        <table class="table table-sm table-hover table-borderless">
+                                            <thead>
+                                                <th scope="row">Crew Name</th>
+                                                <th scope="row">Role</th>
+                                            </thead>
+                                            <tbody>
+                                                <% for (attendee of (event.attendees.filter(f =>{ return f.ticketType != 'player' && f.display })).sort((a,b) => { return ('' + a.ticketType).localeCompare(b.ticketType) || ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname) })){ %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= toTitleCase(attendee.firstname) %>
+                                                                <%= toTitleCase(attendee.surname) %>
+                                                        </td>
+                                                        <td>
+                                                            <%= toTitleCase(attendee.ticketType) %>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <% if (event.ticketsAvailable && !event.externalBooking && event.allowBookings && event.eventApproved) { %>
+                <div class="d-none d-md-grid gap-2 mb-3 ">
+                    <a href="/events/<%= event._id %>/book" class="btn btn-success">
+                        <h3 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book Tickets</h3>
+                    </a>
+                </div>
+                <% } else if (event.externalBooking && event.allowBookings && event.eventApproved) { %>
+                    <div class="d-none d-md-grid gap-2 mb-3">
+                        <a href="<%= event.externalBooking %>" data-bs-toggle="modal" data-bs-target="#externalBookingModal" class="btn btn-success">
+                            <h3 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book Tickets</h3>
+                        </a>
+                    </div>
+                    <% } %>
+                        <div class="card shadow py-3 px-3 mb-1">
+                            <div class="img align-middle text-center"><img id="eventImg" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                                <% if (event.img.url) { %><img id="hostLogo" src="<%= event.eventHost.img %>" class="host-logo-fade" alt=""><% } %>
+                            </div>
+                            <span class="text-center"><a target="_blank" href="<%= event.eventHost.eventSystem.website %>"><img class="img-fluid" src="<%= event.eventHost.eventSystem.img %>" alt=""></a></span>
+                            <div class="mb-3">
+                                <ul class="list-group list-group-flush mb-1">
+                                    <li class="list-group-item">
+                                        <h5>Event Dates</h5>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <%= new Date(event.eventStart).toLocaleDateString() %>
+                                            <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+                                                <%= new Date(event.eventEnd).toLocaleDateString() %>
+                                                    <% } %>
+                                    </li>
+                                </ul>
+                                <ul class="list-group list-group-flush mb-1">
+                                    <li class="list-group-item">
+                                        <h5>Event Location</h5>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(event.location) %>">
+                                            <%= event.location %>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <% if (event.eventHost.contactAddress && event.eventHost.contactAddress.length > 0) { %>
+                                    <ul class="list-group list-group-flush mb-1">
+                                        <li class="list-group-item">
+                                            <h5>Contact Address</h5>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <a href="mailto:<%= event.eventHost.contactAddress %>">
+                                                <%= event.eventHost.contactAddress %>
+                                            </a>
+                                        </li>
+                                        </li>
+                                    </ul>
+                                    <% } %>
+
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <h5>Player Ticket Prices</h5>
+                                            </li>
+                                            <% var ticketCount = 0; for (var i = 0; i < event.eventTickets.length;i++) { if (['player','playerchild','mealticket','mealticketchild'].includes(event.eventTickets[i].ticketType) && new Date(event.eventTickets[i].availableTo) >= new Date() ) { ticketCount++;%>
+                                                <li class="list-group-item">£
+                                                    <%= event.eventTickets[i].cost %> -
+                                                        <%= event.eventTickets[i].description %><br><small><%= new Date(event.eventTickets[i].availableFrom).toLocaleDateString() %> - <%= new Date(event.eventTickets[i].availableTo).toLocaleDateString() %></small>
+                                                </li>
+                                                <% }} if (ticketCount === 0) { %>
+                                                    <li class="list-group-item">
+                                                        No tickets are currently available
+                                                    </li>
+                                                    <% } %>
+                                        </ul>
+                            </div>
+                        </div>
+                        <% if (currentUser) { %>
+                            <% if (adminGroups.includes(currentUser.role) || (currentUser.eventHosts.includes(event.eventHost))) { %>
+                                <div class="card shadow py-3 px-3 mb-3">
+                                    <h5>Event Admin</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <a class="link-dark" href="/admin/events/<%= event._id %>/edit"><i class="bi bi-pencil-square pe-2"></i>Edit Event</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <% } %>
+                                    <% } %>
+        </div>
+    </div>
+    <% if (event.externalBooking) { %>
+        <div class="modal fade" id="externalBookingModal" tabindex="-1" aria-labelledby="externalBookingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="externalBookingModalLabel">External Booking Site</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        This event uses an external booking website. Do you wish to continue?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a target="_blank" href="<%= event.externalBooking %>" type="button" class="btn btn-primary">Visit Booking Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+<% if (event.img.url) { %>
+            <script>
+                document.getElementById('eventImg').addEventListener('mouseenter', () => {
+                    document.getElementById('eventImg').classList.add('event-logo-fade');
+                    document.getElementById('hostLogo').classList.remove('host-logo-fade');
+                    document.getElementById('hostLogo').classList.add('host-logo');
+                })
+                document.getElementById('eventImg').addEventListener('mouseleave', () => {
+                    document.getElementById('eventImg').classList.remove('event-logo-fade');
+                    document.getElementById('hostLogo').classList.add('host-logo-fade');
+                    document.getElementById('hostLogo').classList.remove('host-logo');
+                })
+
+                document.getElementById('hostLogo').addEventListener('mouseenter', () => {
+                    document.getElementById('eventImg').classList.add('event-logo-fade');
+                    document.getElementById('hostLogo').classList.remove('host-logo-fade');
+                    document.getElementById('hostLogo').classList.add('host-logo');
+                })
+                document.getElementById('hostLogo').addEventListener('mouseleave', () => {
+                    document.getElementById('eventImg').classList.remove('event-logo-fade');
+                    document.getElementById('hostLogo').classList.add('host-logo-fade');
+                    document.getElementById('hostLogo').classList.remove('host-logo');
+                })
+            </script>
+            <% } %>

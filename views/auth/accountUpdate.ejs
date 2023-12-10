@@ -1,0 +1,26 @@
+<% layout('layouts/boilerplate') %>
+<div class="card shadow">
+    <div class="card-body">
+        <div class="alert alert-warning">
+            <h4 class="alert-heading">Missing Player ID</h4>
+            <p>In order to fully use this website we need your Lorien Trust Player ID.</p>
+            <p>If you do not know your Player ID you can find it in the top right corner of your Lorien Trust Character Card, or by logging into your account on the <a href="https://www.lorientrust.com" class="alert-link">Lorien Trust website</a></p>
+            <hr>
+            <p class="mb-0">If you have not attended a Lorien Trust event before, please <a class="alert-link" href="">click here.</a></p>
+        </div>
+        <form action="/account" method="POST">
+            <div class="row">
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="playerId" name="playerId" value="<%= currentUser.playerId %>" required>
+                        <label for="playerId">Lorien Trust Player ID</label>
+                    </div>
+                </div>
+                <div class="col"><button class="btn btn-success mt-2">Update</button></div>
+            </div>
+            
+            
+        </form>
+        
+    </div>
+</div>

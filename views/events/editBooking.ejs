@@ -1,0 +1,119 @@
+<% layout('layouts/boilerplate') %>
+    <div class="row">
+        <div class="col-md-10 offset-md-1 col-xl-8 offset-xl-2">
+            <div class="card shadow py-3 px-3 mb-3">
+                <div class="card-header bg-white">
+                    <h4>
+                        <%= eventBooking.event.name %> - Ticket Booking
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4 col-md-4">
+                            <h5 class="card-title">
+                                <a class="link-dark" href="/events/<%= eventBooking.event._id %>">
+                                    <%= eventBooking.event.name %>
+                                </a>
+                            </h5>
+                            <p class="card-text">
+                                <i>
+                    <%= new Date(eventBooking.event.eventStart).toLocaleDateString() %> -
+                        <%= new Date(eventBooking.event.eventEnd).toLocaleDateString() %><br /><small>
+                            <a class="link-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(eventBooking.event.location) %>"><%= eventBooking.event.location.split(',')[0] %></a>
+                            </small>
+                        </i>
+                            </p>
+                            <span class="align-middle"><img id="eventImg" src="<%= eventBooking.event.hostImg %>" class="img-fluid rounded-start py-3 px-3" alt="..."></span>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <input type="hidden" value="<%= eventBooking._id %>" id="eventBookingId">
+                                <h5>Your Event Tickets</h5>
+                                <ul class="list-group list-group-flush">
+                                    <% for (eventTicket of eventBooking.eventTickets) { %>
+                                        <li class="list-group-item">
+                                            <% if (['player','playerchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-ticket" aria-hidden="true"></i>
+                                                <% } %>
+                                                    <% if (['monster','monsterchild'].includes(eventTicket.ticketType)) { %> <i class='bi bi-bug-fill nav_icon'></i>
+                                                        <% } %>
+                                                            <% if (['staff'].includes(eventTicket.ticketType)) { %> <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                                                <% } %>
+                                                                    <% if (['mealticket','mealticketchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-cutlery me-1" aria-hidden="true"> </i>
+                                                                        <% } %>
+                                                                            <% if (['playerbunk','monsterbunk','staffbunk'].includes(eventTicket.ticketType)) { %><i class="fa fa-bed me-1" aria-hidden="true"> </i>
+                                                                                <% } %>
+                                                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventTicket.cost) %> -
+                                                                                        <%= eventTicket.description %>
+                                                                                            <% } %>
+                                        </li>
+                                </ul>
+                                <% if (eventTickets.length > 0) { %>
+                                    <form action="/events/booking/<%= eventBooking._id %>" method="POST" novalidate class="validated-form">
+                                        <div class="row gx-1">
+
+                                            <div class="col-2"></div>
+                                            <div class="col-8">
+                                                <label for="eventTicket"><small>Add an optional event ticket</small></label>
+                                                <select required name="eventTicket" id="eventTicket" class="form-select form-select">
+                                    <% for (ticket of eventTickets) { %>
+                                        <option value="<%= ticket._id %>"><%= ticket.description %></option>
+                                    <% } %>
+                                </select>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <button class="btn btn-success"><i class="bi bi-plus-circle-fill"></i></button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                    <% } %>
+                            </div>
+                            <div class="mb-3">
+                                <hr>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item <%= eventBooking.totalDue > eventBooking.totalPaid ? 'text-danger' : ''  %>">Total Due:
+                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalDue) %>
+                                    </li>
+                                    <li class="list-group-item <%= eventBooking.totalDue === eventBooking.totalPaid ? 'text-success' : ''  %>">Total Paid:
+                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalPaid)%>
+                                    </li>
+                                    <% if (eventBooking.paid) { %>
+                                        <li class="list-group-item">
+                                            Paid:
+                                            <%= new Date(eventBooking.bookingPaid).toLocaleDateString() %><br>
+                                                <%= eventBooking.paypalPayer %>
+                                                    </small>
+                                        </li>
+                                        <% } else {%>
+                                            <li class="list-group-item">
+                                                <% if (eventBooking.eventTickets.filter(a => new Date(a.availableTo).toLocaleDateString() < new Date().toLocaleDateString()).length > 0 ) {%>
+                                                    <div class="alert alert-danger">
+                                                        <p>The tickets you have selected are no longer available!</p>
+                                                        <p><a href="#" onclick="document.getElementById('deleteRebook').submit()" class="alert-link">Click here</a> to delete this booking and re-book.</p>
+                                                        <form id="deleteRebook" action="/events/booking/<%= eventBooking._id %>?_method=DELETE&rebook=true" method="POST"></form>
+                                                    </div>
+                                                    <% } else { %>
+                                                        <p id="result-message"></p>
+                                                        <div id="paypal-button-container"></div>
+                                                        <% } %>
+                                            </li>
+                                            <li class="list-group-item"><a href="#" onclick="document.getElementById('cancelBooking<%= eventBooking._id %>').submit()" class="link-danger"><small>Cancel Booking</small></a>
+                                                <form id="cancelBooking<%= eventBooking._id %>" action="/events/booking/<%= eventBooking._id %>?_method=DELETE" method="POST"></form>
+                                            </li>
+                                            <% } %>
+                                </ul>
+                            </div>
+                            <form class="validated-form" action="/events/booking/<%= eventBooking._id %>" method="POST" novalidate>
+                                <div class="mb-3">
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AZr-Xodo9qz8Q-0Njgl8w_oKSWtKJBdZNo_wMhQmEjN3WvXWeBR7mk36zmCZImmz03JWjbMmJoegZqmg&currency=GBP"></script>
+    <script src="/js/paypal.js"></script>

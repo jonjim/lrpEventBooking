@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate') %>
+
+    <% if (!events) { %>
+        <div class="mt-5 pt-5">
+            <h3 class="text-center mt-5">There are currently no events available for booking</h3>
+        </div>
+
+        <% } else { %>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <% for (event of events) { %>
+                    <div class="col">
+                        <div class="card shadow h-100 py-3 px-3">
+                            <div class="row h-100 g-0 pb-0">
+                                <div class="col-4 col-md-4">
+                                    <span class="align-middle"><img class="rounded mt-3 upcoming-logo" id="eventImg" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img : event.imgThumbnail %>"
+                            class="img-fluid rounded-start py-3 px-3" alt="..."></span>
+                                </div>
+                                <div class="col-8 col-md-8">
+                                    <div class="card-body pb-0">
+                                        <h4 class="card-title">
+                                            <a class="link-dark" href="/events/<%= event._id %>">
+                                                <%= event.name %>
+                                            </a>
+                                        </h4>
+                                        <p class="card-text">
+                                            <i>
+                                <%= new Date(event.eventStart).toLocaleDateString() %> -
+                                    <%= new Date(event.eventEnd).toLocaleDateString() %><br /><small>
+                                            <%= event.location.split(',')[0] %>
+                                        </small>
+                            </i>
+                                            <p class="card-text">
+                                                <%- event.promoDescription %>
+                                            </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer eventFooter">
+                                <div class="row h-100">
+                                    <div class="col"><a target="_blank" href="<%= event.eventHost.eventSystem.website %>"><img class="system-logo" height="60px" src="<%= event.eventHost.eventSystem.img %>" alt="<%= event.eventHost.eventSystem.name %>"></a></div>
+                                    <div class="col text-end mb-0 my-auto">
+                                        <% if (event.eventHost.display) { %><small class="text-muted">Hosted by the <%= event.eventHost.name
+                                    %></small>
+                                            <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% }  %>
+            </div>
+            <% } %>

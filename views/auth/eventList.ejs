@@ -1,0 +1,171 @@
+<% layout('layouts/boilerplate') %>
+    <% if (eventBookings.length === 0) { %>
+        <div class="mt-5 pt-5">
+            <h3 class="text-center mt-5">You haven't booked for any events yet!</h3>
+        </div>
+
+        <% } else { %>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+
+                <% for (eventBooking of eventBookings) { %>
+                    <div class="col">
+                        <div class="card shadow h-100">
+                            <div class="row h-100 g-0 pb-0">
+                                <div class="col-4 col-md-4">
+                                    <span class="align-middle"><img id="eventImg" src="<%= eventBooking.event.hostImg %>"
+                            class="img-fluid rounded-start py-3 px-3" alt="..."></span>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body pb-0">
+                                        <div class="text-center" style="position:absolute;top:1em;right:1em;">
+                                            <% if (eventBooking.paid) { %><i title="Payment Complete" class="bi bi-check2-circle text-success display-4"></i>
+                                                <% } else { %>
+                                                    <% if (new Date(eventBooking.event.eventEnd) < Date.now()) { %>
+                                                        <i title="Event missed. This event is no longer available to book" class="bi bi-x-circle text-danger display-4"></i><br><span class="text-danger">Event missed</span>
+                                                        <% } else if (eventBooking.payOnGate || !((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff'))) { %>
+                                                            <a class="link-danger" href="/account/pay/<%= eventBooking._id %>"><i title="Payment Due" class="bi bi-exclamation-circle text-danger display-4"></i><br>Pay Now</a></span>
+                                                            <% } %>
+                                                                <% }%>
+                                        </div>
+                                        <h5 class="card-title">
+                                            <a class="link-dark" href="/events/<%= eventBooking.event._id %>">
+                                                <%= eventBooking.event.name %>
+                                            </a>
+                                        </h5>
+                                        <p class="card-text">
+                                            <i>
+                                <%= new Date(eventBooking.event.eventStart).toLocaleDateString() %> -
+                                    <%= new Date(eventBooking.event.eventEnd).toLocaleDateString() %><br /><small>
+                                        <a class="link-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(eventBooking.event.location) %>"><%= eventBooking.event.location.split(',')[0] %></a>
+                                        </small>
+                                    </i>
+                                            <p class="card-text">
+                                                <ul class="list-group list-group-flush">
+                                                    <% for (eventTicket of eventBooking.eventTickets) { %>
+                                                        <li class="list-group-item">
+                                                            <% if (['player','playerchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-ticket" aria-hidden="true"></i>
+                                                                <% } %>
+                                                                    <% if (['monster','monsterchild'].includes(eventTicket.ticketType)) { %> <i class='bi bi-bug-fill nav_icon'></i>
+                                                                        <% } %>
+                                                                            <% if (['staff'].includes(eventTicket.ticketType)) { %> <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                                                                <% } %>
+                                                                                    <% if (['mealticket','mealticketchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-cutlery me-1" aria-hidden="true"> </i>
+                                                                                        <% } %>
+                                                                                            <% if (['playerbunk','monsterbunk','staffbunk'].includes(eventTicket.ticketType)) { %><i class="fa fa-bed me-1" aria-hidden="true"> </i>
+                                                                                                <% } %>
+                                                                                                    £
+                                                                                                    <%= eventTicket.cost %> -
+                                                                                                        <%= eventTicket.description %>
+                                                        </li>
+                                                        <% } %>
+                                                            <% if (eventBooking.paid) { %>
+                                                                <li class="list-group-item"><small class="text-muted">Paid:
+                                                        <%= new Date(eventBooking.bookingPaid).toLocaleDateString() %><br>
+                                                            <%= eventBooking.paypalPayer %></small></li><br>
+                                                                <a href="/events/booking/<%= eventBooking._id %>" class="link-info"><small>Update Booking</small></a><a href="" onclick="document.getElementById('giftBookingId').value = '<%= eventBooking._id %>'"
+                                                                    data-bs-toggle="modal" data-bs-target="#giftModal" class="link-dark link-muted"><small><i class="bi bi-gift"></i> Gift this booking to another user</small></a></li>
+                                                                <% } else { %>
+                                                                    <li class="list-group-item"><a href="/events/booking/<%= eventBooking._id %>" class="link-info"><small>Update Booking</small></a><br/><a href="#" onclick="document.getElementById('cancelBooking<%= eventBooking._id %>').submit()"
+                                                                            class="link-danger"><small>Cancel Booking</small></a>
+                                                                        <form id="cancelBooking<%= eventBooking._id %>" action="/events/booking/<%= eventBooking._id %>?_method=DELETE" method="POST"></form>
+                                                                    </li>
+                                                                    <% } %>
+
+
+                                                </ul>
+                                            </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer eventFooter mt-0">
+                                <div class="row h-100">
+                                    <div class="col text-muted">
+                                        <% if ((!eventBooking.paid && !eventBooking.payOnGate) && ((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff'))) { %>
+                                            <div class="alert alert-danger py-1 text-center">Event is fully booked. <br> You are on the waiting list.</div>
+                                            <% } %>
+                                                <small>
+                                        <%- !eventBooking.originalUser.equals(eventBooking.user) ? '<i class="bi bi-gift"></i> This was a gift!' : '' %>
+                                    </small>
+                                    </div>
+                                    <div class="col">
+                                        <p class="card-text text-end pt-4"><small class="text-muted">Hosted by the <%= eventBooking.event.eventHost.name
+                                    %></small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
+            <% } %>
+
+                <div class="modal fade" id="giftModal" tabindex="-1" aria-labelledby="giftModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="giftModalLabel">Gift this booking</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Gift an event booking to a very lucky friend!</p>
+                                <p>It is possible to gift your paid booking to someone else, however they need to be registered to be eligible.</p>
+                                <hr>
+                                <form id="giftBooking" action="/events/booking/gift">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                                            <input class="form-control form-control-sm" type="email" id="giftEmail" name="username" required>
+                                            <div id="giftInvalid" class="invalid-feedback">
+                                                Username was not found
+                                            </div>
+                                            <script>
+                                                document.getElementById('giftEmail').setCustomValidity("Invalid field.")
+                                            </script>
+                                            <input type="hidden" id="giftBookingId" name="eventBooking" value="">
+                                        </div>
+                                        <div class="col-4">
+                                            <a href="#" class="btn btn-primary mt-4" onclick="submitGift()"><i class="bi bi-gift"></i> Send Gift</a>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    async function submitGift() {
+                        try {
+                            await fetch('/events/booking/gift', {
+                                    method: 'POST',
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        username: document.getElementById('giftEmail').value,
+                                        eventBooking: document.getElementById('giftBookingId').value,
+                                    })
+                                })
+                                .then(response => {
+                                    switch (response.status) {
+                                        case 404:
+                                            document.getElementById('giftEmail').classList.add('is-invalid');
+                                            document.getElementById('giftInvalid').innerText = 'Username was not found';
+                                            break;
+                                        case 418:
+                                            document.getElementById('giftEmail').classList.add('is-invalid');
+                                            document.getElementById('giftInvalid').innerText = 'You can not give a gift to yourself!';
+                                            break;
+                                        case 200:
+                                            document.getElementById('giftEmail').classList.add('is-valid');
+                                            window.location.href = window.origin;
+                                            break;
+                                    }
+                                })
+                        } catch (error) {
+                            console.log(error);
+                            document.getElementById('giftEmail').classList.add('is-invalid')
+                        }
+                    }
+                </script>

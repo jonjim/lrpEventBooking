@@ -1,0 +1,37 @@
+<% layout('layouts/boilerplate') %>
+    <div class="container justify-content-center align-middle mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md- col-xl-4 offset-xl-4">
+                <div class="card shadow">
+                    <img src="/img/lorienTrustx4.png" alt="" class="img-fluid card-img-top" />
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Lorien Trust Sanctioned Events</h5>
+                        <form action="/login" method="POST" novalidate class="validated-form">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="email" name="username" required placeholder="E-mail Address">
+                                <label for="floatingInput">E-mail Address</label>
+                                <div class="invalid-feedback">
+                                    Please enter a Username.
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
+                                <label for="floatingPassword">Password</label>
+                                <div class="invalid-feedback">
+                                    Please enter a Password.
+                                </div>
+                            </div>
+                            <div class="d-grid d-inline-column gap-2">
+                                <button class="btn btn-success btn-block">Login</button>
+                                <a href="/auth/google" class="btn btn-outline-dark"><img height="25px" class="my-0 me-2" src="/img/web_light_sq_ctn@4x.png">Sign in with Google</a>
+                                <a href="/auth/facebook" class="btn btn-primary"><i class="bi bi-facebook me-2"></i>Sign in with Facebook</a>
+                                <hr>
+                                <a href="/register" class="btn btn-primary btn-block">Register</a>
+                                <button class="btn btn-warning btn-block">Forgot My Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

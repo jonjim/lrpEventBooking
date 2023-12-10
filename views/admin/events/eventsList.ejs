@@ -1,0 +1,57 @@
+<% layout('layouts/boilerplate') %>
+    <div class="card shadow py-3 px-3 mb-3">
+        <div class="card-header bg-white mb-3">
+            <h4>Manage Events</h4>
+        </div>
+        <div class=" ms-auto">
+            <a href="/admin/events/new" class="btn btn-secondary">Add Event</a>
+        </div>
+        <div class="card-body">
+            <table id="events" class="table table-striped table-hover">
+                <thead>
+                    <th scope="col">Event Name</th>
+                    <th scope="col">Host</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col" width="50px" class="text-center">Approved</th>
+                </thead>
+                <tbody>
+                    <% for (event of events) { %>
+                        <tr>
+                            <td scope="row">
+                                <a href="/admin/events/<%= event._id %>/manage" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Event"><i class="bi bi-pencil-square link-dark"></i></a>
+
+                                <a href="/admin/events/<%= event._id %>/manage" class="link-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="View Event Details">
+                                    <%= event.name %>
+                                </a>
+                                <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %>
+                            </td>
+                            <td scope="row">
+                                <% try { %>
+                                    <%= event.eventHost.eventSystem.name %>
+                                        <%= event.eventHost.display? ` - ${event.eventHost.name}` : '' %>
+                                            <% } catch {} %>
+                            </td>
+                            <td scope="row">
+                                <%= new Date(event.eventStart).toLocaleDateString() %>
+                            </td>
+                            <td scope="row">
+                                <%= new Date(event.eventEnd).toLocaleDateString() %>
+                            </td>
+                            <td scope="row" class="text-center <%= event.eventApproved ? 'text-success' : 'text-danger' %> ps-3" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
+                                <%- event.eventApproved ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
+                            </td>
+                        </tr>
+                        <% } %>
+                </tbody>
+            </table>
+            <ul id="eventsNavPosition" class="pagination pager-nav justify-content-center"></ul>
+        </div>
+    </div>
+    <script src="/js/pagination.js"></script>
+    <script>
+        const eventsPager = new Pager('events', 15);
+        eventsPager.init();
+        eventsPager.showPageNav('eventsPager', 'eventsNavPosition');
+        eventsPager.showPage(1);
+    </script>

@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate')%>
+    <div class="container justify-content-center align-items-center mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md- col-xl-4 offset-xl-4">
+                <div class="card shadow">
+                    <img src="/img/lorienTrustx4.png" alt="" class="img-fluid card-img-top" />
+                    <div class="card-body">
+                        <h5 class="card-title">Reset Password</h5>
+                        <form action="/resetpassword" method="POST" novalidate class="validated-form">
+                            <div class="mb-3">
+                                <label class="form-label" for="username">E-mail Address</label>
+                                <input class="form-control" type="email" id="username" name="username" autofocus required>
+                                <div class="invalid-feedback">
+                                    Please enter a valid e-mail address.
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success">Request Reset</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>

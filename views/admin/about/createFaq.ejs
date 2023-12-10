@@ -1,0 +1,30 @@
+<% layout('layouts/boilerplate') %>
+    <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/admin/faq" class="link-dark">Manage FAQ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                New FAQ
+            </li>
+        </ol>
+    </nav>
+    <div class="card shadow py-3 px-3 mb-3">
+        <form action="/admin/faq/new" method="POST">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="faqQuestion">Question</label>
+                    <input type="text" id="faqQuestion" name="question" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="faqAnswer">Answer</label>
+                    <textarea name="answer" class="form-control" id="faqAnswer" cols="30" rows="10"></textarea>
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-success">
+                    Create
+                </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/js/adminAbout.js"></script>

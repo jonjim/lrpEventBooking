@@ -1,0 +1,41 @@
+<% layout('layouts/boilerplate') %>
+
+    <div class="card shadow  py-3 px-3 mb-3">
+        <div class="card-header bg-white mb-3">
+            <h4>Manage Event Hosts</h4>
+        </div>
+        <div class=" ms-auto">
+            <a href="/admin/hosts/new" class="btn btn-secondary">Add Event Host</a>
+        </div>
+        <div class="card-body">
+            <table id="eventhosts" class="table table-hover">
+                <thead>
+                    <th scope="col">System</th>
+                    <th scope="col">Host Name</th>
+                    <th scope="col"></th>
+                </thead>
+                <tbody>
+                    <% for (eventHost of eventHosts.sort((a,b) => a.eventSystem.name.localeCompare(b.eventSystem.name) || a.name.localeCompare(b.name))) { %>
+                        <% if (adminGroups.includes(currentUser.role) || currentUser.eventHosts.filter(a => a._id.equals(eventHost._id)).length > 0) { %>
+                            <tr>
+                                <td scope="row">
+                                    <%= eventHost.eventSystem?.name %>
+                                </td>
+                                <td scope="row">
+                                    <%= eventHost.name %>
+                                </td>
+                                <td scope="row"><a href="/admin/hosts/<%= eventHost._id %>" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>
+                            </tr>
+                            <% }} %>
+                </tbody>
+            </table>
+            <ul id="eventsNavPosition" class="pagination pager-nav justify-content-center"></ul>
+            <script src="/js/pagination.js"></script>
+            <script>
+                const eventsPager = new Pager('eventhosts', 15);
+                eventsPager.init();
+                eventsPager.showPageNav('eventsPager', 'eventsNavPosition');
+                eventsPager.showPage(1);
+            </script>
+        </div>
+    </div>

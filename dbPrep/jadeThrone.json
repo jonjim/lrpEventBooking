@@ -1,0 +1,25 @@
+[{
+        "name": "Hinotori",
+        "img": "/img/hosts/hinotori.png"
+    },
+    {
+        "name": "Kani",
+        "img": "/img/hosts/kani.png"
+    },
+    {
+        "name": "Ryu",
+        "img": "/img/hosts/ryu.png"
+    },
+    {
+        "name": "Sasori",
+        "img": "/img/hosts/sasori.png"
+    },
+    {
+        "name": "Shishi",
+        "img": "/img/hosts/shishi.png"
+    },
+    {
+        "name": "Tsuru",
+        "img": "/img/hosts/tsuru.png"
+    }
+]
