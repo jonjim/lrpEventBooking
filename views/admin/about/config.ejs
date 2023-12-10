@@ -1,0 +1,80 @@
+<% layout('layouts/boilerplate') %>
+    <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form action="/admin/config" method="POST" enctype="multipart/form-data">
+                <div class="card shadow  py-3 px-3 mb-3">
+                    <div class="card-header bg-white">
+                        <h4>System Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">Please be aware these settings will affect the entire booking system for all users and organisers.</div>
+                        <input type="hidden" name="configId" value="<%= config._id %>">
+                        <div class="mb-3">
+                            <label for="siteName">System Name</label>
+                            <input type="text" class="form-control" name="siteName" id="siteName" value="<%= config.siteName %>" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="siteLogo">System Logo</label>
+                            <div class="input-group">
+                                <input class="form-control" type="file" id="siteLogo" name="image" accept="image/png, image/jpeg">
+                                <a title="Clear current image" class="btn btn-outline-secondary" href="#" onclick="document.getElementById('delImg').submit()" type="button"><i class="bi bi-trash"></i></a>
+                            </div>
+                            <div class="form-text">Do not upload an image if you do not wish to change the current image.</div>
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="techContactName">Technical Contact Name</label>
+                            <input type="text" class="form-control" name="techContactName" id="techContactName" value="<%= config.techContactName %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="techContactEmail">Technical Contact E-mail</label>
+                            <input type="email" name="techContactEmail" class="form-control" id="techContactEmail" value="<%= config.techContactEmail %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="siteDescription">System Description</label>
+                            <textarea name="siteDescription" class="form-control" id="siteDescription" cols="30" rows="10"><%= config.siteDescription %></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <form action="/admin/config?_method=DELETE" method="POST" id="delImg"></form>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            browser_spellcheck: true,
+            menubar: false,
+            height: "200",
+            contextmenu: "link useBrowserSpellcheck image table",
+            setup: function(editor) {
+                editor.ui.registry.addMenuItem("useBrowserSpellcheck", {
+                    text: "Use `Ctrl+Right click` to access spellchecker",
+                    onAction: function() {
+                        editor.notificationManager.open({
+                            text: "To access the spellchecker, hold the Control (Ctrl) key and right-click on the misspelt word.",
+                            type: "info",
+                            timeout: 5000,
+                            closeButton: true,
+                        });
+                    },
+                });
+                editor.ui.registry.addContextMenu("useBrowserSpellcheck", {
+                    update: function(node) {
+                        return editor.selection.isCollapsed() ? ["useBrowserSpellcheck"] : [];
+                    },
+                });
+            },
+            content_style: `
+            body {
+              background: #fff;
+              font-size: 10pt;
+            }
+        …
+     `
+        });
+    </script>

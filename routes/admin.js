@@ -132,6 +132,7 @@ router.route('/policies')
 
 router.route('/config')
     .get(isLoggedIn, isSuperAdmin, catchAsync(adminAboutController.editConfig))
-    .post(isLoggedIn, isSuperAdmin, catchAsync(adminAboutController.postConfig));
+    .post(isLoggedIn, isSuperAdmin, upload.single('image'), catchAsync(adminAboutController.postConfig))
+    .delete(isLoggedIn, isSuperAdmin, catchAsync(adminAboutController.delConfig))
 
 module.exports = router;

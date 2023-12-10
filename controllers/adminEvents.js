@@ -96,7 +96,7 @@ module.exports.updateEvent = async(req, res, next) => {
     req.body.event.eventApproved = req.body.event.eventApproved ? req.body.event.eventApproved == 'on' ? true : false : false;
     req.body.event.visible = req.body.event.visible ? req.body.event.visible == 'on' ? true : false : false;
     req.body.event.overflowQueue = req.body.event.overflowQueue ? req.body.event.overflowQueue == 'on' ? true : false : false;
-    const event = await Event.findByIdAndUpdate(id, {...req.body.event });
+    const event = await Event.findByIdAndUpdate(id, {...req.body.event }, { new: true });
     if (req.files) {
         const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
         event.img = imgs[0];

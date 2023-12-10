@@ -8,7 +8,10 @@ const siteConfigSchema = new mongoose.Schema({
     paypalPercentage: Number,
     paypalFixedFee: Number,
     siteName: String,
-    siteLogo: String,
+    siteLogo: {
+        url: String,
+        filename: String
+    },
     siteDescription: String
 })
 
