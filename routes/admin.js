@@ -46,11 +46,15 @@ router.route('/systems')
 
 router.route('/systems/new')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemNewForm))
-    .post(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemNew))
+    .post(isLoggedIn, isAdmin, upload.single('image'), catchAsync(adminController.eventSystemNew))
 
 router.route('/systems/:id')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemEdit))
-    .post(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemUpdate))
+    .post(isLoggedIn, isAdmin, upload.single('image'), catchAsync(adminController.eventSystemUpdate))
+    .delete(isLoggedIn, isSuperAdmin, catchAsync(adminController.eventSystemDelete))
+
+    router.route('/systems/:id/image')
+    .delete(isLoggedIn, isAdmin,  catchAsync(adminController.eventSystemDelImg))
 
 router.route('/events')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.listHostedEvents));

@@ -37,7 +37,7 @@
                             </div>
                             <div class="card-footer eventFooter">
                                 <div class="row h-100">
-                                    <div class="col"><a target="_blank" href="<%= event.eventHost.eventSystem.website %>"><img class="system-logo" height="60px" src="<%= event.eventHost.eventSystem.img %>" alt="<%= event.eventHost.eventSystem.name %>"></a></div>
+                                    <div class="col"><a class="link-dark" target="_blank" href="<%= event.eventHost.eventSystem.website %>"><% if (event.eventHost.eventSystem.img?.url) { %><img class="system-logo" height="60px" src="<%= event.eventHost.eventSystem.img.url %>" alt="<%= event.eventHost.eventSystem.name %>"><% } else { %><%= event.eventHost.eventSystem.name %><% } %></a></div>
                                     <div class="col text-end mb-0 my-auto">
                                         <% if (event.eventHost.display) { %><small class="text-muted">Hosted by the <%= event.eventHost.name
                                     %></small>

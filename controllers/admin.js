@@ -3,6 +3,7 @@ const User = require('../models/auth');
 const emailService = require('../utils/email');
 const EventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
+const { cloudinary } = require('../utils/cloudinary');
 
 module.exports.eventHosts = async(req, res, next) => {
     const eventHosts = await eventHost.find().populate('eventSystem');
@@ -87,8 +88,27 @@ module.exports.eventSystemEdit = async(req, res, next) => {
     return res.render('admin/eventSystems/edit', { title: 'Manage Event System', eventSystem });
 }
 
+module.exports.eventSystemDelete = async (req,res,next) => {
+    await EventSystems.findByIdAndDelete(req.params.id);
+    req.flash('success','Event System deleted');
+    return res.redirect('/admin/systems')
+}
+
+module.exports.eventSystemDelImg = async(req,res,next) => {
+    const eventSystem = await EventSystems.findById(req.params.id)
+    await cloudinary.uploader.destroy(eventSystem.img.filename);
+    eventSystem.img = undefined;
+    await eventSystem.save();
+    req.flash('success','Event System image removed');
+    return res.redirect('/admin/systems')
+}
+
 module.exports.eventSystemUpdate = async(req, res, next) => {
-    await EventSystems.findByIdAndUpdate(req.params.id, {...req.body });
+    const eventSystem = await EventSystems.findByIdAndUpdate(req.params.id, {...req.body },{new:true});
+    if (req.file) {
+        eventSystem.img = req.file;
+        await eventSystem.save();
+    }
     req.flash('success', 'Event System Updated!')
     return res.redirect('/admin/systems')
 }

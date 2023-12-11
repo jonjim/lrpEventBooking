@@ -9,38 +9,53 @@
         </ol>
     </nav>
     <div class="row">
-        <div class="col col-md-8 offset-md-2">
+        <div class="col">
             <div class="card shadow  py-3 px-3 mb-3">
                 <div class="card-header bg-white">
-                    <h4>Edit Event System</h4>
+                    <h4>Edit Event System <% if (eventSystem.img?.url) { %><img style="margin-top:-20px;" class="ms-5" height="60px" src="<%= eventSystem.img.url %>" alt="<%= eventSystem.name %>"><% } %></h4>
                 </div>
                 <div class="card-body">
-                    <form action="/admin/systems/<%= eventSystem._id %>" method="POST" class="validated-form" novalidate>
+                    <form action="/admin/systems/<%= eventSystem._id %>" method="POST" class="validated-form" enctype="multipart/form-data" novalidate>
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="systemName">Name</label>
                                     <input required type="text" id="systemName" name="name" class="form-control" value="<%= eventSystem.name %>">
                                 </div>
+                                <div class="mb-3">
+                                    <label for="systemImg">Image <span class="form-text">(60px x 250px)</span></label>
+                                    <div class="input-group">
+                                        <input class="form-control" type="file" id="systemImg" name="image" accept="image/png, image/jpeg">
+                                        <% if (eventSystem.img?.url) { %> <a title="Clear current image" class="btn btn-outline-secondary" href="#" onclick="document.getElementById('delImg').submit()" type="button"><i class="bi bi-trash"></i></a><% } %>
+                                    </div>
+                                    <div class="form-text">Do not upload an image if you do not wish to change the current image.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="systemWebsite">Website</label>
+                                    <input type="url" id="systemWebsite" name="website" class="form-control" value="<%= eventSystem.website %>">
+                                </div>
                             </div>
                             <div class="col">
+                                
                                 <div class="mb-3">
-                                    <label for="systemImg">Image</label>
-                                    <input required type="text" id="systemImg" name="img" class="form-control" value="<%= eventSystem.img %>">
+                                    <label for="systemName">Description</label>
+                                    <textarea required class="form-control" name="description" id="systemDescription" cols="30" rows="5">
+                                    <%= eventSystem.description %>
+                                    </textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="systemWebsite">Website</label>
-                            <input type="url" id="systemWebsite" name="website" class="form-control" value="<%= eventSystem.website %>">
+                            <label for="systemName">Terms & Conditions</label>
+                            <textarea required class="form-control" name="terms" id="systemTerms" title="These are your system specific terms and conditions" cols="30" rows="5">
+                            <%= eventSystem.terms %>
+                            </textarea>
                         </div>
-                        <div class="mb-3">
-                            <label for="systemName">Description</label>
-                            <textarea required class="form-control" name="description" id="systemDescription" cols="30" rows="10">
-                            <%= eventSystem.description %>
-                        </textarea>
-                        </div>
+
                         <div class="text-end">
+                            <% if (currentUser.role == 'superAdmin') { %>
+                            <a href=""  data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger">Delete</a>
+                            <% } %>
                             <button class="btn btn-success">Save Changes</button>
                         </div>
 
@@ -49,4 +64,26 @@
             </div>
         </div>
     </div>
-    <script src="/js/adminAbout.js"></script>
+    <form action="/admin/systems/<%= eventSystem._id %>/image?_method=DELETE" method="POST" id="delImg"></form>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Delete Event System?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this Event System?</p>
+                    <p>This will delete all linked event hosts, events, and event bookings!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="/admin/systems/<%= eventSystem._id %>?_method=DELETE" method="POST">
+                        <button type="submit" class="btn btn-danger">Delete System</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/adminEventSystem.js"></script>
