@@ -15,3 +15,10 @@ module.exports.faq = async(req, res, next) => {
     const faq = await FAQ.find();
     res.render('about/faq', { title: `Frequently Asked Questions`, faq });
 }
+
+module.exports.organisers = async(req,res,next) => {
+    const meta = {
+        crawl: true
+    }
+    res.render('about/organisers',{title:'Event Organisers', meta});
+}

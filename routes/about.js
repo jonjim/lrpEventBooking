@@ -13,4 +13,7 @@ router.route('/terms')
 router.route('/faq')
     .get(catchAsync(controller.faq))
 
+router.route('/organisers')
+    .get(catchAsync(controller.organisers))
+
 module.exports = router;

@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/png" href="">
 
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
     <meta name="author" content="<%= rootUrl %>">
 
     <meta name="keywords" content="live role play,live action role play,lrp,larp">
@@ -24,14 +24,21 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
-    <% if (typeof meta != 'undefined') { %>
+    <% if (typeof meta != 'undefined' && (typeof meta.crawl != 'undefined' && meta.crawl)) { %>
+        <% if (!meta.crawl) { %>
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <meta property="og:title" content="<% meta.title %>">
         <meta name="twitter:title" content="<%= meta.title %>">
         <meta name="description" content="<%- meta.description %>">
         <meta property="og:description" content="<%- meta.description %>">
         <meta name="twitter:description" content="<%- meta.description %>">
         <meta property="og:url" content="<%= rootUrl %>><%= meta.path %>">
-        <% } else { %>
+            <% } else { %>
+                <meta name="robots" content="noindex">
+            <% } %>
+            
+            <% } else { %>
+                <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
             <meta property="og:title" content="<%= config.siteName %>">
             <meta name="twitter:title" content="<% config.siteName %>">
             <meta name="description" content="<%= config.siteDescription %>">
