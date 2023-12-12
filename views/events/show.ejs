@@ -109,89 +109,7 @@ function toTitleCase(str) {
             </div>
         </div>
         <div class="col-md-3">
-            <% if (event.ticketsAvailable && !event.externalBooking && event.allowBookings && event.eventApproved) { %>
-                <div class="d-none d-md-grid gap-2 mb-3 ">
-                    <a href="/events/<%= event._id %>/book" class="btn btn-success">
-                        <h3 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book Tickets</h3>
-                    </a>
-                </div>
-                <% } else if (event.externalBooking && event.allowBookings && event.eventApproved) { %>
-                    <div class="d-none d-md-grid gap-2 mb-3">
-                        <a href="<%= event.externalBooking %>" data-bs-toggle="modal" data-bs-target="#externalBookingModal" class="btn btn-success">
-                            <h3 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book Tickets</h3>
-                        </a>
-                    </div>
-                    <% } %>
-                        <div class="card shadow py-3 px-3 mb-1">
-                            <div class="img align-middle text-center"><img id="eventImg" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                                <% if (event.img.url) { %><img id="hostLogo" src="<%= event.eventHost.img %>" class="host-logo-fade" alt=""><% } %>
-                            </div>
-                            <span class="text-center"><a target="_blank" href="<%= event.eventHost.eventSystem.website %>"><img class="img-fluid" src="<%= event.eventHost.eventSystem.img %>" alt=""></a></span>
-                            <div class="mb-3">
-                                <ul class="list-group list-group-flush mb-1">
-                                    <li class="list-group-item">
-                                        <h5>Event Dates</h5>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <%= new Date(event.eventStart).toLocaleDateString() %>
-                                            <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-                                                <%= new Date(event.eventEnd).toLocaleDateString() %>
-                                                    <% } %>
-                                    </li>
-                                </ul>
-                                <ul class="list-group list-group-flush mb-1">
-                                    <li class="list-group-item">
-                                        <h5>Event Location</h5>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(event.location) %>">
-                                            <%= event.location %>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <% if (event.eventHost.contactAddress && event.eventHost.contactAddress.length > 0) { %>
-                                    <ul class="list-group list-group-flush mb-1">
-                                        <li class="list-group-item">
-                                            <h5>Contact Address</h5>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <a href="mailto:<%= event.eventHost.contactAddress %>">
-                                                <%= event.eventHost.contactAddress %>
-                                            </a>
-                                        </li>
-                                        </li>
-                                    </ul>
-                                    <% } %>
-
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                <h5>Player Ticket Prices</h5>
-                                            </li>
-                                            <% var ticketCount = 0; for (var i = 0; i < event.eventTickets.length;i++) { if (['player','playerchild','mealticket','mealticketchild'].includes(event.eventTickets[i].ticketType) && new Date(event.eventTickets[i].availableTo) >= new Date() ) { ticketCount++;%>
-                                                <li class="list-group-item">£
-                                                    <%= event.eventTickets[i].cost %> -
-                                                        <%= event.eventTickets[i].description %><br><small><%= new Date(event.eventTickets[i].availableFrom).toLocaleDateString() %> - <%= new Date(event.eventTickets[i].availableTo).toLocaleDateString() %></small>
-                                                </li>
-                                                <% }} if (ticketCount === 0) { %>
-                                                    <li class="list-group-item">
-                                                        No tickets are currently available
-                                                    </li>
-                                                    <% } %>
-                                        </ul>
-                            </div>
-                        </div>
-                        <% if (currentUser) { %>
-                            <% if (adminGroups.includes(currentUser.role) || (currentUser.eventHosts.includes(event.eventHost))) { %>
-                                <div class="card shadow py-3 px-3 mb-3">
-                                    <h5>Event Admin</h5>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item">
-                                            <a class="link-dark" href="/admin/events/<%= event._id %>/edit"><i class="bi bi-pencil-square pe-2"></i>Edit Event</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <% } %>
-                                    <% } %>
+            <%- include('../partials/eventSidebar')%>
         </div>
     </div>
     <% if (event.externalBooking) { %>
@@ -213,28 +131,28 @@ function toTitleCase(str) {
             </div>
         </div>
         <% } %>
-<% if (event.img.url) { %>
-            <script>
-                document.getElementById('eventImg').addEventListener('mouseenter', () => {
-                    document.getElementById('eventImg').classList.add('event-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo');
-                })
-                document.getElementById('eventImg').addEventListener('mouseleave', () => {
-                    document.getElementById('eventImg').classList.remove('event-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo');
-                })
+            <% if (event.img.url) { %>
+                <script>
+                    document.getElementById('eventImg').addEventListener('mouseenter', () => {
+                        document.getElementById('eventImg').classList.add('event-logo-fade');
+                        document.getElementById('hostLogo').classList.remove('host-logo-fade');
+                        document.getElementById('hostLogo').classList.add('host-logo');
+                    })
+                    document.getElementById('eventImg').addEventListener('mouseleave', () => {
+                        document.getElementById('eventImg').classList.remove('event-logo-fade');
+                        document.getElementById('hostLogo').classList.add('host-logo-fade');
+                        document.getElementById('hostLogo').classList.remove('host-logo');
+                    })
 
-                document.getElementById('hostLogo').addEventListener('mouseenter', () => {
-                    document.getElementById('eventImg').classList.add('event-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo');
-                })
-                document.getElementById('hostLogo').addEventListener('mouseleave', () => {
-                    document.getElementById('eventImg').classList.remove('event-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo');
-                })
-            </script>
-            <% } %>
+                    document.getElementById('hostLogo').addEventListener('mouseenter', () => {
+                        document.getElementById('eventImg').classList.add('event-logo-fade');
+                        document.getElementById('hostLogo').classList.remove('host-logo-fade');
+                        document.getElementById('hostLogo').classList.add('host-logo');
+                    })
+                    document.getElementById('hostLogo').addEventListener('mouseleave', () => {
+                        document.getElementById('eventImg').classList.remove('event-logo-fade');
+                        document.getElementById('hostLogo').classList.add('host-logo-fade');
+                        document.getElementById('hostLogo').classList.remove('host-logo');
+                    })
+                </script>
+                <% } %>

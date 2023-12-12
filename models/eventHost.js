@@ -6,7 +6,10 @@ const eventHostSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    img: String,
+    img: {
+        url: String,
+        filename: String
+    },
     contactAddress: String,
     paypalAddress: String,
     paypalPercentage: {
@@ -22,5 +25,10 @@ const eventHostSchema = new mongoose.Schema({
         ref: 'eventSystems'
     },
 })
+
+eventHostSchema.virtual('img.path')
+    .set(function(value) {
+        this.img.url = value;
+    })
 
 module.exports = mongoose.model('eventHost', eventHostSchema);

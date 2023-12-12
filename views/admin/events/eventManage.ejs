@@ -3,18 +3,22 @@
         <ol class="breadcrumb small">
             <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
             <li class="breadcrumb-item active" aria-current="page">
-                <%= event.name %>
+                <%= event.name %> 
             </li>
         </ol>
     </nav>
     <div class="card shadow py-3 px-3">
         <div class="card-header mb-3 bg-white row">
-            <div class="d-none d-md-block col-md-2 mb-2"><span class="align-middle"><img id="eventImg" src="<%= event.eventHost.img %>"
-            class="img-fluid rounded-start" alt="..."></span></div>
+            <div class="d-none d-md-block col-md-2 mb-2">                
+                <div class="img align-middle text-center">
+                    <img id="eventImg" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                <% if (event.img.url) { %><img id="hostLogo" style="top:-70px !important; left:10px !important;" src="<%= event.eventHost.img %>" class="host-logo-fade" alt=""><% } %>
+                </div>
+            </div>
             <div class="col">
                 <h2>
                     <a href="/events/<%= event._id %>" class="link-dark">
-                        <%= event.name %>
+                        <%= event.name %> <% if (event.eventHost.eventSystem.img?.url) { %><img height="60px" style="top:-20px" src="<%= event.eventHost.eventSystem.img.url %>" alt=""> <% } %>
                     </a>
                     <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %>
                 </h2>

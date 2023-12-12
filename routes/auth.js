@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
 const passport = require('passport');
-const { isLoggedIn, isAdmin } = require('../middleware');
+const { isLoggedIn, isAdmin, usernameToLowerCase } = require('../middleware');
 
 const auth = require('../controllers/auth');
 const controllerPaypal = require('../controllers/paypal');
@@ -10,11 +10,11 @@ const controllerPaypal = require('../controllers/paypal');
 /* GET users listing. */
 router.route('/login')
     .get(auth.renderLoginForm)
-    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), catchAsync(auth.login));
+    .post(usernameToLowerCase, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), catchAsync(auth.login));
 
 router.route('/register')
     .get(auth.renderRegister)
-    .post(catchAsync(auth.register));
+    .post(usernameToLowerCase,catchAsync(auth.register));
 
 router.route('/logout')
     .get(isLoggedIn, catchAsync(auth.logout))

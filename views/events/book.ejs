@@ -248,48 +248,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card shadow py-3 px-3 mb-3">
-                <div class="img align-middle text-center"><img id="eventImg" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                                <% if (event.img.url) { %><img id="hostLogo" src="<%= event.eventHost.img %>" class="host-logo-fade" alt=""><% } %>
-                            </div>
-                <span class="text-center"><a target="_blank" href="<%= event.eventHost.eventSystem.website %>"><img class="img-fluid" src="<%= event.eventHost.eventSystem.img %>" alt=""></a></span>
-                <div class="mb-3">
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item">
-                            <h5>Event Dates</h5>
-                        </li>
-                        <li class="list-group-item">
-                            <%= new Date(event.eventStart).toLocaleDateString() %>
-                                <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-                                    <%= new Date(event.eventEnd).toLocaleDateString() %>
-                                        <% } %>
-                        </li>
-                    </ul>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item">
-                            <h5>Event Location</h5>
-                        </li>
-                        <li class="list-group-item">
-                            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(event.location) %>">
-                                <%= event.location %>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <h5>Player Ticket Prices</h5>
-                        </li>
-                        <% for (var i = 0; i < event.eventTickets.length;i++) {
-                            if (['player','playerchild','mealticket','mealticketchild'].includes(event.eventTickets[i].ticketType) && new Date(event.eventTickets[i].availableTo) >= new Date() ) {
-                            %>
-                            <li class="list-group-item">£
-                                <%= event.eventTickets[i].cost %> -
-                                    <%= event.eventTickets[i].description %><br><small><%= new Date(event.eventTickets[i].availableFrom).toLocaleDateString() %> - <%= new Date(event.eventTickets[i].availableTo).toLocaleDateString() %></small>
-                            </li>
-                            <% }} %>
-                    </ul>
-                </div>
-            </div>
+            <%- include('../partials/eventSidebar')%>
         </div>
     </div>
     <% if (event.img.url) { %>

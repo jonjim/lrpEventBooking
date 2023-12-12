@@ -18,8 +18,28 @@ module.exports.eventHostEdit = async(req, res, next) => {
 
 module.exports.eventHostUpdate = async(req, res, next) => {
     const host = await eventHost.findByIdAndUpdate(req.params.id, {...req.body });
+    if (req.file) {
+        host.img = req.file;
+        await host.save();
+    }
     req.flash('success', `${host.name} has been updated`);
     return res.redirect('/admin/hosts');
+}
+
+module.exports.deleteEventHost = async(req, res, next) => {
+    const host = await eventHost.findByIdAndDelete(req.params.id);
+    await cloudinary.uploader.destroy(host.img.filename);
+    req.flash('success', 'Event Host Deleted');
+    return res.redirect('/admin/hosts')
+}
+
+module.exports.deleteEventHostImg = async(req, res, next) => {
+    const host = await eventHost.findById(req.params.id);
+    await cloudinary.uploader.destroy(host.img.filename);
+    host.img = undefined;
+    host.save();
+    req.flash('success', 'Event Host Image Deleted');
+    return res.redirect('/admin/hosts')
 }
 
 module.exports.eventHostNewForm = async(req, res, next) => {
@@ -88,23 +108,23 @@ module.exports.eventSystemEdit = async(req, res, next) => {
     return res.render('admin/eventSystems/edit', { title: 'Manage Event System', eventSystem });
 }
 
-module.exports.eventSystemDelete = async (req,res,next) => {
+module.exports.eventSystemDelete = async(req, res, next) => {
     await EventSystems.findByIdAndDelete(req.params.id);
-    req.flash('success','Event System deleted');
+    req.flash('success', 'Event System deleted');
     return res.redirect('/admin/systems')
 }
 
-module.exports.eventSystemDelImg = async(req,res,next) => {
+module.exports.eventSystemDelImg = async(req, res, next) => {
     const eventSystem = await EventSystems.findById(req.params.id)
     await cloudinary.uploader.destroy(eventSystem.img.filename);
     eventSystem.img = undefined;
     await eventSystem.save();
-    req.flash('success','Event System image removed');
+    req.flash('success', 'Event System image removed');
     return res.redirect('/admin/systems')
 }
 
 module.exports.eventSystemUpdate = async(req, res, next) => {
-    const eventSystem = await EventSystems.findByIdAndUpdate(req.params.id, {...req.body },{new:true});
+    const eventSystem = await EventSystems.findByIdAndUpdate(req.params.id, {...req.body }, { new: true });
     if (req.file) {
         eventSystem.img = req.file;
         await eventSystem.save();

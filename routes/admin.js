@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
-const { isLoggedIn, isAdmin, isSuperAdmin, isEventHost, isMatchingEventHost } = require('../middleware');
+const { isLoggedIn, isAdmin, isSuperAdmin, isEventHost, isMatchingEventHost, usernameToLowerCase } = require('../middleware');
 const multer = require('multer');
 const { storage } = require('../utils/cloudinary');
 const upload = multer({ storage });
@@ -39,7 +39,11 @@ router.route('/hosts/new')
 
 router.route('/hosts/:id')
     .get(isLoggedIn, isMatchingEventHost, catchAsync(adminController.eventHostEdit))
-    .post(isLoggedIn, isMatchingEventHost, catchAsync(adminController.eventHostUpdate))
+    .post(isLoggedIn, isMatchingEventHost, upload.single('image'), catchAsync(adminController.eventHostUpdate))
+    .delete(isLoggedIn, isAdmin, catchAsync(adminAboutController.deleteEventHost))
+
+router.route('/hosts/:id/image')
+    .delete(isLoggedIn, isAdmin, catchAsync(adminAboutController.deleteEventHostImg))
 
 router.route('/systems')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemList));
@@ -53,8 +57,8 @@ router.route('/systems/:id')
     .post(isLoggedIn, isAdmin, upload.single('image'), catchAsync(adminController.eventSystemUpdate))
     .delete(isLoggedIn, isSuperAdmin, catchAsync(adminController.eventSystemDelete))
 
-    router.route('/systems/:id/image')
-    .delete(isLoggedIn, isAdmin,  catchAsync(adminController.eventSystemDelImg))
+router.route('/systems/:id/image')
+    .delete(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemDelImg))
 
 router.route('/events')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.listHostedEvents));
