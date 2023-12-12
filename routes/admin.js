@@ -9,6 +9,7 @@ const upload = multer({ storage });
 const adminController = require('../controllers/admin');
 const adminAboutController = require('../controllers/adminAbout');
 const adminEventsController = require('../controllers/adminEvents');
+const adminPrintController = require('../controllers/adminPrint')
 const eventsController = require('../controllers/events');
 const authController = require('../controllers/auth');
 const EventBooking = require('../models/eventBooking')
@@ -85,19 +86,19 @@ router.route('/events/:id/cancel')
     .post(isLoggedIn, isEventHost, catchAsync(adminEventsController.cancelEvent))
 
 router.route('/events/:id/print/signin')
-    .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.signinEvent))
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.signinEvent))
 
 router.route('/events/:id/print/medical')
-    .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.medicalEvent))
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.medicalEvent))
 
 router.route('/events/:id/print/attendees')
-    .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.attendeesEvent))
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.attendeesEvent))
 
 router.route('/events/:id/print/dietary')
-    .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.dietaryEvent))
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.dietaryEvent))
 
 router.route('/events/:id/print/pid')
-    .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.pidEvent))
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.pidEvent))
 
 router.route('/events/:id/tickets/new')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.createEventTicket))
