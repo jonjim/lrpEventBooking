@@ -1,5 +1,5 @@
 const eventHost = require('../models/eventHost');
-const User = require('../models/auth');
+const User = require('../models/user');
 const emailService = require('../utils/email');
 const EventSystems = require('../models/eventSystems')
 const crypto = require('crypto');

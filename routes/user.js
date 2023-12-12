@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const passport = require('passport');
 const { isLoggedIn, isAdmin, usernameToLowerCase } = require('../middleware');
 
-const auth = require('../controllers/auth');
+const auth = require('../controllers/user');
 const controllerPaypal = require('../controllers/paypal');
 
 /* GET users listing. */
@@ -24,7 +24,7 @@ router.route('/password')
     .post(isLoggedIn, catchAsync(auth.changePassword))
 
 router.route('/resetpassword')
-    .get(function(req,res,next) { res.render('auth/resetSearch',{title:"Password Reset"})})
+    .get(function(req,res,next) { res.render('user/resetSearch',{title:"Password Reset"})})
     .post(catchAsync(auth.resetPasswordLink))
 
 router.route('/resetpassword/:id')

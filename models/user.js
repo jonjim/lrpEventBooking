@@ -107,10 +107,31 @@ const userSchema = new mongoose.Schema({
             }]
         },
     },
+    twistedTales: {
+        character: {
+            characterName: String
+        }
+    },
+    eldritchDays: {
+        character: {
+            characterName: String
+        }
+    },
+    jadeThrone: {
+        character: {
+            characterName: String,
+            clan: String
+        }
+    },
     eventTickets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'EventTicket'
     }]
+})
+
+userSchema.virtual('jadeThrone.character.faction')
+.set(function () {
+    return this.jadeThrone.character.clan;
 })
 
 userSchema.plugin(passportLocalMongoose);

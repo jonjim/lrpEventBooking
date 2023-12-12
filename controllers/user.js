@@ -1,4 +1,4 @@
-const User = require('../models/auth');
+const User = require('../models/user');
 const axios = require('axios');
 const EventBooking = require('../models/eventBooking');
 const Event = require('../models/event');
@@ -9,7 +9,7 @@ const crypto = require('crypto');
 const emailService = require('../utils/email');
 
 module.exports.renderRegister = (req, res) => {
-    res.render('auth/register', { title: 'Create New Account' });
+    res.render('user/register', { title: 'Create New Account' });
 };
 
 module.exports.register = async(req, res, next) => {
@@ -33,7 +33,7 @@ module.exports.register = async(req, res, next) => {
 module.exports.listEventBookingsUser = async(req, res, next) => {
     const eventBookings = await EventBooking.find({ user: req.user._id }).populate('eventTickets').populate('event').populate({ path: 'event', populate: { path: 'eventHost' } }).sort({ bookingMade: 'desc' });
     if (eventBookings.length > 0)
-        return res.render('auth/eventList', { title: `Your Event Bookings`, eventBookings: eventBookings, event: eventBookings[0].event });
+        return res.render('user/eventList', { title: `Your Event Bookings`, eventBookings: eventBookings, event: eventBookings[0].event });
     else {
         req.flash('error', 'You do not have any event bookings yet!');
         return res.redirect('/');
@@ -77,7 +77,7 @@ module.exports.accountUpdate = async (req, res, next) => {
 };
 
 module.exports.renderLoginForm = (req, res) => {
-    res.render('auth/login', { title: 'Login to your account' });
+    res.render('user/login', { title: 'Login to your account' });
 };
 
 module.exports.logout = async(req, res, next) => {
@@ -106,12 +106,12 @@ module.exports.login = async(req, res) => {
 module.exports.renderEditForm = async(req, res, next) => {
     console.log('editform');
     const user = await User.findById(req.params.id);
-    res.render('auth/edit', { title: 'Edit User', user })
+    res.render('user/edit', { title: 'Edit User', user })
 };
 
 module.exports.renderAccountSettings = async(req, res, next) => {
     const systems = await eventSystems.find();
-    res.render('auth/accountSettings', { title: 'My Account', eventSystems: systems });
+    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems });
 };
 
 module.exports.ltAPI = async(req, res, next) => {
@@ -154,7 +154,7 @@ module.exports.resetPasswordForm = async(req, res, next) => {
         req.flash('error', 'This password reset link is not valid');
         return res.redirect('/');
     }
-    return res.render('auth/resetPassword.ejs', { title: "Password Reset", user });
+    return res.render('user/resetPassword.ejs', { title: "Password Reset", user });
 }
 
 module.exports.resetPassword = async(req, res, next) => {
@@ -171,7 +171,7 @@ module.exports.resetPassword = async(req, res, next) => {
 }
 
 module.exports.changePasswordForm = async(req, res, next) => {
-    return res.render('auth/changePassword.ejs', { title: "Password Reset" });
+    return res.render('user/changePassword.ejs', { title: "Password Reset" });
 };
 
 module.exports.changePassword = async(req, res, next) => {

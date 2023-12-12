@@ -11,7 +11,8 @@ const eventSystemSchema = new mongoose.Schema({
         filename: String
     },
     website: String,
-    terms: String
+    terms: String,
+    systemRef: String
 })
 
 eventSystemSchema.virtual('img.path')

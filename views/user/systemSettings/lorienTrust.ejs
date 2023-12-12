@@ -1,0 +1,132 @@
+<div class="accordion-item">
+    <h2 class="accordion-header" ">
+        <button style="font-size:1.2rem !important; font-weight:500 !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionLorienTrust" aria-expanded="false" aria-controls="accordionLorienTrust">
+      <img height="60px" src="<%= eventSystems.find(a => a.systemRef == 'lorienTrust').img.url %>" alt="">
+    </button>
+    </h2>
+    <div id="accordionLorienTrust" class="accordion-collapse collapse" data-bs-parent="#systemSettings">
+        <div class="card-header bg-white mt-3">
+            <h6>Player Information</h6>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label for="playerId">Lorien Trust Player ID</label>
+                    <input type="number" id="ltPlayerId" name="lorienTrust[playerId]" value="<%= currentUser.lorienTrust.playerId %>" class="form-control form-control-sm">
+                    <div class="invalid-feedback">
+                        <p>If you do not know your Player ID you can find it in the top right corner of your Lorien Trust Character Card, or by logging into your account on the <a href="https://www.lorientrust.com" class="alert-link">Lorien Trust website</a></p>
+                        <hr>
+                        <p class="mb-0">If you have not attended a Lorien Trust event before, please <a class="alert-link" onclick="document.getElementById('playerId').value = 0;return false;" href="#">click here.</a></p>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p class="form-text">The following information is optional, and is not required by any Lorien Trust player. It is likely you may not have some, or any, of this information. Before using any of the below skills, you will be required to provide
+                valid proof at an event.</p>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-4">
+                        <label for="refMarshal">Referee / Marshal Number</label>
+                        <input type="text" class="form-control" name="lorienTrust[refMarshal]" id="refMarshal" value="<%= currentUser.lorienTrust.refMarshal %>">
+                    </div>
+                    <div class="form-check mt-4 mb-3 pt-1">
+                        <label for="firstAid" class="form-check-label">First Aider</label>
+                        <input type="checkbox" class="form-check-input" name="lorienTrust[firstAid]" id="firstAid" <%= currentUser.lorienTrust.firstAid ? 'checked' : '' %>>
+                        <p class="form-text">Minimum 3-day First-at-Work training.</p>
+                    </div>
+                    <div class="form-check">
+                        <label for="mentalFirstAid" class="form-check-label">Mental Health First Aider</label>
+                        <input type="checkbox" class="form-check-input" name="lorienTrust[mentalFirstAid]" id="mentalFirstAid" <%= currentUser.lorienTrust.mentalFirstAid ? 'checked' : '' %>>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check mt-4">
+                        <label for="bowComp" class="form-check-label">Bow Competency</label>
+                        <input type="checkbox" class="form-check-input" name="lorienTrust[bowComp]" id="bowComp" <%= currentUser.lorienTrust.bowComp ? 'checked' : '' %>>
+                        <p class="form-text">Required to use projectile weapons</p>
+                    </div>
+                    <div class="form-check">
+                        <label for="clawComp" class="form-check-label">Claw Competency</label>
+                        <input type="checkbox" class="form-check-input" id="clawComp" name="lorienTrust[clawComp]" <%= currentUser.lorienTrust.clawComp ? 'checked' : '' %>>
+                        <p class="form-text">Required to use claw weapons</p>
+                    </div>
+                    <div class="form-check">
+                        <label for="wepCheck" class="form-check-label">Weapons Checker</label>
+                        <input type="checkbox" class="form-check-input" id="wepCheck" name="lorienTrust[wepCheck]" <%= currentUser.lorienTrust.wepCheck ? 'checked' : '' %>>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-header bg-white">
+            <h6>Character Information</h6>
+        </div>
+        <div class="card-body">
+            <div class="row mt-3">
+                <div class="col">
+                    <label for="authCode" class="form-label">Lorien Trust Character Access Token</label>
+                    <input id="authCode" name="lorienTrust[authCode]" class="form-control form-control-sm" aria-describedby="ltAuthCodeHelpBlock" value="<%= currentUser.lorienTrust.authCode %>">
+                </div>
+                <div class="col-3 pt-1">
+                    <a href="#character" onclick="getCharacter()" class="btn btn-success mt-4" role="button">Update</a>
+                </div>
+                <div id="ltAuthCodeHelpBlock" class="form-text mb-3">
+                    This code can be obtained from your account on the <a href="https://www.lorientrust.com" class="link-dark">Lorien Trust website</a>.<br>It is not required, and is not shared with event organisers
+                </div>
+                <hr>
+            </div>
+            <div id="spinnerDiv"></div>
+            <div id="character">
+                <div>
+                    <input type="text" style="border:none !important" class="form-control mb-2 text-center fw-bold" placeholder="Character Name" id="ltCharacterName" name="lorienTrust[character][characterName]" value="<%= currentUser.lorienTrust.character.characterName %>">
+                    <div class="invalid-feedback">You must enter a character name</div>
+                </div>
+                <h6 id="characterRace" class="text-center">
+                    <%= currentUser.character ? currentUser.lorienTrust.character.race : '' %>
+                </h6>
+                <select style="border:none !important" class="mb-2 form-select form-select-sm text-center" name="lorienTrust[character][faction]" id="characterFaction">
+                    <option value="No Faction" <%= currentUser.lorienTrust.character.faction == "No Faction" ? 'selected' : '' %>>No Faction</option>
+                    <option value="Bears" <%= currentUser.lorienTrust.character.faction == "Bears" ? 'selected' : '' %>>Bears</option>
+                    <option value="Dragons" <%= currentUser.lorienTrust.character.faction == "Dragons" ? 'selected' : '' %>>Dragons</option>
+                    <option value="Gryphons" <%= currentUser.lorienTrust.character.faction == "Gryphons" ? 'selected' : '' %>>Gryphons</option>
+                    <option value="Harts" <%= currentUser.lorienTrust.character.faction == "Harts" ? 'selected' : '' %>>Harts</option>
+                    <option value="Jackals" <%= currentUser.lorienTrust.character.faction == "Jackals" ? 'selected' : '' %>>Jackals</option>
+                    <option value="Lions" <%= currentUser.lorienTrust.character.faction == "Lions" ? 'selected' : '' %>>Lions</option>
+                    <option value="Tarantulas" <%= currentUser.lorienTrust.character.faction == "Tarantulas" ? 'selected' : '' %>>Tarantulas</option>
+                    <option value="Unicorns" <%= currentUser.lorienTrust.character.faction == "Unicorns" ? 'selected' : '' %>>Unicorns</option>
+                    <option value="Vipers <%= currentUser.lorienTrust.character.faction == "Vipers" ? 'selected' : '' %>">Vipers</option>
+                    <option value="Wolves" <%= currentUser.lorienTrust.character.faction == "Wolves" ? 'selected' : '' %>>Wolves</option>
+                </select>
+                <h6 id="characterGroup" class="text-center">
+                    <%= currentUser.character ? currentUser.lorienTrust.character.groupname : '' %>
+                </h6>
+                <div class="row">
+                    <div class="col-6 col-md">
+                        <ul class="list-unstyled" id="characterCS">
+                            <% if (currentUser.character) { for (var i=0; i < currentUser.lorienTrust.character.characterSkills.length; i++){ %>
+                                <li class="small">
+                                    <%= currentUser.lorienTrust.character.characterSkills[i].name %>
+                                </li>
+                                <% } %>
+
+                                    <br>
+                                    <% for (var i=0; i < currentUser.lorienTrust.character.occupationalSkills.length;i++){ if (currentUser.lorienTrust.character.occupationalSkills[i].script) { %>
+                                        <li class="small">
+                                            <%= currentUser.lorienTrust.character.occupationalSkills[i].name %>
+                                        </li>
+                                        <% }}} %>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md">
+                        <ul class="list-unstyled" id="characterOS">
+                            <% if (currentUser.character) { for (var i=0; i < currentUser.lorienTrust.character.occupationalSkills.length;i++){ if (!currentUser.lorienTrust.character.occupationalSkills[i].script) { %>
+                                <li class="small">
+                                    <%= currentUser.lorienTrust.character.occupationalSkills[i].name %>
+                                </li>
+                                <% }}} %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

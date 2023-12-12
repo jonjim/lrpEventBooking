@@ -57,14 +57,3 @@ async function getCharacter() {
 
 }
 
-var sys = new URL(window.location.href).searchParams.get("system");
-if (sys) {
-    switch (sys) {
-        case "lt":
-            document.getElementById('accordionLorienTrust').classList.toggle('show');
-            document.getElementById('ltPlayerId').required = true;
-            document.getElementById('ltCharacterName').required = true;
-            document.getElementById('ltFaction').required = true;
-            break;
-    }
-}

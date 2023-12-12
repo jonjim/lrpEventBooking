@@ -17,8 +17,7 @@ const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const flash = require('connect-flash');
 
-const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
+const authRouter = require('./routes/user');
 const eventRouter = require('./routes/events');
 const aboutRouter = require('./routes/about');
 const paypalRouter = require('./routes/paypal');
@@ -54,7 +53,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
 
-const Auth = require('./models/auth')
+const Auth = require('./models/user')
 const siteConfig = require('./models/siteConfig');
 
 const store = MongoStore.create({
@@ -150,6 +149,7 @@ loadConfig().then((configRecord) => {
     config = configRecord
 })
 
+const {getSystemData} = require('./utils/systemCheck')
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -160,14 +160,13 @@ app.use((req, res, next) => {
     res.locals.hostGroups = ['eventHost', 'sanctioningOfficer', 'admin', 'superAdmin'];
     res.locals.rootUrl = process.env.ROOT_URL
     res.locals.config = config
-
+    res.locals.systemData = getSystemData
     next();
 })
 
 app.use('/', eventRouter);
 app.use('/', authRouter);
 app.use('/', aboutRouter)
-app.use('/users', usersRouter);
 app.use('/paypal', paypalRouter);
 app.use('/admin/', adminRouter);
 

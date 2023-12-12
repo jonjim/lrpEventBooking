@@ -1,0 +1,23 @@
+<div class="accordion-item">
+    <h2 class="accordion-header" ">
+        <button style="font-size:1.2rem !important; font-weight:500 !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTwistedTales" aria-expanded="false" aria-controls="accordionTwistedTales">
+      <img height="60px" src="<%= eventSystems.find(a => a.systemRef == 'twistedTales').img.url %>" alt="Twisted Tales">
+    </button>
+    </h2>
+    <div id="accordionTwistedTales" class="accordion-collapse collapse" data-bs-parent="#systemSettings">
+        <div class="card-header bg-white mt-3">
+            <h6>Character Information</h6>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label for="ttCharacterName">Character Name</label>
+                    <input type="text" id="ttCharacterName" name="twistedTales[character][characterName]" value="<%= currentUser.twistedTales.character.characterName %>" class="form-control form-control-sm">
+                    <div class="invalid-feedback">
+                        <p>Please provide a character name</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

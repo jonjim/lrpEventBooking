@@ -2,7 +2,7 @@ const Event = require('../models/event');
 const EventTicket = require('../models/eventTicket');
 const EventBooking = require('../models/eventBooking');
 const EventHost = require('../models/eventHost');
-const User = require('../models/auth');
+const User = require('../models/user');
 const mongoose = require('mongoose');
 const { array } = require('joi');
 const emailService = require('../utils/email');
@@ -39,7 +39,7 @@ module.exports.showEventBooking = async(req, res, next) => {
     const changeUser = typeof req.query.alt == 'undefined' || !req.query.alt ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
     const manual = typeof req.query.manual == 'undefined' || !req.query.manual ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
     if (eventTickets.length > 0 && event.allowBookings) {
-        if (systemCheck(req, res, event.eventHost.eventSystem))
+        if (systemCheck(req, res, event.eventHost.eventSystem.systemRef, req.user))
             return res.render('events/book', { title: event.name, event, changeUser, manual });
     }
         req.flash('error', `${event.name} is not currently open for bookings!`);
