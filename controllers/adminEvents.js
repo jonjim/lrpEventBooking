@@ -7,6 +7,7 @@ const pdfService = require('../utils/pdf');
 const emailService = require('../utils/email');
 const ExpressError = require('../utils/ExpressError');
 const { cloudinary } = require('../utils/cloudinary');
+const {bookingCheck} = require('../utils/systemCheck')
 
 module.exports.listEvents = async(req, res, next) => {
     const eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
@@ -145,13 +146,14 @@ module.exports.deleteEventTicket = async(req, res, next) => {
 
 module.exports.bookingCash = async(req, res, next) => {
     const booking = await eventBooking.findByIdAndUpdate(req.params.id, {...req.body }).populate('eventTickets');
-    await await Event.findByIdAndUpdate(booking.event, {
+    const event = await Event.findByIdAndUpdate(booking.event, {
         $pull: {
             attendees: {
                 booking: booking._id,
             }
         }
-    })
+    }).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
+    const characterData = bookingCheck(event.systemRef,booking.user); 
     await Event.findByIdAndUpdate(booking.event, {
         $push: {
             attendees: {
@@ -161,8 +163,8 @@ module.exports.bookingCash = async(req, res, next) => {
                 display: booking.displayBooking,
                 surname: booking.surname,
                 firstname: booking.firstname,
-                icName: req.user.character ? req.user.character.characterName : '',
-                faction: req.user.character ? req.user.character.faction : ''
+                icName: req.user.character ? characterData.icName : '',
+                faction: req.user.character ? characterData.faction : ''
             }
         }
     })

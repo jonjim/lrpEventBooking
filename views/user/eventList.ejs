@@ -14,7 +14,7 @@
                             <div class="row h-100 g-0 pb-0">
                                 <div class="col-4 col-md-4 mt-2">
                                     <div class="img align-middle text-center ms-2"><img id="eventImg<%= eventBooking._id %>" aria-label="event-logo" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                                        <% if (event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= eventBooking._id %>" aria-label="host-logo" src="<%= event.eventHost.img %>" class="host-logo-fade" alt=""><% } %>
+                                        <% if (event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= eventBooking._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -137,7 +137,7 @@
                         </div>
                     </div>
                 </div>
-
+                <script src="/js/eventLogo.js"></script>
                 <script>
                     async function submitGift() {
                         try {
@@ -171,35 +171,5 @@
                             console.log(error);
                             document.getElementById('giftEmail').classList.add('is-invalid')
                         }
-                    }
-                    const eventLogos = document.querySelectorAll('[aria-label="event-logo"]');
-                    for (eventLogo of eventLogos){
-                        const hostImg = document.getElementById(eventLogo.id.replace('event','host'));
-                        const eventImg = document.getElementById(eventLogo.id);
-                        eventImg.addEventListener('mouseenter', () => {
-                            eventImg.classList.add('event-logo-fade');
-                            hostImg.classList.add('host-logo');
-                            hostImg.classList.remove('host-logo-fade');
-                        });
-                        eventImg.addEventListener('mouseleave', () => {
-                            eventImg.classList.remove('event-logo-fade');
-                            hostImg.classList.add('host-logo-fade');
-                            hostImg.classList.remove('host-logo');
-                        });
-                    }
-                    const hostLogos = document.querySelectorAll('[aria-label="host-logo"]');
-                    for (hostLogo of hostLogos){
-                        const eventImg = document.getElementById(hostLogo.id.replace('host','event'));
-                        const hostImg = document.getElementById(hostLogo.id);
-                        hostImg.addEventListener('mouseenter', () => {
-                            eventImg.classList.add('event-logo-fade');
-                            hostImg.classList.remove('host-logo-fade');
-                            hostImg.classList.add('host-logo');
-                        })
-                        hostImg.addEventListener('mouseleave', () => {
-                            eventImg.classList.remove('event-logo-fade');
-                            hostImg.classList.add('host-logo-fade');
-                            hostImg.classList.remove('host-logo');
-                        })
                     }
                 </script>

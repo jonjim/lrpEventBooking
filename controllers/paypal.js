@@ -4,6 +4,7 @@ const Event = require('../models/event');
 const mongoose = require('mongoose');
 const base = "https://api-m.sandbox.paypal.com";
 const emailService = require('../utils/email');
+const {bookingCheck} = require('../utils/systemCheck')
 
 /**
  * Generate an OAuth 2.0 access token for authenticating with PayPal REST APIs.
@@ -115,7 +116,7 @@ const captureOrder = async(req, orderID) => {
         // (3) Successful transaction -> Show confirmation or thank you message
         // Or go to another URL:  actions.redirect('thank_you.html');
         var eventBooking = await EventBooking.findById(responseData.jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user');
-        var event = await Event.findById(eventBooking.event);
+        var event = await Event.findById(eventBooking.event).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
         
         eventBooking.paid = true;
         eventBooking.paypalPaymentId = responseData.jsonResponse.id;
@@ -128,17 +129,17 @@ const captureOrder = async(req, orderID) => {
         eventBooking.displayBooking = req.user.displayBookings;
         await eventBooking.save();
         for (ticket of eventBooking.eventTickets.filter(e => !['mealticket', 'mealticketchild'].includes(e.ticketType))) {
-            //console.log(eventBooking.user);
+            const characterData = await bookingCheck(event.eventHost.eventSystem.systemRef,eventBooking.user); 
             event.attendees.push({
                 user: eventBooking.user,
                 booking: eventBooking,
                 ticketType: ticket.ticketType,
                 display: req.user.displayBookings,
                 oocName: `${eventBooking.user.firstname} ${eventBooking.user.surname}`,
-                icName: eventBooking.user.character.characterName,
+                icName: characterData.icName,
                 firstname: eventBooking.user.firstname,
                 surname: eventBooking.user.surname,
-                faction: eventBooking.user.character.faction
+                faction: characterData.faction
             })
         }
         event.save();

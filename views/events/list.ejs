@@ -12,8 +12,9 @@
                         <div class="card shadow h-100 py-3 px-3">
                             <div class="row h-100 g-0 pb-0">
                                 <div class="col-4 col-md-4">
-                                    <span class="align-middle"><img class="rounded mt-3 upcoming-logo" id="eventImg" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>"
-                            class="img-fluid rounded-start py-3 px-3" alt="..."></span>
+                                    <div class="img align-middle text-center ms-2"><img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo"<% } %> class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                                        <% if (event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
+                                    </div>
                                 </div>
                                 <div class="col-8 col-md-8">
                                     <div class="card-body pb-0">
@@ -35,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer eventFooter">
+                            <div class="card-footer eventFooter mt-3">
                                 <div class="row h-100">
                                     <div class="col"><a class="link-dark" target="_blank" href="<%= event.eventHost.eventSystem.website %>"><% if (event.eventHost.eventSystem.img?.url) { %><img class="system-logo" height="60px" src="<%= event.eventHost.eventSystem.img.url %>" alt="<%= event.eventHost.eventSystem.name %>"><% } else { %><%= event.eventHost.eventSystem.name %><% } %></a></div>
                                     <div class="col text-end mb-0 my-auto">
@@ -50,3 +51,4 @@
                     <% }  %>
             </div>
             <% } %>
+            <script src="/js/eventLogo.js"></script>

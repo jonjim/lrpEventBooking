@@ -12,7 +12,7 @@
         </div>
         <% } %>
             <div class="card shadow py-3 px-3 mb-1">
-                <div class="img align-middle text-center"><img id="eventImg" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                <div class="img align-middle text-center"><img id="eventImg" <% if (event.img.url) {%> aria-label="event-logo"<% } %> class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
                     <% if (event.img.url) { %><img id="hostLogo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt="">
                         <% } %>
                 </div>
@@ -82,3 +82,4 @@
                     </div>
                     <% } %>
                         <% } %>
+        

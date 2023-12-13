@@ -55,4 +55,29 @@ function getSystemData(systemRef, user){
     }
 }
 
-module.exports = { systemCheck, getSystemData }
+async function bookingCheck(systemRef,user){
+    switch (systemRef) {
+        case 'lorienTrust':
+            return {
+                icName: user?.lorienTrust.character.characterName,
+                faction: user?.lorienTrust.character.faction,
+            } 
+        case 'twistedTales':
+            return {
+                icName: user?.twistedTales.character.characterName,
+                faction: '',
+            } 
+        case 'eldritchDays':
+            return {
+                icName: user?.eldritchDays.character.characterName,
+                faction: ''
+            } 
+        case 'jadeThrone':
+            return {
+                icName: user?.jadeThrone.character.characterName,
+                faction: user?.jadeThrone.character.clan,
+            } 
+    }
+}
+
+module.exports = { systemCheck, getSystemData, bookingCheck }

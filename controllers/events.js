@@ -7,10 +7,10 @@ const mongoose = require('mongoose');
 const { array } = require('joi');
 const emailService = require('../utils/email');
 const crypto = require('crypto');
-const { systemCheck } = require('../utils/systemCheck');
+const { systemCheck, bookingCheck } = require('../utils/systemCheck');
 
 module.exports.upcomingEvents = async(req, res, next) => {
-    const eventList = await Event.find({ visible: true, cancelled: false, eventApproved: true, eventEnd: { $gte: new Date().toLocaleDateString() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    const eventList = await Event.find({ visible: true, cancelled: false, eventApproved: true, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
     const meta = {
         title: 'LARP Event Bookings: Upcoming Events',
         description: 'LARP Event Bookings - Event information and booking for LRP events across the United Kingdom',
@@ -47,7 +47,7 @@ module.exports.showEventBooking = async(req, res, next) => {
 }
 
 module.exports.editEventBooking = async(req, res, next) => {
-    const eventBooking = await EventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate({ path: 'event', populate: { path: 'eventTickets' } });
+    const eventBooking = await EventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost'}}).populate({path: 'event.eventHost',populate:{ path:'eventSystem'}});
     const eventTickets = await eventBooking.event.eventTickets.filter(a => new Date(a.availableFrom).toLocaleDateString() <= new Date().toLocaleDateString() && new Date(a.availableTo).toLocaleDateString() >= new Date().toLocaleDateString() && a.available && ['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(a.ticketType) && !eventBooking.eventTickets.find(t => t._id.equals(a._id)))
     if (req.user._id.equals(eventBooking.user._id))
         res.render('events/editBooking', { title: 'Edit Event Booking', eventBooking, eventTickets });
@@ -123,9 +123,10 @@ module.exports.createEventBooking = async(req, res, next) => {
     await booking.save();
     var eventBooking = await EventBooking.findById(booking._id).populate('eventTickets').populate('user').populate('event');
     console.log(eventBooking.user);
-    var event = await Event.findById(eventBooking.event);
+    var event = await Event.findById(eventBooking.event).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
     if (booking.totalDue == 0) {
         for (ticket of eventBooking.eventTickets.filter(e => !['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(e.ticketType))) {
+            const characterData = bookingCheck(event.systemRef,eventBooking.user); 
             event.attendees.push({
                 user: eventBooking.user,
                 booking: eventBooking,
@@ -133,8 +134,8 @@ module.exports.createEventBooking = async(req, res, next) => {
                 display: req.user.displayBookings,
                 surname: eventBooking.surname,
                 firstname: eventBooking.firstname,
-                icName: manual ? req.body.characterName : eventBooking.user.character?.characterName,
-                faction: manual ? req.body.faction : eventBooking.user.character?.faction
+                icName: manual ? req.body.characterName : characterData.icName,
+                faction: manual ? req.body.faction : characterData.faction
             })
         }
         event.save();

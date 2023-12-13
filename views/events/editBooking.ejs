@@ -23,7 +23,9 @@
                             </small>
                         </i>
                             </p>
-                            <span class="align-middle"><img id="eventImg" src="<%= eventBooking.event.hostImg %>" class="img-fluid rounded-start py-3 px-3" alt="..."></span>
+                            <div class="img align-middle text-center ms-2"><img id="eventImg<%= eventBooking._id %>" <% if (eventBooking.event.img.url) {%> aria-label="event-logo"<% } %> class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img.url : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                                <% if (eventBooking.event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= eventBooking._id %>" aria-label="host-logo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
+                            </div>
                         </div>
                         <div class="col-md-8">
                             <div class="mb-3">
@@ -84,9 +86,10 @@
                                                 <%= eventBooking.paypalPayer %>
                                                     </small>
                                         </li>
-                                        <% } else {%>
+                                        <% } else { let locale = Intl.DateTimeFormat().resolvedOptions().locale;
+                                            console.log(locale);%>
                                             <li class="list-group-item">
-                                                <% if (eventBooking.eventTickets.filter(a => new Date(a.availableTo).toLocaleDateString() < new Date().toLocaleDateString()).length > 0 ) {%>
+                                                <% if (eventBooking.eventTickets.filter(a => new Date(a.availableTo) < new Date()).length > 0 ) {%>
                                                     <div class="alert alert-danger">
                                                         <p>The tickets you have selected are no longer available!</p>
                                                         <p><a href="#" onclick="document.getElementById('deleteRebook').submit()" class="alert-link">Click here</a> to delete this booking and re-book.</p>
@@ -117,3 +120,4 @@
 
     <script src="https://www.paypal.com/sdk/js?client-id=AZr-Xodo9qz8Q-0Njgl8w_oKSWtKJBdZNo_wMhQmEjN3WvXWeBR7mk36zmCZImmz03JWjbMmJoegZqmg&currency=GBP"></script>
     <script src="/js/paypal.js"></script>
+    <script src="/js/eventLogo.js"></script>
