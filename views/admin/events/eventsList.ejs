@@ -10,10 +10,10 @@
             <table id="events" class="table table-striped table-hover">
                 <thead>
                     <th scope="col">Event Name</th>
-                    <th scope="col">Host</th>
+                    <th class="d-none d-md-table-cell" scope="col">Host</th>
                     <th scope="col">Start Date</th>
-                    <th scope="col">End Date</th>
-                    <th scope="col" width="50px" class="text-center">Approved</th>
+                    <th class="d-none d-md-table-cell" scope="col">End Date</th>
+                    <th class="d-none d-md-table-cell" scope="col" width="50px" class="text-center">Approved</th>
                 </thead>
                 <tbody>
                     <% for (event of events) { %>
@@ -26,7 +26,7 @@
                                 </a>
                                 <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %>
                             </td>
-                            <td scope="row">
+                            <td class="d-none d-md-table-cell" scope="row">
                                 <% try { %>
                                     <%= event.eventHost.eventSystem.name %>
                                         <%= event.eventHost.display? ` - ${event.eventHost.name}` : '' %>
@@ -35,10 +35,10 @@
                             <td scope="row">
                                 <%= new Date(event.eventStart).toLocaleDateString() %>
                             </td>
-                            <td scope="row">
+                            <td class="d-none d-md-table-cell" scope="row">
                                 <%= new Date(event.eventEnd).toLocaleDateString() %>
                             </td>
-                            <td scope="row" class="text-center <%= event.eventApproved ? 'text-success' : 'text-danger' %> ps-3" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
+                            <td class="d-none d-md-table-cell" scope="row" class="text-center <%= event.eventApproved ? 'text-success' : 'text-danger' %> ps-3" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
                                 <%- event.eventApproved ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
                             </td>
                         </tr>

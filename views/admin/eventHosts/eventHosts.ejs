@@ -8,20 +8,30 @@
             <a href="/admin/hosts/new" class="btn btn-secondary">Add Event Host</a>
         </div>
         <div class="card-body">
-            <table id="eventhosts" class="table table-hover">
+            
+            <table id="eventHosts" class="table table-hover">
                 <thead>
                     <th scope="col">System</th>
-                    <th scope="col">Host Name</th>
+                    <th class="hosts" scope="col">
+                        <div class="row">
+                            <div class="d-none d-md-table-cell col-md-auto">
+                                Host Name
+                            </div>
+                            <div class="col-md"><input id="hostSearch" type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+                            <div class="d-table-cell d-md-none col-md-auto mt-3">
+                                Host Name
+                            </div>
+                        </div></th>
                     <th scope="col"></th>
                 </thead>
-                <tbody>
+                <tbody class="hosts">
                     <% for (eventHost of eventHosts.sort((a,b) => a.eventSystem.name.localeCompare(b.eventSystem.name) || a.name.localeCompare(b.name))) { %>
                         <% if (adminGroups.includes(currentUser.role) || currentUser.eventHosts.filter(a => a._id.equals(eventHost._id)).length > 0) { %>
-                            <tr>
+                            <tr >
                                 <td scope="row">
                                     <%= eventHost.eventSystem?.name %>
                                 </td>
-                                <td scope="row">
+                                <td class="hosts" scope="row">
                                     <%= eventHost.name %>
                                 </td>
                                 <td scope="row"><a href="/admin/hosts/<%= eventHost._id %>" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>
@@ -32,10 +42,19 @@
             <ul id="eventsNavPosition" class="pagination pager-nav justify-content-center"></ul>
             <script src="/js/pagination.js"></script>
             <script>
-                const eventsPager = new Pager('eventhosts', 15);
+                const eventsPager = new Pager('eventHosts', 15);
                 eventsPager.init();
                 eventsPager.showPageNav('eventsPager', 'eventsNavPosition');
                 eventsPager.showPage(1);
+                function filterTable(type) {
+                    const query = q => document.querySelectorAll(q);
+                    const filters = [...query(`th.${type} input`)].map(e => new RegExp(e.value, 'i'));
+                    query(`tbody.${type} tr`).forEach(row => row.style.display = 
+                    filters.some((f, i) => f.test(row.cells[0].textContent) || f.test(row.cells[1].textContent)) ? '' : 'none');
+                }
+                document.getElementById('hostSearch').addEventListener('keyup', function() {
+                    filterTable('hosts');
+                });
             </script>
         </div>
     </div>

@@ -12,7 +12,7 @@
             <div class="d-none d-md-block col-md-2 mb-2">                
                 <div class="img align-middle text-center">
                     <img id="eventImg" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                <% if (event.img.url) { %><img id="hostLogo" style="top:-70px !important; left:10px !important;" src="<%= event.eventHost.img %>" class="host-logo-fade" alt=""><% } %>
+                <% if (event.img.url) { %><img id="hostLogo" style="top:-70px !important; left:10px !important;" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
                 </div>
             </div>
             <div class="col">
@@ -310,7 +310,8 @@
                 </div>
                 <div class="row">
                     <% if (event.limits.playerLimit > 0){ %>
-                        <div class="col">
+                        <div class="col-md">
+                            <h5 class="d-inline-block d-md-none">Player Bookings</h5>
                             <table  id="playerBookings" class="table table-sm table-hover mt-3 players">
                                 <thead>
                                     <th class="players" scope="col">
@@ -352,7 +353,8 @@
                         </div>
                         <% } %>
                             <% if (event.limits.monsterLimit > 0){ %>
-                                <div class="col">
+                                <div class="col-md">
+                                    <h5 class="d-inline-block d-md-none">Monster Bookings</h5>
                                     <table id="monsterBookings" class="table table-sm table-hover mt-3 monsters">
                                         <thead>
                                             <th class="monsters" scope="col">
@@ -394,7 +396,8 @@
                                 </div>
                                 <% } %>
                                     <% if (event.limits.staffLimit > 0){ %>
-                                        <div class="col">
+                                        <div class="col-md">
+                                            <h5 class="d-inline-block d-md-none">Staff Bookings</h5>
                                             <table id="staffBookings" class="table table-sm table-hover mt-3 staff">
                                                 <thead>
                                                     <th class="staff" scope="col">

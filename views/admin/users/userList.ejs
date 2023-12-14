@@ -6,25 +6,35 @@
         <div class="card-body">
             <table id="users" class="table-striped table table-hover">
                 <thead>
-                    <th scope="col">Surname</th>
-                    <th scope="col">Firstname</th>
-                    <th scope="col">E-mail Address</th>
-                    <th scope="col">Role</th>
+                    <th class="d-none d-md-table-cell" scope="col">Surname</th>
+                    <th class="d-none d-md-table-cell" scope="col">Firstname</th>
+                    <th class="users" scope="col">
+                        <div class="row">
+                            <div class="d-none d-md-table-cell col-md-auto">
+                                E-mail Address
+                            </div>
+                            <div class="col-md"><input id="userSearch" type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+                            <div class="d-table-cell d-md-none col-md-auto mt-3">
+                                E-mail Address
+                            </div>
+                        </div>
+                    </th>
+                    <th class="d-none d-md-table-cell" scope="col">Role</th>
                     <th scope="col"></th>
                 </thead>
-                <tbody>
+                <tbody class="users">
                     <% for (user of users) { %>
                         <tr>
-                            <td scope="row">
+                            <td class="d-none d-md-table-cell" scope="row">
                                 <%= user.surname %>
                             </td>
-                            <td scope="row">
+                            <td class="d-none d-md-table-cell" scope="row">
                                 <%= user.firstname %>
                             </td>
                             <td scope="row">
                                 <%= user.username %>
                             </td>
-                            <td scope="row">
+                            <td class="d-none d-md-table-cell" scope="row">
                                 <%
                         switch (user.role){
                             case 'user':
@@ -53,6 +63,15 @@
                 usersPager.init();
                 usersPager.showPageNav('eventsPager', 'usersNavPosition');
                 usersPager.showPage(1);
+                function filterTable(type) {
+                    const query = q => document.querySelectorAll(q);
+                    const filters = [...query(`th.${type} input`)].map(e => new RegExp(e.value, 'i'));
+                    query(`tbody.${type} tr`).forEach(row => row.style.display = 
+                    filters.some((f, i) => f.test(row.cells[0].textContent) || f.test(row.cells[1].textContent) || f.test(row.cells[2].textContent)) ? '' : 'none');
+                }
+                document.getElementById('userSearch').addEventListener('keyup', function() {
+                    filterTable('users');
+                });
             </script>
         </div>
     </div>
