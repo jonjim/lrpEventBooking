@@ -90,7 +90,6 @@ passport.use(new GoogleStrategy({
     async function(accessToken, refreshToken, profile, done) {
         const findUser = await Auth.find({ googleId: profile.id });
         if (findUser.length === 0) {
-            console.log('No user found');
             const newUser = await new Auth({
                 googleId: profile.id,
                 username: profile.emails[0].value,
@@ -111,10 +110,8 @@ passport.use(new FacebookStrategy({
         callbackURL: `${process.env.ROOT_URL}/auth/facebook/callback`
     },
     async function(accessToken, refreshToken, profile, done) {
-        console.log(profile);
         const findUser = await Auth.find({ facebookId: profile.id });
         if (findUser.length === 0) {
-            console.log('No user found');
             const newUser = await new Auth({
                 facebookId: profile.id,
                 firstname: profile.displayName,

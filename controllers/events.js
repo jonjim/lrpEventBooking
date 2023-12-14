@@ -122,7 +122,6 @@ module.exports.createEventBooking = async(req, res, next) => {
     }
     await booking.save();
     var eventBooking = await EventBooking.findById(booking._id).populate('eventTickets').populate('user').populate('event');
-    console.log(eventBooking.user);
     var event = await Event.findById(eventBooking.event).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
     if (booking.totalDue == 0) {
         for (ticket of eventBooking.eventTickets.filter(e => !['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(e.ticketType))) {
@@ -165,7 +164,6 @@ module.exports.giftBooking = async(req, res, next) => {
         if (user._id.equals(req.user._id))
             res.sendStatus(418);
         const booking = await EventBooking.findById(req.body.eventBooking).populate('user');
-        console.log(booking);
         await EventBooking.findByIdAndUpdate(req.body.eventBooking, {
             user: user._id,
             firstname: user.firstname,
@@ -196,7 +194,6 @@ module.exports.giftBooking = async(req, res, next) => {
                         attendee.icName = '';
                         attendee.faction = '';
                     }
-                    console.log(attendee);
                     const push = await Event.findByIdAndUpdate(event._id, {
                         $push: {
                             attendees: {...attendee }

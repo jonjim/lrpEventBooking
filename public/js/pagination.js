@@ -25,7 +25,6 @@ function Pager(tableName, itemsPerPage) {
             // Not initialized
             return;
         }
-        console.log(this.pages)
         let oldPageAnchor = document.getElementById('pg' + this.currentPage);
         oldPageAnchor.classList.remove('active');
 

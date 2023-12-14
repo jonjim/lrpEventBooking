@@ -29,6 +29,5 @@ module.exports.eventSystem = async(req,res,next) => {
         crawl: true
     }
     const eventSystem = await EventSystems.findOne({systemRef: req.params.id});
-    console.log(eventSystem);
     res.render('about/eventSystem', {title: eventSystem.name, eventSystem, meta})
 }

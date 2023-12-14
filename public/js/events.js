@@ -43,10 +43,8 @@ function setLtHost() {
 }
 
 function setHostImageUrl(host) {
-    console.log(host);
     let url;
     let hostName = host.value ? host.value : host;
-    console.log(hostName);
     if (hostName && (hostName === 'Lorien Trust' || hostName === 'Arcane' || hostName === 'Martial' || hostName === 'Knowledge'))
         url = '/img/lorienTrustx4.png';
     else

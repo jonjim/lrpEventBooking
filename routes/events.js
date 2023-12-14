@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
-const { isLoggedIn, isAdmin } = require('../middleware');
+const { isLoggedIn } = require('../middleware');
 
 const controller = require('../controllers/events');
 

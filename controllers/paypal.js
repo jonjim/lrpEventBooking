@@ -106,12 +106,9 @@ const captureOrder = async(req, orderID) => {
     if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
         // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
         // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-        console.log("error 1");
     } else if (errorDetail) {
         // (2) Other non-recoverable errors -> Show a failure message
-        console.log("error 2");
     } else if (!responseData.jsonResponse.purchase_units) {
-        console.log("error 3");
     } else {
         // (3) Successful transaction -> Show confirmation or thank you message
         // Or go to another URL:  actions.redirect('thank_you.html');

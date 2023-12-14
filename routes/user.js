@@ -5,7 +5,6 @@ const passport = require('passport');
 const { isLoggedIn, isAdmin, usernameToLowerCase } = require('../middleware');
 
 const auth = require('../controllers/user');
-const controllerPaypal = require('../controllers/paypal');
 
 /* GET users listing. */
 router.route('/login')

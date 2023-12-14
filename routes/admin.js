@@ -10,9 +10,6 @@ const adminController = require('../controllers/admin');
 const adminAboutController = require('../controllers/adminAbout');
 const adminEventsController = require('../controllers/adminEvents');
 const adminPrintController = require('../controllers/adminPrint')
-const eventsController = require('../controllers/events');
-const authController = require('../controllers/user');
-const EventBooking = require('../models/eventBooking')
 
 router.route('/users')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.listUsers));
