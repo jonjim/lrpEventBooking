@@ -1,0 +1,29 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+    <div class="col-md-9">
+        <div class="card shadow py-3 px-3 mb-3">
+            <div class="card-header bg-white mb-3">
+                <h4>Terms & Conditions</h4>
+            </div>
+            <div class="card-body">
+                <% if (eventSystem.terms) { %>
+                    <%- eventSystem.terms %>
+                <% } else { %>
+                    <div class="alert alert-warning">This system has not published specific terms and conditions for attending their events.</div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow px-3 mb-3">
+            <div class="card-header bg-white mb-3 text-center">
+                <img class="img-fluid" src="<%= eventSystem.img.url %>" alt="<%= eventSystem.name %>">
+            </div>
+            <div class="card-body">
+                <a href="<%= eventSystem.website %>" class="link-dark"><%= eventSystem.website %></a>
+                <hr class="mb-3">
+                <small><%- eventSystem.description %></small>
+            </div>
+        </div>
+    </div>
+</div>

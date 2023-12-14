@@ -39,35 +39,37 @@
                             </a>
                         </li>
                     </ul>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h5>Player Ticket Prices</h5>
+                        </li>
+                        <% var ticketCount = 0; for (var i = 0; i < event.eventTickets.length;i++) { if (['player','playerchild','mealticket','mealticketchild'].includes(event.eventTickets[i].ticketType) && new Date(event.eventTickets[i].availableTo) >= new Date() ) { ticketCount++;%>
+                            <li class="list-group-item">£
+                                <%= event.eventTickets[i].cost %> -
+                                    <%= event.eventTickets[i].description %><br><small><%= new Date(event.eventTickets[i].availableFrom).toLocaleDateString() %> - <%= new Date(event.eventTickets[i].availableTo).toLocaleDateString() %></small>
+                            </li>
+                            <% }} if (ticketCount === 0) { %>
+                                <li class="list-group-item">
+                                    No tickets are currently available
+                                </li>
+                                <% } %>
+                    </ul>
                     <% if (event.eventHost.contactAddress && event.eventHost.contactAddress.length > 0) { %>
                         <ul class="list-group list-group-flush mb-1">
                             <li class="list-group-item">
-                                <h5>Contact Address</h5>
+                                <h5>System Details</h5>
                             </li>
                             <li class="list-group-item">
                                 <a href="mailto:<%= event.eventHost.contactAddress %>">
                                     <%= event.eventHost.contactAddress %>
                                 </a>
-                            </li>
+                                <% if (event.eventHost.eventSystem.terms) { %>
+                                    <br/><a href="/system/<%= event.eventHost.eventSystem.systemRef %>">Terms & Conditions</a>
+                                <% } %>
                             </li>
                         </ul>
-                        <% } %>
+                    <% } %>
 
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <h5>Player Ticket Prices</h5>
-                                </li>
-                                <% var ticketCount = 0; for (var i = 0; i < event.eventTickets.length;i++) { if (['player','playerchild','mealticket','mealticketchild'].includes(event.eventTickets[i].ticketType) && new Date(event.eventTickets[i].availableTo) >= new Date() ) { ticketCount++;%>
-                                    <li class="list-group-item">£
-                                        <%= event.eventTickets[i].cost %> -
-                                            <%= event.eventTickets[i].description %><br><small><%= new Date(event.eventTickets[i].availableFrom).toLocaleDateString() %> - <%= new Date(event.eventTickets[i].availableTo).toLocaleDateString() %></small>
-                                    </li>
-                                    <% }} if (ticketCount === 0) { %>
-                                        <li class="list-group-item">
-                                            No tickets are currently available
-                                        </li>
-                                        <% } %>
-                            </ul>
                 </div>
             </div>
             <% if (currentUser) { %>

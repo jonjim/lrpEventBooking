@@ -16,4 +16,7 @@ router.route('/faq')
 router.route('/organisers')
     .get(catchAsync(controller.organisers))
 
+router.route('/system/:id')
+    .get(catchAsync(controller.eventSystem))
+
 module.exports = router;
