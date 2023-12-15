@@ -10,7 +10,7 @@ const crypto = require('crypto');
 const { systemCheck, bookingCheck } = require('../utils/systemCheck');
 
 module.exports.upcomingEvents = async(req, res, next) => {
-    const eventList = await Event.find({ visible: true, cancelled: false, eventApproved: true, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
     const meta = {
         title: 'LARP Event Bookings: Upcoming Events',
         description: 'LARP Event Bookings - Event information and booking for LRP events across the United Kingdom',

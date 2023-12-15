@@ -71,19 +71,6 @@ function toTitleCase(str) {
                                     </div>
                                 </div>
                             </div>
-                            <% if (event.eventApproved || adminGroups.includes(currentUser.role)) { %>
-                                <% if (['sanctioningOfficer','superAdmin'].includes(currentUser.role)) { %>
-                                <div class="mb-3 row">
-                                    <div class="col-8"><label for="eventApproved">Sanctioning Approval</label></div>
-                                    <div class="col">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" name="event[eventApproved]" id="eventApproved" <%=( event.eventApproved ? 'checked' : '') %>>
-                                        </div>
-                                    </div>
-                                </div>
-                                <% } else { %>
-                                    <div class="mb-3 lead text-center alert alert-<%= event.eventApproved ? 'success' : 'danger' %>"><%- event.eventApproved ? '<i class="bi bi-check2-circle"></i> Sanctioning Approved' : '<i class="bi bi-x-circle"></i> Awaiting Approval' %></div>
-                                    <% } %>
                                 <div class="mb-3 row">
                                     <div class="col-8"><label for="eventVisible">Advertise Event</label></div>
                                     <div class="col">
@@ -100,11 +87,12 @@ function toTitleCase(str) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="eventSanctioningOfficer">Sanctioning Officer</label>
-                                    <input type="text" class="form-control" id="eventSanctioningOfficer" name="event[sanctioningOfficer]" value="<%= event.sanctioningOfficer %>">
-                                </div>
-                            <% } %>
+                                <% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
+                                    <div class="mb-3">
+                                        <label for="eventSanctioningOfficer">Sanctioning Officer</label>
+                                        <input type="text" class="form-control" id="eventSanctioningOfficer" name="event[sanctioningOfficer]" value="<%= event.sanctioningOfficer %>">
+                                    </div>
+                                <% } %>
                         </div>
                         <div class="col text-center">
                                 <img src="<%= typeof event.img.url === 'undefined' ? event.hostImg : event.imgThumbnail %>" id="eventImg" class="img-fluid mx-auto">
