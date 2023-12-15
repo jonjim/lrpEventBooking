@@ -10,7 +10,7 @@
                 <% for (event of events) { %>
                     <div class="col">
                         <div class="card shadow h-100 py-3 px-3">
-                            <div class="row h-100 g-0 pb-0">
+                            <div class="row h-100 g-5 pb-0">
                                 <div class="col-4 col-md-4">
                                     <div class="img align-middle text-center ms-2"><img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo"<% } %> class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
                                         <% if (event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>

@@ -58,7 +58,7 @@ function toTitleCase(str) {
                                             <thead>
                                                 <th scope="row">Player Name</th>
                                                 <th scope="row">Character</th>
-                                                <th scope="row">Faction</th>
+                                                <th scope="row"></th>
                                             </thead>
                                             <tbody>
                                                 <% for (attendee of event.attendees.filter(f => f.ticketType == 'player' && f.display).sort((a,b) => a.surname.localeCompare(b.surname) || a.firstname.localeCompare(b.firstname) )){ %>

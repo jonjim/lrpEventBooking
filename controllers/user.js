@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const axios = require('axios');
+const fs = require('fs');
 const EventBooking = require('../models/eventBooking');
 const Event = require('../models/event');
 const EventTicket = require('../models/eventTicket');
@@ -7,6 +8,7 @@ const event = require('../models/event');
 const eventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
 const emailService = require('../utils/email');
+
 
 module.exports.renderRegister = (req, res) => {
     res.render('user/register', { title: 'Create New Account' });
@@ -111,7 +113,8 @@ module.exports.renderEditForm = async(req, res, next) => {
 
 module.exports.renderAccountSettings = async(req, res, next) => {
     const systems = await eventSystems.find();
-    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems });
+    let settingsList = await fs.readdirSync('./views/user/systemSettings')
+    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems, settingsList });
 };
 
 module.exports.ltAPI = async(req, res, next) => {

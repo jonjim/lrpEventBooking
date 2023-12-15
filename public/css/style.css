@@ -112,6 +112,18 @@ div.img {
     }
 }
 
+@media (max-width:1199.99px){
+    .upcoming-logo {
+        max-width: 110px !important;
+    }
+    .event-logo {
+        max-width: 110px;
+    }
+    .host-logo-fade {
+        display:none;
+    }
+}
+
 .pager-nav {
     margin: 16px 0;
 }

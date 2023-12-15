@@ -94,9 +94,9 @@
                         <h4>System Information</h4>
                     </div>
                     <div class="accordion accordion-flush py-3 px-3" id="systemSettings">
-                        <%- include('systemSettings/lorienTrust') %>
-                        <%- include('systemSettings/jadeThrone') %>
-                        <%- include('systemSettings/twistedTales') %>
+                        <% for (setting of settingsList) { %>
+                        <%- include(`systemSettings/${setting}`) %>
+                        <% } %>
                     </div>
                 </div>
             </div>
