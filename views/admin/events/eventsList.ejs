@@ -4,7 +4,7 @@
             <h4>Manage Events</h4>
         </div>
         <div class=" ms-auto">
-            <a href="/admin/events/new" class="btn btn-secondary">Add Event</a>
+            <a href="/admin/events/new" class="btn btn-secondary"><i class="bi bi-plus-circle"></i> Add Event</a>
         </div>
         <div class="card-body">
             <table id="events" class="table table-striped table-hover">
@@ -13,7 +13,8 @@
                     <th class="d-none d-md-table-cell" scope="col">Host</th>
                     <th scope="col">Start Date</th>
                     <th class="d-none d-md-table-cell" scope="col">End Date</th>
-                    <th class="d-none d-md-table-cell" scope="col" width="50px" class="text-center">Approved</th>
+                    <th class="d-none d-md-table-cell" scope="col" width="50px" class="text-center">Advertised?</th>
+                    <th class="d-none d-md-table-cell" scope="col" width="50px" class="text-center">Bookings?</th>
                 </thead>
                 <tbody>
                     <% for (event of events) { %>
@@ -38,8 +39,11 @@
                             <td class="d-none d-md-table-cell" scope="row">
                                 <%= new Date(event.eventEnd).toLocaleDateString() %>
                             </td>
-                            <td class="d-none d-md-table-cell" scope="row" class="text-center <%= event.eventApproved ? 'text-success' : 'text-danger' %> ps-3" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
-                                <%- event.eventApproved ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
+                            <td class="d-none d-md-table-cell text-center <%= event.visible ? 'text-success' : 'text-danger' %>" scope="row" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
+                                <%- event.visible ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
+                            </td>
+                            <td class="d-none d-md-table-cell text-center <%= event.allowBookings ? 'text-success' : 'text-danger' %>" scope="row" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
+                                <%- event.allowBookings ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
                             </td>
                         </tr>
                         <% } %>
