@@ -31,3 +31,9 @@ module.exports.eventSystem = async(req,res,next) => {
     const eventSystem = await EventSystems.findOne({systemRef: req.params.id});
     res.render('about/eventSystem', {title: eventSystem.name, eventSystem, meta})
 }
+
+module.exports.configCheck = async (req, res, next) => {
+    const config = await siteConfig.findOne();
+    if (typeof config == 'undefined') return res.send(404);
+    res.send(200);
+}

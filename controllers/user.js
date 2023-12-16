@@ -73,7 +73,17 @@ module.exports.accountUpdate = async (req, res, next) => {
     req.body.lorienTrust.wepCheck = typeof req.body.lorienTrust.wepCheck != 'undefined' ? req.body.lorienTrust.wepCheck == 'on' ? true : false : false;
     // End
 
-    const user = await User.findByIdAndUpdate(req.user._id, {...req.body }, { new: true })
+    const susObject = {
+        character: {
+            characterName: 'A Name',
+            faction: '',
+        },
+        aField: false
+    }
+    
+    req.body['anotherSystem'] = susObject;
+    req.body['anotherSystem']['anotherField'] = 'aValue'
+    const user = await User.findByIdAndUpdate(req.user._id, {...req.body }, { new: true, strict:false })
     req.user = user;
     res.redirect('/account');
 };
@@ -111,10 +121,11 @@ module.exports.renderEditForm = async(req, res, next) => {
     res.render('user/edit', { title: 'Edit User', user })
 };
 
-module.exports.renderAccountSettings = async(req, res, next) => {
+module.exports.renderAccountSettings = async (req, res, next) => {
+    const user = await User.findById(req.user._id, { strict: false });
     const systems = await eventSystems.find();
     let settingsList = await fs.readdirSync('./views/user/systemSettings')
-    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems, settingsList });
+    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems, settingsList, user: JSON.parse(JSON.stringify(user)) });
 };
 
 module.exports.ltAPI = async(req, res, next) => {

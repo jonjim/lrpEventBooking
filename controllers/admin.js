@@ -114,6 +114,15 @@ module.exports.eventSystemDelete = async(req, res, next) => {
     return res.redirect('/admin/systems')
 }
 
+module.exports.eventSystemAddField = async (req, res, next) => {
+    req.body.required = typeof req.body.required != 'undefined' ? req.body.required == 'on' ? true : false : false;
+    if (req.body.options != '') req.body.options = req.body.options.split(',');
+    else req.body.options = undefined;
+    await EventSystems.findByIdAndUpdate(req.params.id, { $push: { customFields: { ...req.body }  } })
+    req.flash('success','Added Custom Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
 module.exports.eventSystemDelImg = async(req, res, next) => {
     const eventSystem = await EventSystems.findById(req.params.id)
     await cloudinary.uploader.destroy(eventSystem.img.filename);
@@ -123,7 +132,8 @@ module.exports.eventSystemDelImg = async(req, res, next) => {
     return res.redirect('/admin/systems')
 }
 
-module.exports.eventSystemUpdate = async(req, res, next) => {
+module.exports.eventSystemUpdate = async (req, res, next) => {
+    req.body.active = typeof req.body.active != 'undefined' ? req.body.active == 'on' ? true : false : false;
     const eventSystem = await EventSystems.findByIdAndUpdate(req.params.id, {...req.body }, { new: true });
     if (req.file) {
         eventSystem.img = req.file;

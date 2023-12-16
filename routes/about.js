@@ -19,4 +19,7 @@ router.route('/organisers')
 router.route('/system/:id')
     .get(catchAsync(controller.eventSystem))
 
+router.route('/checkConfig')
+    .get(catchAsync(controller.configCheck))
+
 module.exports = router;

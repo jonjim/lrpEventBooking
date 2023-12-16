@@ -1,0 +1,50 @@
+<div class="row mt-3">
+    <div class="col">
+        <label for="lorienTrustauthCode" class="form-label">Lorien Trust Character Access Token</label>
+        <input id="lorienTrustauthCode" name="lorienTrust[authCode]" class="form-control form-control-sm" aria-describedby="ltAuthCodeHelpBlock" value="<%= user.lorienTrust.authCode %>">
+    </div>
+    <div class="col-3 pt-1">
+        <a href="#character" onclick="getCharacter()" class="btn btn-success mt-4" role="button">Update</a>
+    </div>
+    <div id="ltAuthCodeHelpBlock" class="form-text mb-3">
+        This code can be obtained from your account on the <a href="https://www.lorientrust.com" class="link-dark">Lorien Trust website</a>.<br>It is not required, and is not shared with event organisers
+    </div>
+    <hr>
+</div>
+<div id="lorienTrustspinnerDiv"></div>
+<div id="lorienTrustcharacter">
+    <h6 id="lorienTrustcharacterRace" class="text-center">
+        <%= user.lorienTrust.character ? user.lorienTrust.character.race : '' %>
+    </h6>
+    <h6 id="lorienTrustcharacterGroup" class="text-center">
+        <%= user.lorienTrust.character ? user.lorienTrust.character.groupname : '' %>
+    </h6>
+    <div class="row">
+        <div class="col-6 col-md">
+            <ul class="list-unstyled" id="lorienTrustcharacterCS">
+                <% if (user.lorienTrust.character) { for (var i=0; i < user.lorienTrust.character.characterSkills.length; i++){ %>
+                    <li class="small">
+                        <%= user.lorienTrust.character.characterSkills[i].name %>
+                    </li>
+                    <% } %>
+
+                        <br>
+                        <% for (var i=0; i < user.lorienTrust.character.occupationalSkills.length;i++){ if (user.lorienTrust.character.occupationalSkills[i].script) { %>
+                            <li class="small">
+                                <%= user.lorienTrust.character.occupationalSkills[i].name %>
+                            </li>
+                            <% }}} %>
+            </ul>
+        </div>
+        <div class="col-6 col-md">
+            <ul class="list-unstyled" id="lorienTrustcharacterOS">
+                <% if (user.character) { for (var i=0; i < user.lorienTrust.character.occupationalSkills.length;i++){ if (!user.lorienTrust.character.occupationalSkills[i].script) { %>
+                    <li class="small">
+                        <%= user.lorienTrust.character.occupationalSkills[i].name %>
+                    </li>
+                    <% }}} %>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="/js/lorienTrust.js"></script>

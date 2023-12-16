@@ -172,6 +172,7 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
+    if (typeof res.locals.config == 'undefined') res.render('configCheck', {url: req.originalUrl})
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
     res.status(statusCode).render('error', { title: 'An Error has occured!', err })

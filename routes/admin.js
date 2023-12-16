@@ -55,6 +55,9 @@ router.route('/systems/:id')
     .post(isLoggedIn, isAdmin, upload.single('image'), catchAsync(adminController.eventSystemUpdate))
     .delete(isLoggedIn, isSuperAdmin, catchAsync(adminController.eventSystemDelete))
 
+router.route('/systems/:id/fields')
+    .post(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemAddField));
+
 router.route('/systems/:id/image')
     .delete(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemDelImg))
 
