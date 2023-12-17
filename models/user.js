@@ -39,90 +39,12 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'eventHost', 'sanctioningOfficer', 'admin', 'superAdmin'],
         default: 'user'
     },
-    title: String,
-    address_1: String,
-    address_2: String,
-    address_3: String,
-    address_4: String,
-    postcode: String,
     dob: Date,
     emergencyContactName: String,
     emergencyContactNumber: String,
     emergencyContactRelation: String,
     medicalInfo: String,
     allergyDietary: String,
-    character: {
-        pid: Number,
-        cid: Number,
-        requestDate: Date,
-        characterName: String,
-        playerForename: String,
-        playerMiddlename: String,
-        playerSurname: String,
-        faction: String,
-        race: String,
-        groupname: String,
-        characterSkills: [{
-            id: Number,
-            name: String,
-            cost: Number
-        }],
-        occupationalSkills: [{
-            id: Number,
-            name: String,
-            tier: Number,
-            script: Boolean
-        }]
-    },
-    lorienTrust: {
-        refMarshal: String,
-        firstAid: Boolean,
-        mentalFirstAid: Boolean,
-        bowComp: Boolean,
-        clawComp: Boolean,
-        wepCheck: Boolean,
-        playerId: Number,
-        authCode: String,
-        character: {
-            pid: Number,
-            cid: Number,
-            requestDate: Date,
-            characterName: String,
-            playerForename: String,
-            playerMiddlename: String,
-            playerSurname: String,
-            faction: String,
-            race: String,
-            groupname: String,
-            characterSkills: [{
-                id: Number,
-                name: String,
-                cost: Number
-            }],
-            occupationalSkills: [{
-                id: Number,
-                name: String,
-                tier: Number,
-                script: Boolean
-            }]
-        },
-    },
-    twistedTales: {
-        character: {
-            characterName: String
-        }
-    },
-    eldritchDays: {
-        character: {
-            characterName: String
-        }
-    },
-    jadeThrone: {
-        character: {
-            characterName: String,
-            clan: String
-        }
-    },
     eventTickets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'EventTicket'

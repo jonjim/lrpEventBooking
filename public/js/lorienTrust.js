@@ -28,7 +28,7 @@ async function getCharacter() {
             document.getElementById('lorienTrustcharacterRace').innerText = data.race;
             document.getElementById('lorienTrustcharacterGroup').innerText = data.groupname;
             document.getElementById('lorienTrustfaction').value = data.faction;
-            document.getElementById('lorienTrustplayerId').innerText = data.pid;
+            document.getElementById('lorienTrustplayerId').value = data.pid;
 
             for (var i = 0; i < data.characterSkills.length; i++) {
                 var li = document.createElement("li");

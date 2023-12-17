@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const axios = require('axios');
-const fs = require('fs');
 const EventBooking = require('../models/eventBooking');
 const eventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
@@ -103,8 +102,7 @@ module.exports.renderEditForm = async(req, res, next) => {
 module.exports.renderAccountSettings = async (req, res, next) => {
     const user = await User.findById(req.user._id, { strict: false });
     const systems = await eventSystems.find();
-    let settingsList = await fs.readdirSync('./views/user/systemSettings')
-    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems, settingsList, user: JSON.parse(JSON.stringify(user)) });
+    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems, user: JSON.parse(JSON.stringify(user)) });
 };
 
 module.exports.ltAPI = async(req, res, next) => {
@@ -112,13 +110,14 @@ module.exports.ltAPI = async(req, res, next) => {
         headers: { Authorization: `Basic ${process.env.LTAPI_KEY}` }
     })
     try {
+        console.log(response.data);
         await User.findByIdAndUpdate(req.user._id, {
             lorienTrust: {
                 authCode: req.params.id,
-                character: { ...response.data },
+                character: response.data,
                 playerId: response.data.pid,
             }
-        });
+        }, {strict: false});
     } catch (error) {
         console.log(error);
     }
