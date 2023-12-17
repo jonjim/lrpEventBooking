@@ -139,25 +139,38 @@ userSchema.plugin(passportLocalMongoose);
 userSchema.post('findOneAndUpdate', async function(doc) {
     if (doc) {
         await eventBooking.updateMany({ user: doc._id }, { $set: { displayBooking: doc.displayBookings, firstname: doc.firstname, surname: doc.surname, playerId: doc.playerId } });
-        const events = await Event.find({ $in: { attendees: { user: doc._id } } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
+        const events = await Event.find({ $in: { attendees: { user: doc._id } } }, {strict:false}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
         for (e of events) {
             for (attendee of e.attendees) {
                 if (attendee.user?.equals(doc._id)) {
-                    const pull = await Event.findByIdAndUpdate(e._id, {
+                    await Event.findByIdAndUpdate(e._id, {
                         $pull: {
                             attendees: { booking: attendee.booking }
                         }
                     })
-                    attendee.display = doc.displayBookings;
-                    if (e.eventHost.eventSystem === "Lorien Trust") {
-                        attendee.icName = doc.lorienTrust?.character?.characterName;
-                        attendee.faction = doc.lorienTrust?.character?.faction;
-                    }
-                    const push = await Event.findByIdAndUpdate(e._id, {
-                        $push: {
-                            attendees: {...attendee }
+                    const attendeeData = JSON.parse(JSON.stringify(attendee))
+                    attendeeData.display = doc.displayBookings;
+                    const characterData = doc[e.eventHost.eventSystem.systemRef]; 
+                    attendeeData.customFields = [];
+                    if (typeof e.eventHost.eventSystem.customFields !== 'undefined') {
+                        for (field of e.eventHost.eventSystem.customFields.filter(a => a.display)) {
+                            if (field.section === 'player') 
+                                attendeeData.customFields.push({
+                                    name: field.name,
+                                    value:characterData[field.name]
+                                });
+                            else if (field.section === 'character')
+                                attendeeData.customFields.push({
+                                    name: field.name,
+                                    value:characterData.character[field.name]
+                                });
                         }
-                    })
+                    }
+                    await Event.findByIdAndUpdate(e._id, {
+                        $push: {
+                            attendees: {...attendeeData }
+                        }
+                    }, {strict: false})
                 }
             }
         }

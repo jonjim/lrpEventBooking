@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const { array } = require('joi');
 const emailService = require('../utils/email');
 const crypto = require('crypto');
-const { systemCheck, bookingCheck } = require('../utils/systemCheck');
+const { systemCheck } = require('../utils/systemCheck');
 
 module.exports.upcomingEvents = async(req, res, next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
@@ -39,7 +39,7 @@ module.exports.showEventBooking = async(req, res, next) => {
     const changeUser = typeof req.query.alt == 'undefined' || !req.query.alt ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
     const manual = typeof req.query.manual == 'undefined' || !req.query.manual ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
     if (eventTickets.length > 0 && event.allowBookings) {
-        if (systemCheck(req, res, event.eventHost.eventSystem.systemRef, req.user))
+        if (systemCheck(req, res, event.eventHost.eventSystem, req.user))
             return res.render('events/book', { title: event.name, event, changeUser, manual });
     }
         req.flash('error', `${event.name} is not currently open for bookings!`);
@@ -122,20 +122,38 @@ module.exports.createEventBooking = async(req, res, next) => {
     }
     await booking.save();
     var eventBooking = await EventBooking.findById(booking._id).populate('eventTickets').populate('user').populate('event');
-    var event = await Event.findById(eventBooking.event).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
+    var event = await Event.findById(eventBooking.event,{strict:false}).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
     if (booking.totalDue == 0) {
         for (ticket of eventBooking.eventTickets.filter(e => !['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(e.ticketType))) {
-            const characterData = bookingCheck(event.systemRef,eventBooking.user); 
-            event.attendees.push({
+            const characterData = eventBooking.user[event.eventHost.eventSystem.systemRef]; 
+            const attendeeData = {
                 user: eventBooking.user,
                 booking: eventBooking,
                 ticketType: ticket.ticketType,
                 display: req.user.displayBookings,
                 surname: eventBooking.surname,
                 firstname: eventBooking.firstname,
-                icName: manual ? req.body.characterName : characterData.icName,
-                faction: manual ? req.body.faction : characterData.faction
-            })
+                icName: manual ? req.body.characterName : characterData.character.characterName
+            };
+            if (typeof event.eventHost.eventSystem.customFields !== 'undefined') {
+                for (field of event.eventHost.eventSystem.customFields.filter(a => a.display)) {
+                    if (field.section === 'player')
+                        attendeeData[field.name] = characterData[field.name];
+                    else if (field.section === 'character')
+                        attendeeData[field.name] = characterData.character[field.name];
+                }
+            }
+            // event.attendees.push({
+            //     user: eventBooking.user,
+            //     booking: eventBooking,
+            //     ticketType: ticket.ticketType,
+            //     display: req.user.displayBookings,
+            //     surname: eventBooking.surname,
+            //     firstname: eventBooking.firstname,
+            //     icName: manual ? req.body.characterName : characterData.icName,
+            //     faction: manual ? req.body.faction : characterData.faction
+            // })
+            event.attendees.push(attendeeData);
         }
         event.save();
     }

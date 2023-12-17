@@ -38,7 +38,11 @@ const eventSystemSchema = new mongoose.Schema({
             defaultValue: String,
             description: String,
             placeholder: String,
-            error: String
+            error: String,
+            display: {
+                type: Boolean,
+                default: false
+            }
         }
     ],
     customTools:[{ type: String }]

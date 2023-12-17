@@ -1,83 +1,35 @@
-function systemCheck(req, res, systemRef, user){
-    const systemData = getSystemData(systemRef,user)
-    switch(systemRef){
-        case 'lorienTrust':
-            if (typeof systemData?.playerId === 'undefined' ||systemData?.playerId === '') {
-                req.flash('error', 'A Lorien Trust Player ID is required to play this event')
-                res.redirect('/account?system=lt')
+async function systemCheck(req, res, system, user) {
+    const systemData = user[system.systemRef];
+    if (typeof systemData?.customFields === 'undefined') {
+        if (typeof user[system.systemRef].character.characterName === 'undefined' || user[system.systemRef].character.characterName === '') {
+            req.flash('error', `A ${system.name} Character Name is required to play this event`);
+            res.redirect(`/account?system=${system.systemRef}`)
+            return false;
+        }
+        else return true;
+    }
+    for (field of systemData.customFields.filter(a => a.required)) {
+        if (typeof user[system.systemRef].character.characterName === 'undefined' || user[system.systemRef].character.characterName === '') {
+            req.flash('error', `A ${system.name} Character Name is required to play this event`);
+            res.redirect(`/account?system=${system.systemRef}`)
+            return false;
+        }
+        if (field.section === 'player') {
+            if (typeof user[system.systemRef][field.name] === 'undefined' || user[system.systemRef][field.name] === '') {
+                req.flash('error', `${system.name} ${field.label} is required to play this event`);
+                res.redirect(`/account?system=${system.systemRef}`)
                 return false;
             }
-            if (typeof systemData?.character.characterName === 'undefined' || systemData?.character.characterName === '') {
-                req.flash('error', 'A Lorien Trust Character Name is required to play this event')
-                res.redirect('/account?system=lt')
+        }
+        else if (field.section === 'character') {
+            if (typeof user[system.systemRef].character[field.name] === 'undefined' || user[system.systemRef].character[field.name] === '') {
+                req.flash('error', `${system.name} ${field.label} is required to play this event`);
+                res.redirect(`/account?system=${system.systemRef}`)
                 return false;
             }
-            if (typeof systemData?.character.faction === 'undefined' || systemData?.character.faction === '') {
-                req.flash('error', 'A Lorien Trust Faction is required to play this event')
-                res.redirect('/account?system=lt')
-                return false;
-            }
-            break;
-        case 'twistedTales':
-            if (typeof systemData?.character.characterName === 'undefined' || systemData?.character.characterName === '') {
-                req.flash('error', 'A Twisted Tales Character Name is required to play this event')
-                res.redirect('/account?system=tt')
-                return false;
-            }
-        case 'jadeThrone':
-            if (typeof systemData?.character.characterName === 'undefined' || systemData?.character.characterName === '') {
-                req.flash('error', 'A Jade Throne Character Name is required to play this event')
-                res.redirect('/account?system=jt')
-                return false;
-            }
-            if (typeof systemData?.character.clan === 'undefined' || systemData?.character.clan === '') {
-                req.flash('error', 'A Jade Throne Clan is required to play this event')
-                res.redirect('/account?system=jt')
-                return false;
-            }
-            break;
-        case 'eldritchDays':
-            break;
+        }
     }
     return true;
 }
 
-function getSystemData(systemRef, user){
-    switch (systemRef) {
-        case 'lorienTrust':
-            return user?.lorienTrust;
-        case 'twistedTales':
-            return user?.twistedTales;
-        case 'eldritchDays':
-            return user?.eldritchDays;
-        case 'jadeThrone':
-            return user?.jadeThrone;
-    }
-}
-
-async function bookingCheck(systemRef,user){
-    switch (systemRef) {
-        case 'lorienTrust':
-            return {
-                icName: user?.lorienTrust.character.characterName,
-                faction: user?.lorienTrust.character.faction,
-            } 
-        case 'twistedTales':
-            return {
-                icName: user?.twistedTales.character.characterName,
-                faction: '',
-            } 
-        case 'eldritchDays':
-            return {
-                icName: user?.eldritchDays.character.characterName,
-                faction: ''
-            } 
-        case 'jadeThrone':
-            return {
-                icName: user?.jadeThrone.character.characterName,
-                faction: user?.jadeThrone.character.clan,
-            } 
-    }
-}
-
-module.exports = { systemCheck, getSystemData, bookingCheck }
+module.exports = { systemCheck }

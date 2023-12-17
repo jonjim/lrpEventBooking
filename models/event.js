@@ -88,7 +88,11 @@ const eventSchema = new mongoose.Schema({
         firstname: String,
         surname: String,
         icName: String,
-        faction: String
+        faction: String,
+        customFields: [{
+            name: String,
+            value: {}
+        }]
     }]
 }, {
     virtuals: {
@@ -135,7 +139,7 @@ const eventSchema = new mongoose.Schema({
     }
 }, {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
 })
 
 

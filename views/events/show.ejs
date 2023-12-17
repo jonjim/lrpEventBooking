@@ -1,9 +1,12 @@
 <% layout('layouts/boilerplate'); 
 function toTitleCase(str) {
+    try{
     if (typeof str == 'undefined') return '';
     return str.replace(/\w\S*/g, function(txt){
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
+    }
+    catch{return str}
 };
 %>
     <div class="row">
@@ -70,9 +73,11 @@ function toTitleCase(str) {
                                                         <td scope="col">
                                                             <%= toTitleCase(attendee.icName) %>
                                                         </td>
+                                                        <% if (typeof attendee.customFields !== 'undefined') {for (field of attendee.customFields) { %>
                                                         <td scope="col">
-                                                            <%= toTitleCase(attendee.faction) %>
+                                                            <%= toTitleCase(field.value) %>
                                                         </td>
+                                                        <% }} %>
                                                     </tr>
                                                     <% } %>
                                             </tbody>

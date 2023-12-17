@@ -116,10 +116,30 @@ module.exports.eventSystemDelete = async(req, res, next) => {
 
 module.exports.eventSystemAddField = async (req, res, next) => {
     req.body.required = typeof req.body.required != 'undefined' ? req.body.required == 'on' ? true : false : false;
+    req.body.display = typeof req.body.display != 'undefined' ? req.body.display == 'on' ? true : false : false;
     if (req.body.options != '') req.body.options = req.body.options.split(',');
     else req.body.options = undefined;
     await EventSystems.findByIdAndUpdate(req.params.id, { $push: { customFields: { ...req.body }  } })
     req.flash('success','Added Custom Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
+module.exports.eventSystemUpdateField = async (req, res, next) => {
+    const fieldId = req.body.idField;
+    req.body.idField = undefined;
+    req.body.required = typeof req.body.required != 'undefined' ? req.body.required == 'on' ? true : false : false;
+    req.body.display = typeof req.body.display != 'undefined' ? req.body.display == 'on' ? true : false : false;
+    if (req.body.options != '') req.body.options = req.body.options.split(',');
+    else req.body.options = undefined;
+    await EventSystems.findByIdAndUpdate(req.params.id, { $pull: { customFields: { _id: fieldId } } });
+    await EventSystems.findByIdAndUpdate(req.params.id, { $push: { customFields: { ...req.body } } });
+    req.flash('success','Updated Custom Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
+module.exports.eventSystemDeleteField = async (req, res, next) => {
+    await EventSystems.findByIdAndUpdate(req.params.id, { $pull: { customFields: { _id: req.body.idField } } });
+    req.flash('success','Deleted Custom Field');
     res.redirect(`/admin/systems/${req.params.id}`)
 }
 

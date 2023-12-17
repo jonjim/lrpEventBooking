@@ -69,7 +69,7 @@
                             <div class="col-md-6">
                                 <div class="row mb-3">
                                     <div class="col"><b>Custom Character Fields</b></div>
-                                    <div class="col text-end"><a href="" onclick="document.getElementById('customSection').value = 'character'" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#customFieldModal"><i class="bi bi-plus-circle"></i> Add Character Field</a></div>
+                                    <div class="col text-end"><a href="" onclick="newField('<%= eventSystem._id %>');document.getElementById('customSection').value = 'character'" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#customFieldModal"><i class="bi bi-plus-circle"></i> Add Character Field</a></div>
                                 </div>
                                 <table class="table table-striped">
                                     <thead>
@@ -87,7 +87,7 @@
                                             <tr>
                                                 <td><%= field.label %></td>
                                                 <td class="text-capitalize"><%= field.type %></td>
-                                                <td><i class="bi bi-pencil-square"></i></td>
+                                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#customFieldModal" class="link-dark" onclick="editField('<%= eventSystem._id %>',<%= JSON.stringify(field) %>)"><i class="bi bi-pencil-square"></i></a></td>
                                             </tr>
                                         <% } %>
                                     </tbody>
@@ -96,7 +96,7 @@
                             <div class="col-md-6">
                                 <div class="row mb-3">
                                     <div class="col"><b>Custom Player Fields</b></div>
-                                    <div class="col text-end"><a href="" onclick="document.getElementById('customSection').value = 'player'" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#customFieldModal"><i class="bi bi-plus-circle"></i> Add Player Field</a></div>
+                                    <div class="col text-end"><a href="" onclick="newField('<%= eventSystem._id %>');document.getElementById('customSection').value = 'player'" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#customFieldModal"><i class="bi bi-plus-circle"></i> Add Player Field</a></div>
                                 </div>
                                 <table class="table table-striped">
                                     <thead>
@@ -109,7 +109,7 @@
                                             <tr>
                                                 <td><%= field.label %></td>
                                                 <td class="text-capitalize"><%= field.type %></td>
-                                                <td><i class="bi bi-pencil-square"></i></td>
+                                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#customFieldModal" onclick="editField('<%= eventSystem._id %>',<%= JSON.stringify(field) %>)" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>
                                             </tr>
                                         <% } %>
                                     </tbody>
@@ -161,7 +161,7 @@
     <div class="modal fade" id="customFieldModal" tabindex="-1" aria-labelledby="customFieldModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <form action="/admin/systems/<%= eventSystem._id %>/fields" method="POST" class="validated-form" novalidate>
+                <form id="customFieldForm" action="/admin/systems/<%= eventSystem._id %>/fields" method="POST" class="validated-form" novalidate>
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="customFieldModalLabel">Create new Custom Field?</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -173,6 +173,7 @@
                                 <label for="customLabel">Label</label>
                                 <input id="customLabel" type="text" onblur="document.getElementById('customName').value = camelize(this.value)" name="label" class="form-control" required placeholder="Text label for field...">
                                 <input type="hidden" name="name" id="customName">
+                                <input type="hidden" name="idField" id="customId">
                                 <div class="invalid-feedback">You must label your field!</div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -190,11 +191,16 @@
                                 </div>
                                 
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="form-check mt-3">
+                            <div class="col-md-4">
+                                <div class="form-check">
                                     <label for="customRequired" class="form-check-label"> Required</label>
                                     <input onchange="document.getElementById('customError').parentElement.classList.toggle('d-none')" type="checkbox" class="form-check-input" name="required" id="customRequired" >
                                     <p class="form-text">Is this a required field?</p>
+                                </div>
+                                <div class="form-check">
+                                    <label for="customDisplay" class="form-check-label"> Display</label>
+                                    <input  type="checkbox" class="form-check-input" name="display" id="customDisplay" >
+                                    <p class="form-text">Display as event attendee data?</p>
                                 </div>
                             </div>
                         </div>
@@ -225,19 +231,14 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Create Field</button>
+                        <a href="#" id="deleteFieldBtn" class="btn btn-danger" onclick="deleteField()">Delete Field</a>
+                            <button id="fieldSubmit" type="submit" class="btn btn-success">Create Field</button>
                     </div>
                 </form>
+                <form id="deleteFieldForm" action="/admin/systems/<%= eventSystem._id %>/fields?_method=DELETE" method="POST"><input type="hidden" id="deleteId" name="idField"></form>
             </div>
         </div>
     </div>
     <script src="/js/adminEventSystem.js"></script>
-    <script>
-        function camelize(str) {
-  return str.replace(/[^a-zA-Z ]/g, "").toLowerCase().replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-    return index === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
-}
-    </script>
