@@ -156,7 +156,7 @@
                                         </div>
                                         <% } %>
                                     </div>
-                                    <% for (tool of eventSystem.customTools) { %>
+                                    <% for (tool of eventSystem.customTools.filter(a => a != '')) {%>
                                         <%- include(`systemTools/${tool}`) %>
                                     <% } %>
                                 </div>
