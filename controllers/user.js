@@ -84,7 +84,7 @@ module.exports.logout = async(req, res, next) => {
 module.exports.login = async(req, res) => {
     const redirectUrl = req.session.returnTo || '/';
     delete req.session.returnTo;
-    if (req.user.playerId && req.user.username) {
+    if (req.user.username) {
         req.flash('success', 'Welcome back!');
         res.redirect(redirectUrl);
     } else {
