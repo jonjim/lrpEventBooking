@@ -110,7 +110,6 @@ module.exports.ltAPI = async(req, res, next) => {
         headers: { Authorization: `Basic ${process.env.LTAPI_KEY}` }
     })
     try {
-        console.log(response.data);
         await User.findByIdAndUpdate(req.user._id, {
             lorienTrust: {
                 authCode: req.params.id,
