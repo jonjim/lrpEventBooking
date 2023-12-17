@@ -1,10 +1,9 @@
 const EventBooking = require('../models/eventBooking');
-const EventTicket = require('../models/eventTicket');
 const Event = require('../models/event');
 const mongoose = require('mongoose');
 const base = "https://api-m.sandbox.paypal.com";
 const emailService = require('../utils/email');
-const {bookingCheck} = require('../utils/systemCheck')
+const {attendeeUpdate} = require('../utils/systemCheck')
 
 /**
  * Generate an OAuth 2.0 access token for authenticating with PayPal REST APIs.
@@ -125,21 +124,11 @@ const captureOrder = async(req, orderID) => {
         eventBooking.surname = req.user.surname;
         eventBooking.displayBooking = req.user.displayBookings;
         await eventBooking.save();
-        for (ticket of eventBooking.eventTickets.filter(e => !['mealticket', 'mealticketchild'].includes(e.ticketType))) {
-            const characterData = await bookingCheck(event.eventHost.eventSystem.systemRef,eventBooking.user); 
-            event.attendees.push({
-                user: eventBooking.user,
-                booking: eventBooking,
-                ticketType: ticket.ticketType,
-                display: req.user.displayBookings,
-                oocName: `${eventBooking.user.firstname} ${eventBooking.user.surname}`,
-                icName: characterData.icName,
-                firstname: eventBooking.user.firstname,
-                surname: eventBooking.user.surname,
-                faction: characterData.faction
-            })
-        }
-        event.save();
+        await Event.findByIdAndUpdate(booking.event, {
+            $push: {
+                attendees: { ...await attendeeUpdate(event.eventHost.eventSystem,eventBooking)}
+            }
+        })
         req.flash('success', `Payment complete!`);
     }
     return responseData;

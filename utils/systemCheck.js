@@ -32,4 +32,28 @@ async function systemCheck(req, res, system, user) {
     return true;
 }
 
-module.exports = { systemCheck }
+async function attendeeUpdate(eventSystem,eventBooking) {
+    const attendeeData = {
+        booking: eventBooking,
+        ticketType: eventBooking.eventTickets.filter(e => !['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(e.ticketType))[0].ticketType,
+        display: eventBooking.displayBooking,
+        surname: eventBooking.surname,
+        firstname: eventBooking.firstname,
+    };
+    if (typeof eventBooking.user != 'undefined'){
+        const characterData = eventBooking.user[eventSystem.systemRef]; 
+        attendeeData.user = eventBooking.user;
+        attendeeData.icName = characterData.character.characterName;
+        if (typeof eventSystem.customFields !== 'undefined') {
+            for (field of eventSystem.customFields.filter(a => a.display)) {
+                if (field.section === 'player')
+                    attendeeData[field.name] = characterData[field.name];
+                else if (field.section === 'character')
+                    attendeeData[field.name] = characterData.character[field.name];
+            }
+        }
+    }
+    return attendeeData;
+}
+
+module.exports = { systemCheck, attendeeUpdate }

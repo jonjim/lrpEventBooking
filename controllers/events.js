@@ -1,12 +1,9 @@
 const Event = require('../models/event');
 const EventTicket = require('../models/eventTicket');
 const EventBooking = require('../models/eventBooking');
-const EventHost = require('../models/eventHost');
 const User = require('../models/user');
 const mongoose = require('mongoose');
-const { array } = require('joi');
 const emailService = require('../utils/email');
-const crypto = require('crypto');
 const { systemCheck } = require('../utils/systemCheck');
 
 module.exports.upcomingEvents = async(req, res, next) => {
@@ -143,16 +140,6 @@ module.exports.createEventBooking = async(req, res, next) => {
                         attendeeData[field.name] = characterData.character[field.name];
                 }
             }
-            // event.attendees.push({
-            //     user: eventBooking.user,
-            //     booking: eventBooking,
-            //     ticketType: ticket.ticketType,
-            //     display: req.user.displayBookings,
-            //     surname: eventBooking.surname,
-            //     firstname: eventBooking.firstname,
-            //     icName: manual ? req.body.characterName : characterData.icName,
-            //     faction: manual ? req.body.faction : characterData.faction
-            // })
             event.attendees.push(attendeeData);
         }
         event.save();

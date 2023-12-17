@@ -2,9 +2,6 @@ const User = require('../models/user');
 const axios = require('axios');
 const fs = require('fs');
 const EventBooking = require('../models/eventBooking');
-const Event = require('../models/event');
-const EventTicket = require('../models/eventTicket');
-const event = require('../models/event');
 const eventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
 const emailService = require('../utils/email');
@@ -21,7 +18,7 @@ module.exports.register = async(req, res, next) => {
         const registeredUser = await User.register(newUser, password);
         req.login(registeredUser, err => {
             if (err) return next();
-            req.flash('success', `Welcome to Lorien Trust Sanctioned Events ${registeredUser.username}!`);
+            req.flash('success', `Welcome to ${config.siteName} ${registeredUser.username}!`);
             const redirectUrl = req.session.returnTo || '/';
             delete req.session.returnTo;
             return res.redirect(redirectUrl);
@@ -65,24 +62,6 @@ module.exports.payEventBooking = async(req, res, next) => {
 
 module.exports.accountUpdate = async (req, res, next) => {
     req.body.displayBookings = typeof req.body.displayBookings != 'undefined' ? req.body.displayBookings == 'on' ? true : false : false;
-    // Lorien Trust specific settings
-    req.body.lorienTrust.firstAid = typeof req.body.lorienTrust.firstAid != 'undefined' ? req.body.lorienTrust.firstAid == 'on' ? true : false : false;
-    req.body.lorienTrust.mentalFirstAid = typeof req.body.lorienTrust.mentalFirstAid != 'undefined' ? req.body.lorienTrust.mentalFirstAid == 'on' ? true : false : false;
-    req.body.lorienTrust.bowComp = typeof req.body.lorienTrust.bowComp != 'undefined' ? req.body.lorienTrust.bowComp == 'on' ? true : false : false;
-    req.body.lorienTrust.clawComp = typeof req.body.lorienTrust.clawComp != 'undefined' ? req.body.lorienTrust.clawComp == 'on' ? true : false : false;
-    req.body.lorienTrust.wepCheck = typeof req.body.lorienTrust.wepCheck != 'undefined' ? req.body.lorienTrust.wepCheck == 'on' ? true : false : false;
-    // End
-
-    const susObject = {
-        character: {
-            characterName: 'A Name',
-            faction: '',
-        },
-        aField: false
-    }
-    
-    req.body['anotherSystem'] = susObject;
-    req.body['anotherSystem']['anotherField'] = 'aValue'
     const user = await User.findByIdAndUpdate(req.user._id, {...req.body }, { new: true, strict:false })
     req.user = user;
     res.redirect('/account');
@@ -110,7 +89,7 @@ module.exports.login = async(req, res) => {
         req.flash('success', 'Welcome back!');
         res.redirect(redirectUrl);
     } else {
-        req.flash('success', 'Welcome to Lorien Trust Sanctioned Events!');
+        req.flash('success', `Welcome to ${config.siteName}!`);
         res.redirect('/account');
     }
 };

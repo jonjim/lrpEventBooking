@@ -1,12 +1,7 @@
 const Event = require('../models/event');
-const eventHost = require('../models/eventHost');
-const eventBooking = require('../models/eventBooking');
-const EventTicket = require('../models/eventTicket');
 const siteConfig = require('../models/siteConfig');
 const pdfService = require('../utils/pdf');
-const emailService = require('../utils/email');
 const ExpressError = require('../utils/ExpressError');
-const { cloudinary } = require('../utils/cloudinary');
 
 module.exports.pidEvent = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } });

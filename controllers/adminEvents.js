@@ -6,8 +6,7 @@ const siteConfig = require('../models/siteConfig');
 const pdfService = require('../utils/pdf');
 const emailService = require('../utils/email');
 const ExpressError = require('../utils/ExpressError');
-const { cloudinary } = require('../utils/cloudinary');
-const {bookingCheck} = require('../utils/systemCheck')
+const {attendeeUpdate} = require('../utils/systemCheck')
 
 module.exports.listEvents = async(req, res, next) => {
     const eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
@@ -145,7 +144,7 @@ module.exports.deleteEventTicket = async(req, res, next) => {
 }
 
 module.exports.bookingCash = async(req, res, next) => {
-    const booking = await eventBooking.findByIdAndUpdate(req.params.id, {...req.body }).populate('eventTickets');
+    const booking = await eventBooking.findByIdAndUpdate(req.params.id, {...req.body }).populate('eventTickets').populate('user');
     const event = await Event.findByIdAndUpdate(booking.event, {
         $pull: {
             attendees: {
@@ -153,19 +152,9 @@ module.exports.bookingCash = async(req, res, next) => {
             }
         }
     }).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
-    const characterData = bookingCheck(event.systemRef,booking.user); 
     await Event.findByIdAndUpdate(booking.event, {
         $push: {
-            attendees: {
-                user: booking.user,
-                booking: booking._id,
-                ticketType: booking.eventTickets.filter(e => !['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(e.ticketType))[0].ticketType,
-                display: booking.displayBooking,
-                surname: booking.surname,
-                firstname: booking.firstname,
-                icName: req.user.character ? characterData.icName : '',
-                faction: req.user.character ? characterData.faction : ''
-            }
+            attendees: { ...await attendeeUpdate(event.eventHost.eventSystem,booking)}
         }
     })
     res.redirect(`/admin/bookings/${req.params.id}`)
