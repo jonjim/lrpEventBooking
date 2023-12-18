@@ -131,3 +131,4 @@ dist
 
 # Docker
 Dockerfile
+utils/email.js
