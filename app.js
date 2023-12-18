@@ -31,6 +31,7 @@ mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
         console.log('Connected to MongoDB');
+        
     })
     .catch(err => {
         console.log('Error connection to MongoDB');
@@ -147,17 +148,17 @@ loadConfig().then((configRecord) => {
 })
 
 const {getSystemData} = require('./utils/systemCheck')
-app.use((req, res, next) => {
+app.use( async (req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.warn = req.flash('warn');
     res.locals.currentUser = req.user;
     res.locals.path = req.path;
-    res.locals.adminGroups = ['sanctioningOfficer', 'admin', 'superAdmin'];
-    res.locals.hostGroups = ['eventHost', 'sanctioningOfficer', 'admin', 'superAdmin'];
+    res.locals.adminGroups = ['admin', 'superAdmin'];
+    res.locals.hostGroups = ['eventHost', 'admin', 'superAdmin'];
     res.locals.rootUrl = process.env.ROOT_URL
-    res.locals.config = config
     res.locals.systemData = getSystemData
+    res.locals.config = await loadConfig()
     next();
 })
 
@@ -172,7 +173,7 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    if (typeof res.locals.config == 'undefined') res.render('configCheck', {url: req.originalUrl})
+    if (typeof res.locals.config == 'undefined' || !res.locals.config) return res.render('configCheck', {url: req.originalUrl})
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
     res.status(statusCode).render('error', { title: 'An Error has occured!', err })

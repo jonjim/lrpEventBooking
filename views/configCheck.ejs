@@ -25,11 +25,14 @@
         <script>
             setInterval(() => {
                 fetch('/checkConfig', {
-                    method: 'GET'
+                    method: 'GET',
+                    cache: 'no-store'
                 })
                 .then(response => {
                     if (response.status == 200) 
-                        window.location.href = '<%= url %>'
+                        window.location.reload(true)
+                    if (response.status == 418)
+                        window.location.href = '/initialConfig'
                 })
             }, 2000)
         </script>

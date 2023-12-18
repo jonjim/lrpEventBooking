@@ -22,4 +22,9 @@ router.route('/system/:id')
 router.route('/checkConfig')
     .get(catchAsync(controller.configCheck))
 
+
+router.route('/initialConfig')
+    .get(catchAsync(controller.renderInitialConfig))
+    .post(catchAsync(controller.initialConfig))
+
 module.exports = router;

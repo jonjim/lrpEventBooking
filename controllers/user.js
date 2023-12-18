@@ -17,7 +17,7 @@ module.exports.register = async(req, res, next) => {
         const registeredUser = await User.register(newUser, password);
         req.login(registeredUser, err => {
             if (err) return next();
-            req.flash('success', `Welcome to ${config.siteName} ${registeredUser.username}!`);
+            req.flash('success', `Welcome to ${res.locals.config.siteName} ${registeredUser.username}!`);
             const redirectUrl = req.session.returnTo || '/';
             delete req.session.returnTo;
             return res.redirect(redirectUrl);
@@ -88,7 +88,7 @@ module.exports.login = async(req, res) => {
         req.flash('success', 'Welcome back!');
         res.redirect(redirectUrl);
     } else {
-        req.flash('success', `Welcome to ${config.siteName}!`);
+        req.flash('success', `Welcome to ${res.locals.config.siteName}!`);
         res.redirect('/account');
     }
 };

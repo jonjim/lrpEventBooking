@@ -1,25 +1,74 @@
-[{
-        "name": "Hinotori",
-        "img": "/img/hosts/hinotori.png"
+[
+    {
+      "img": {
+        "filename": "lrpEvents/mtqp3dxhffddpzeqtiah",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326196/lrpEvents/mtqp3dxhffddpzeqtiah.png"
+      },
+      "name": "Hinotori",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Kani",
-        "img": "/img/hosts/kani.png"
+      "img": {
+        "filename": "lrpEvents/bexgkcrpuzycjyu6nw5j",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326212/lrpEvents/bexgkcrpuzycjyu6nw5j.png"
+      },
+      "name": "Kani",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Ryu",
-        "img": "/img/hosts/ryu.png"
+      "img": {
+        "filename": "lrpEvents/ho6rb0yn1nqg7zow8h2r",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326224/lrpEvents/ho6rb0yn1nqg7zow8h2r.png"
+      },
+      "name": "Ryu",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Sasori",
-        "img": "/img/hosts/sasori.png"
+      "img": {
+        "filename": "lrpEvents/m2real5gbwiujhpdrcov",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326252/lrpEvents/m2real5gbwiujhpdrcov.png"
+      },
+      "name": "Sasori",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Shishi",
-        "img": "/img/hosts/shishi.png"
+      "img": {
+        "filename": "lrpEvents/nl7cod8grryqptel5se5",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326261/lrpEvents/nl7cod8grryqptel5se5.png"
+      },
+      "name": "Shishi",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Tsuru",
-        "img": "/img/hosts/tsuru.png"
+      "img": {
+        "filename": "lrpEvents/rqwsh3czhb8emccsdksx",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326272/lrpEvents/rqwsh3czhb8emccsdksx.png"
+      },
+      "name": "Tsuru",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     }
 ]

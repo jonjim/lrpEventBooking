@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
     }],
     role: {
         type: String,
-        enum: ['user', 'eventHost', 'sanctioningOfficer', 'admin', 'superAdmin'],
+        enum: ['user', 'eventHost', 'admin', 'superAdmin'],
         default: 'user'
     },
     dob: Date,

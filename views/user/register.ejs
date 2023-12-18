@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-6 offset-md- col-xl-4 offset-xl-4">
                 <div class="card shadow">
-                    <img src="/img/lorienTrustx4.png" alt="" class="img-fluid card-img-top" />
+                    <% if (config.siteLogo) { %><img src="<%= config.siteLogo %>" alt="" class="img-fluid card-img-top" /><% } %>
                     <div class="card-body">
                         <h5 class="card-title">Register</h5>
                         <form action="/register" method="POST" novalidate class="validated-form">

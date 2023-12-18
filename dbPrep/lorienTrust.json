@@ -1,89 +1,266 @@
-[{
-        "name": "Alchemists",
-        "img": "/img/hosts/alchemists.jpg"
+[
+    {
+      "img": {
+        "filename": "lrpEvents/mwb2woary4xfz5ddektl",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326280/lrpEvents/mwb2woary4xfz5ddektl.jpg"
+      },
+      "name": "Alchemists",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Armourers",
-        "img": "/img/hosts/armourers.jpg"
+      "img": {
+        "filename": "lrpEvents/ktzqgfgithkigtyo0oub",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326290/lrpEvents/ktzqgfgithkigtyo0oub.jpg"
+      },
+      "name": "Armourers",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Bank",
-        "img": "/img/hosts/bank.jpg"
+      "img": {
+        "filename": "lrpEvents/zlhsczvsxfg8u1xq4rrd",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326299/lrpEvents/zlhsczvsxfg8u1xq4rrd.jpg"
+      },
+      "name": "Bank",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Bards",
-        "img": "/img/hosts/bards.jpg"
+      "img": {
+        "filename": "lrpEvents/ble97d5cjuwe5uyq5yzj",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326309/lrpEvents/ble97d5cjuwe5uyq5yzj.jpg"
+      },
+      "name": "Bards",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Bears",
-        "img": "/img/hosts/bears.jpg"
+      "img": {
+        "filename": "lrpEvents/wlmxkwetflbjkjio543g",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326320/lrpEvents/wlmxkwetflbjkjio543g.jpg"
+      },
+      "name": "Bears",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Casino",
-        "img": "/img/hosts/casino.jpg"
+      "img": {
+        "filename": "lrpEvents/cpgyrfnunuzltayg2wia",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326334/lrpEvents/cpgyrfnunuzltayg2wia.jpg"
+      },
+      "name": "Casino",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Corruptors",
-        "img": "/img/hosts/corruptors.jpg"
+      "img": {
+        "filename": "lrpEvents/f8cgxt6fmg4uktiifpk1",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326343/lrpEvents/f8cgxt6fmg4uktiifpk1.jpg"
+      },
+      "name": "Corruptors",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Dragons",
-        "img": "/img/hosts/dragons.jpg"
+      "img": {
+        "filename": "lrpEvents/onxvwyo0lvivuvj1e7fp",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326352/lrpEvents/onxvwyo0lvivuvj1e7fp.jpg"
+      },
+      "name": "Dragons",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Gryphons",
-        "img": "/img/hosts/gryphons.jpg"
+      "img": {
+        "filename": "lrpEvents/gjhtadxqetrsf7ofcw1c",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326365/lrpEvents/gjhtadxqetrsf7ofcw1c.jpg"
+      },
+      "name": "Gryphons",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Harts",
-        "img": "/img/hosts/harts.jpg"
+      "img": {
+        "filename": "lrpEvents/xyjbvusfnhdxsxzr5jyq",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326375/lrpEvents/xyjbvusfnhdxsxzr5jyq.jpg"
+      },
+      "name": "Harts",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Healers",
-        "img": "/img/hosts/healers.jpg"
+      "img": {
+        "filename": "lrpEvents/cb4enmbaczx9hbsoynbz",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326388/lrpEvents/cb4enmbaczx9hbsoynbz.jpg"
+      },
+      "name": "Healers",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Incantors",
-        "img": "/img/hosts/incantors.jpg"
+      "img": {
+        "filename": "lrpEvents/uhkh4vu6idavf2erinmv",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326400/lrpEvents/uhkh4vu6idavf2erinmv.jpg"
+      },
+      "name": "Incantors",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Jackals",
-        "img": "/img/hosts/jackals.jpg"
+      "img": {
+        "filename": "lrpEvents/he0mavxxoxei7lack4aq",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326469/lrpEvents/he0mavxxoxei7lack4aq.jpg"
+      },
+      "name": "Jackals",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Lions",
-        "img": "/img/hosts/lions.jpg"
+      "img": {
+        "filename": "lrpEvents/onf7uclegroxjjldtytd",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326533/lrpEvents/onf7uclegroxjjldtytd.jpg"
+      },
+      "name": "Lions",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Mages",
-        "img": "/img/hosts/mages.jpg"
+      "img": {
+        "filename": "lrpEvents/osccgcwh2lpxtn74jazn",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326543/lrpEvents/osccgcwh2lpxtn74jazn.jpg"
+      },
+      "name": "Mages",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Militia",
-        "img": "/img/hosts/militia.jpg"
+      "img": {
+        "filename": "lrpEvents/hw7g8eijhiblogfq2iwz",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326555/lrpEvents/hw7g8eijhiblogfq2iwz.jpg"
+      },
+      "name": "Militia",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Rangers",
-        "img": "/img/hosts/rangers.jpg"
+      "img": {
+        "filename": "lrpEvents/uozhdtjiwxxetujzyfym",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326567/lrpEvents/uozhdtjiwxxetujzyfym.jpg"
+      },
+      "name": "Rangers",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Scouts",
-        "img": "/img/hosts/scouts.jpg"
+      "img": {
+        "filename": "lrpEvents/ilkkryrcgaa9ooruzhwi",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326578/lrpEvents/ilkkryrcgaa9ooruzhwi.jpg"
+      },
+      "name": "Scouts",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Tarantulas",
-        "img": "/img/hosts/tarantulas.jpg"
+      "img": {
+        "filename": "lrpEvents/ghyms7defpx35m9xgfwl",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326589/lrpEvents/ghyms7defpx35m9xgfwl.jpg"
+      },
+      "name": "Tarantulas",
+      "display": true,
+      "contactAddress": "enquiries@twisted-tales.co.uk",
+      "paypalAddress": "events@tarantulafaction.com",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Unicorns",
-        "img": "/img/hosts/unicorns.jpg"
+      "img": {
+        "filename": "lrpEvents/wvx4xoxbge95b7ec3gwm",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326602/lrpEvents/wvx4xoxbge95b7ec3gwm.jpg"
+      },
+      "name": "Unicorns",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Vipers",
-        "img": "/img/hosts/vipers.jpg"
+      "img": {
+        "filename": "lrpEvents/borlyfaefngfc8y6ah3e",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326614/lrpEvents/borlyfaefngfc8y6ah3e.jpg"
+      },
+      "name": "Vipers",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     },
     {
-        "name": "Wolves",
-        "img": "/img/hosts/wolves.jpg"
+      "img": {
+        "filename": "lrpEvents/aaf5mxmdj9u3ct9gtwqj",
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326625/lrpEvents/aaf5mxmdj9u3ct9gtwqj.jpg"
+      },
+      "name": "Wolves",
+      "display": true,
+      "contactAddress": "",
+      "paypalAddress": "",
+      "paypalFixedFee": 0.3,
+      "paypalPercentage": 1.2
     }
-]
+  ]

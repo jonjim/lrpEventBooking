@@ -40,6 +40,7 @@
                 </tbody>
             </table>
             <ul id="eventsNavPosition" class="pagination pager-nav justify-content-center"></ul>
+            <div class="text-end" style="margin-top:20px"><small><a href="" class="link-dark" data-bs-toggle="modal" data-bs-target="#jsonModal">View JSON</a></small></div>
             <script src="/js/pagination.js"></script>
             <script>
                 const eventsPager = new Pager('eventHosts', 15);
@@ -58,3 +59,26 @@
             </script>
         </div>
     </div>
+<% function replacer(key,value)
+{
+    if (key=="eventSystem") return undefined;
+    else if (key=="_id") return undefined;
+    else if (key=="__v") return undefined;
+    else return value;
+} %>
+    <div id="jsonModal" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">JSON View</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <pre id="jsonText" onclick="selectText('jsonText')"><%= JSON.stringify(eventHosts,replacer,2) %></pre>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
