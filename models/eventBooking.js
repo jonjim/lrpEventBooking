@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Event = require('./event');
+const Event = require('./lrpEvent');
 
 const eventBookingSchema = new mongoose.Schema({
     user: {
@@ -16,7 +16,7 @@ const eventBookingSchema = new mongoose.Schema({
     }],
     event: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Event'
+        ref: 'lrpEvent'
     },
     bookingMade: {
         type: Date,

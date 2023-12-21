@@ -1,5 +1,5 @@
 const EventBooking = require('../models/eventBooking');
-const Event = require('../models/event');
+const Event = require('../models/lrpEvent');
 const mongoose = require('mongoose');
 const base = "https://api-m.sandbox.paypal.com";
 const emailService = require('../utils/email');

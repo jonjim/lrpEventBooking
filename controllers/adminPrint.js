@@ -1,4 +1,4 @@
-const Event = require('../models/event');
+const Event = require('../models/lrpEvent');
 const siteConfig = require('../models/siteConfig');
 const pdfService = require('../utils/pdf');
 const ExpressError = require('../utils/ExpressError');

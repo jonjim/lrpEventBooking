@@ -1,4 +1,4 @@
-const Event = require('../models/event');
+const Event = require('../models/lrpEvent');
 const eventHost = require('../models/eventHost');
 const eventBooking = require('../models/eventBooking');
 const EventTicket = require('../models/eventTicket');

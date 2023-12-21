@@ -114,22 +114,22 @@
                                                         <p>Please provide a character name</p>
                                                     </div>
                                                 </div>
-                                                <% for (field of eventSystem.customFields.filter(a => a.section == 'character')) { %>
+                                                <% for (field of eventSystem.customFields.filter(a => a.section == 'character')) { let systemCharacter = user[eventSystem.systemRef]?.character;%>
                                                     <div class="mb-3">
                                                         
                                                         <% if (field.type == 'select') { %>
                                                             <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
                                                             <select name="<%= eventSystem.systemRef %>[character][<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-select form-select-sm" <%= field.required ? 'required' : '' %>>
                                                                 <% for (option of field.options) {%>
-                                                                    <option value="<%= option %>" <%= user[eventSystem.systemRef].character[field.name] == option ? 'selected' : '' %>> <%= option %></option>
+                                                                    <option value="<%= option %>" <%= systemCharacter?.[field.name] == option ? 'selected' : '' %>> <%= option %></option>
                                                                 <% } %>
                                                             </select>
                                                         <% } else if (field.type == 'checkbox') { %>
-                                                            <input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef].character[field.name] %>" id="<%= eventSystem.systemRef %><%= field.name %>" <%= user[eventSystem.systemRef].character[field.name] ? 'checked' : '' %>>
+                                                            <input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= systemCharacter?.[field.name] %>" id="<%= eventSystem.systemRef %><%= field.name %>" <%= systemCharacter?.[field.name] ? 'checked' : '' %>>
                                                             <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
                                                         <% } else { %>
                                                             <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                            <input type="text" class="form-control-sm" name="<%= eventSystem.systemRef %>[character][<%= field.name %>]" value="<%= user[eventSystem.systemRef].character[field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
+                                                            <input type="text" class="form-control-sm" name="<%= eventSystem.systemRef %>[character][<%= field.name %>]" value="<%= systemCharacter?.[field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
                                                         <% } %>
                                                         
                                                         <div class="invalid-feedback"><%- field.error %></div>
@@ -150,15 +150,15 @@
                                                             <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
                                                             <select name="<%= eventSystem.systemRef %>[<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-select form-select-sm" <%= field.required ? 'required' : '' %>>
                                                                 <% for (option of field.options) { %>
-                                                                    <option value="<%= option %>" <%= user[eventSystem.systemRef][field.name] == option ? 'selected' : '' %> <%= option %></option>
+                                                                    <option value="<%= option %>" <%= user[eventSystem.systemRef]?.[field.name] == option ? 'selected' : '' %> <%= option %></option>
                                                                 <% } %>
                                                             </select>                                                        
                                                         <% } else if (field.type == 'checkbox') { %>
-                                                            <input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef][field.name] %>" id="<%= eventSystem.systemRef %><%= field.name %>" <%= user[eventSystem.systemRef][field.name] ? 'checked' : '' %>>
+                                                            <input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef]?.[field.name] %>" id="<%= eventSystem.systemRef %><%= field.name %>" <%= user[eventSystem.systemRef]?.[field.name] ? 'checked' : '' %>>
                                                             <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
                                                         <% } else { %>
                                                             <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                            <input type="<%= field.type %>" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-control form-control-sm" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef][field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
+                                                            <input type="<%= field.type %>" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-control form-control-sm" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef]?.[field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
                                                         <% } %>
                                                         <div class="form-text"><%= field.description %></div>
                                                         <div class="invalid-feedback"><%- field.error %></div>

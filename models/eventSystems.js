@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const EventBooking = require('./eventBooking')
-const Event = require('./event')
-const EventHost = require('./eventHost');
 
 const eventSystemSchema = new mongoose.Schema({
     name: String,

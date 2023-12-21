@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const eventBooking = require('./eventBooking')
-const Event = require('./event')
+const Event = require('./lrpEvent')
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({

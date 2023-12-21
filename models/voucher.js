@@ -22,7 +22,7 @@ const voucherSchema = new mongoose.Schema({
     used: Boolean,
     event: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Event'
+        ref: 'LrpEvent'
     },
 })
 

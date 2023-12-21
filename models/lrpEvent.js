@@ -9,7 +9,7 @@ imgSchema.virtual('thumbnail').get(function() {
     return this.url.replace('/upload', '/upload/c_fill,w_180,h_180');
 });
 
-const eventSchema = new mongoose.Schema({
+const lrpEventSchema = new mongoose.Schema({
     name: String,
     eventStart: Date,
     eventEnd: Date,
@@ -143,4 +143,4 @@ const eventSchema = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model('Event', eventSchema);
+module.exports = mongoose.model('lrpEvent', lrpEventSchema);
