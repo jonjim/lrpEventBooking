@@ -32,20 +32,21 @@ module.exports.showEvent = async(req, res) => {
 
 module.exports.showEventBooking = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventTickets').populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
-    const eventTickets = await event.eventTickets.filter(a => new Date(a.availableFrom).toLocaleDateString() <= new Date().toLocaleDateString() && new Date(a.availableTo).toLocaleDateString() >= new Date().toLocaleDateString() && a.available)
+    const eventTickets = await event.eventTickets.filter(a => new Date(a.availableFrom) <= new Date() && new Date(a.availableTo) >= new Date() && a.available)
     const changeUser = typeof req.query.alt == 'undefined' || !req.query.alt ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
     const manual = typeof req.query.manual == 'undefined' || !req.query.manual ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
-    if (eventTickets.length > 0 && event.allowBookings) {
+    if (eventTickets.length > 0) {
         if (systemCheck(req, res, event.eventHost.eventSystem, req.user))
             return res.render('events/book', { title: event.name, event, changeUser, manual });
+        console.log('systemCheck failed')
     }
         req.flash('error', `${event.name} is not currently open for bookings!`);
-        res.redirect(`/events/${event._id}`)
+        return res.redirect(`/events/${event._id}`)
 }
 
 module.exports.editEventBooking = async(req, res, next) => {
     const eventBooking = await EventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost'}}).populate({path: 'event.eventHost',populate:{ path:'eventSystem'}});
-    const eventTickets = await eventBooking.event.eventTickets.filter(a => new Date(a.availableFrom).toLocaleDateString() <= new Date().toLocaleDateString() && new Date(a.availableTo).toLocaleDateString() >= new Date().toLocaleDateString() && a.available && ['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(a.ticketType) && !eventBooking.eventTickets.find(t => t._id.equals(a._id)))
+    const eventTickets = await eventBooking.event.eventTickets.filter(a => new Date(a.availableFrom) <= new Date() && new Date(a.availableTo) >= new Date() && a.available && ['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(a.ticketType) && !eventBooking.eventTickets.find(t => t._id.equals(a._id)))
     if (req.user._id.equals(eventBooking.user._id))
         res.render('events/editBooking', { title: 'Edit Event Booking', eventBooking, eventTickets });
     else {

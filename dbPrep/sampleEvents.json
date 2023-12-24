@@ -1,0 +1,312 @@
+[
+    {
+      "limits": {
+        "playerLimit": 50,
+        "playerBunkLimit": 0,
+        "monsterLimit": 30,
+        "monsterBunkLimit": 0,
+        "staffLimit": 10,
+        "staffBunkLimit": 0
+      },
+      "financials": {
+        "siteFee": 0,
+        "insurance": 0,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "overflowQueue": true,
+      "name": "Call to Arms",
+      "eventStart": "2024-04-05T00:00:00.000Z",
+      "eventEnd": "2024-04-07T00:00:00.000Z",
+      "visible": true,
+      "cancelled": false,
+      "hostImg": "/img/hosts/jackals.jpg",
+      "location": "Squirrel Wood Scout Campsite, The Abbe's Walk, Doncaster DN6 9JF",
+      "eventApproved": true,
+      "icInvitation": "<p class=\"intro is-italic is-size-5\">Overtyrant Lujayne has put out a call to arms amongst the Jackals and Allies</p>\r\n<p data-block-key=\"fnecw\">We received this detailed missive from the Jackals lore rat</p>\r\n<p data-block-key=\"esral\">&nbsp;</p>\r\n<p data-block-key=\"6g2mc\">Many thingses afoot in Southlands: elementals and water-creatures pestering coast and cities, mind-controlling octopus-things from space, assassins hunting for coins from a melted-down sacrificial altar, tentacle beasties, trouble-makey cults trying to free things we locked away, and innocent chaos beast-friends just trying to get home - and all iss pointing to Khazakstan. Jackals iss go there and sort things out, yess? Iss missions to do all over southlands but lands near Khazakstan iss where we will get to hearts of it all - but be careful, yess? An army iss assembling there and city may not be all ours now! Bring sneakiest disguises and cleverest brains and sharpest weapons.</p>\r\n<p data-block-key=\"1t53f\">&nbsp;</p>\r\n<p data-block-key=\"cdfe8\">The Overtyrant has asked for those Jackals brave enough to meet at Kazakhstan to find out more.</p>",
+      "fullDescription": "<p data-block-key=\"8040s\">Menu</p>\r\n<p data-block-key=\"48l4m\">Friday</p>\r\n<p data-block-key=\"71kn3\">Japanese style chicken/tofu with teriyaki noodles and vegetables. Cake and custard for desert.</p>\r\n<p data-block-key=\"8ggl4\">Saturday</p>\r\n<p data-block-key=\"4adgk\">Cooked breakfast</p>\r\n<p data-block-key=\"5ut1m\">Lunch tbc</p>\r\n<p data-block-key=\"8jrmh\">roast dinner (pork or nut) with cheese cake for desert</p>\r\n<p data-block-key=\"1d44c\">Sunday</p>\r\n<p data-block-key=\"cmblr\">cooked breakfast</p>\r\n<p data-block-key=\"7jt1r\">light sandwich and snacks</p>\r\n<p data-block-key=\"e8b1t\">any specific dietary requirements or restrictions please email</p>\r\n<p data-block-key=\"3kqmq\">enquiries@jackalfaction.uk</p>\r\n<p data-block-key=\"an8ih\"><br>we will run through the site safety rules and introduce the sanctioning officer, first aiders and safeguarding officer befor time in. If you arrive after time in please speak to a member of the command team so these can be explained and introduced to you.</p>\r\n<p data-block-key=\"cbj7h\">You can arrive on site from 14:00, time in will be approximately 19:00.</p>",
+      "promoDescription": "<p>Overtyrant Lujayne has put out a call to arms amongst the Jackals and Allies</p>",
+      "eventTickets": [
+        "6567b647e45a4bcd72625a32",
+        "6567b66fe45a4bcd72625a93",
+        "6567b68de45a4bcd72625af3"
+      ],
+      "attendees": [],
+      "allowBookings": true,
+      "externalBooking": "https://www.jackalfaction.uk/events/call-to-arms/",
+      "sanctioningOfficer": ""
+    },
+    {
+      "limits": {
+        "playerLimit": 50,
+        "playerBunkLimit": 0,
+        "monsterLimit": 30,
+        "monsterBunkLimit": 0,
+        "staffLimit": 10,
+        "staffBunkLimit": 0
+      },
+      "financials": {
+        "siteFee": 0,
+        "insurance": 0,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "name": "The Reclamation of Fenn",
+      "eventStart": "2024-03-08T00:00:00.000Z",
+      "eventEnd": "2024-03-10T00:00:00.000Z",
+      "visible": true,
+      "cancelled": false,
+      "location": "The Grange, Frogmore Grange, Frog Ln, Balsall Common, Coventry CV7 7FP",
+      "eventApproved": false,
+      "icInvitation": "<div class=\"xdj266r x11i5rnm xat24cr x1mh8g0r x1vvkbs\">The Great Ship/Floating Island of Fenn - also know as the Melnibonean Battle Barge has been returned to Reichmarshall Obed by the Great Horned Rat.</div>\r\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">At the Gathering of Nations it crash landed into the docks of Zagreb - crewed by the Lich Greyseer Ragwort, Faceripper - the Voice of the Great Horned Rat &amp; their nests of living Scathen. A great barrier of eerie green light has been erected across the prow of the ship, preventing entry.</div>\r\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Can the Vipers and their Allies find a way onto the Island? Can they save the Melnibonean Revenants bound to the Helm Tower? Will Diplomacy with the local Sea Elves prevail or will Vipers sabotage themselves?</div>",
+      "fullDescription": "<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">This is a Lorien Trust Sanctioned Event being run by the Viper Faction.</div>\r\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">&nbsp;</div>\r\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">We are currently anticipating this event being suitable for newer player characters, there will be puzzles, documents, fighting and more. (Medium Combat. Threat dependant on your actions!)</div>\r\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">&nbsp;</div>\r\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Tickets will be &pound;55 until Dec 31st. From Jan 1st onwards they will be &pound;60. Monstering is free.</div>\r\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Catering will be &pound;37pp and managed by The Grange. A booking link will go live soon to book separately.</div>",
+      "promoDescription": "<p>Can the Vipers and their Allies find a way onto the Island? Can they save the Melnibonean Revenants bound to the Helm Tower? Will Diplomacy with the local Sea Elves prevail or will Vipers sabotage themselves?</p>",
+      "overflowQueue": true,
+      "eventTickets": [
+        "6588203f674de07d104dc09e",
+        "65882058674de07d104dc0ba",
+        "65882077674de07d104dc0d5"
+      ],
+      "attendees": [],
+      "allowBookings": true,
+      "externalBooking": "https://forms.gle/yxPkS8pMFU4ZvCUh7",
+      "hostImg": "",
+      "sanctioningOfficer": ""
+    },
+    {
+      "limits": {
+        "playerLimit": 50,
+        "playerBunkLimit": 0,
+        "monsterLimit": 30,
+        "monsterBunkLimit": 0,
+        "staffLimit": 10,
+        "staffBunkLimit": 0
+      },
+      "financials": {
+        "siteFee": 0,
+        "insurance": 0,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "name": "Caer Danon",
+      "eventStart": "2024-03-02T00:00:00.000Z",
+      "eventEnd": "2024-03-02T00:00:00.000Z",
+      "visible": true,
+      "cancelled": false,
+      "location": "Donington Park Farmhouse, Castle Donington, DE74 2RN",
+      "eventApproved": false,
+      "icInvitation": "<p class=\"zfr3Q CDt4Ke \" dir=\"ltr\"><span class=\"jgG6ef C9DxTc \">The capital island of Caer Danon has finally been retaken! Through the efforts of the Dragons Nation and their allies, the forces that once held the island have been thwarted, and Dragons are returning to their homes now they are finally safe once more.</span></p>\r\n<p>&nbsp;</p>\r\n<p class=\"zfr3Q CDt4Ke \" dir=\"ltr\"><span class=\"jgG6ef C9DxTc \">Caoimhe naBascna, former warrior of Dal Riada who found herself cursed by Domnu, was released from the control of this ancestor of treachery. She has taken up her new role not only as Queen of Caer Danon, but also controlling the machine that stops Caer Danon from sinking into the ocean.</span></p>\r\n<p>&nbsp;</p>\r\n<p class=\"zfr3Q CDt4Ke \" dir=\"ltr\"><span class=\"jgG6ef C9DxTc \">It has taken many years, but the bridge between Erin and Cymrija is finally under Dragons control once again!</span></p>",
+      "fullDescription": "<p class=\"zfr3Q CDt4Ke \" dir=\"ltr\"><span class=\"C9DxTc \">Accommodation:</span><span class=\"C9DxTc \">&nbsp;There is no accommodation provided as part of this event. There are rooms available at the venue, as well as a Premier Inn and Holiday Inn within a ten minute drive of the venue, along with many other local options.</span><span class=\"C9DxTc \"><br></span><span class=\"C9DxTc \">Alcohol:</span> <span class=\"C9DxTc \">There is a licenced bar on site. Please do not bring your own alcohol.</span><span class=\"C9DxTc \"><br></span><span class=\"C9DxTc \">Threat:</span> <span class=\"C9DxTc \">Low/No threat. No combat is planned by the event team, but as this is a sanctioned event there is always the possibility of unforeseen PvP.</span></p>\r\n<p>&nbsp;</p>\r\n<p class=\"zfr3Q CDt4Ke \" dir=\"ltr\"><span class=\"C9DxTc \">This event is intended as a&nbsp;</span><span class=\"C9DxTc \">social event</span><span class=\"C9DxTc \">, with those who cannot make combat campaign events welcome to join us (including children) to catch up with their fellows before the 2024 main events begin. There will be plot information circulating at the event, and refs/marshalls will be available.&nbsp;</span><span class=\"C9DxTc \">Power trackers, loresheets,&nbsp;</span><span class=\"C9DxTc \">and any&nbsp;</span><span class=\"C9DxTc \">in-date lammies</span><span class=\"C9DxTc \">&nbsp;should be kept on your person as per Lorien Trust rules.</span></p>",
+      "promoDescription": "<p>The capital island of Caer Danon has finally been retaken! Through the efforts of the Dragons Nation and their allies, the forces that once held the island have been thwarted, and Dragons are returning to their homes now they are finally safe once more.</p>",
+      "overflowQueue": true,
+      "eventTickets": [
+        "65881e71674de07d104dbef5"
+      ],
+      "attendees": [],
+      "allowBookings": true,
+      "externalBooking": "https://sites.google.com/view/dragons2024social/home",
+      "hostImg": "",
+      "sanctioningOfficer": ""
+    },
+    {
+      "limits": {
+        "playerLimit": 50,
+        "playerBunkLimit": 0,
+        "monsterLimit": 30,
+        "monsterBunkLimit": 0,
+        "staffLimit": 10,
+        "staffBunkLimit": 0
+      },
+      "financials": {
+        "siteFee": 0,
+        "insurance": 0,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "name": "Twisted Tales Event 4",
+      "eventStart": "2024-02-23T00:00:00.000Z",
+      "eventEnd": "2024-02-25T00:00:00.000Z",
+      "visible": true,
+      "cancelled": false,
+      "location": "Alfrey Activity Centre",
+      "eventApproved": true,
+      "icInvitation": "<p><em>No ship greater than a fishing vessel has survived on the water for more than a few hours from it being launched.&nbsp; Those who are hardy enough to take the extreme risks of strange fogs, luring sirens, and water dwelling monsters are some of the most revered citizens of Lugate.&nbsp; The fish and some of the other water dwelling creatures provide many&nbsp;important ingredients for cuisine and components for &nbsp;alchemy.&nbsp; The hardy village of Forna,&nbsp;once a&nbsp;great port before the wars is the last bastion of supply of these delicacies and crucial ingredients. Recently though trade caravans from the isolated port have been few and far between with claims of a bad season with even rougher seas than normal and ferocious storms which&nbsp;many boats have not survived.</em></p>\r\n<p><em>With rumours of&nbsp;horrific fish monsters walking the streets of the town&nbsp;even fewer caravans are willing to even attempt the journey and if it is not supplied his last port will fail.&nbsp;&nbsp;Admiral Junta Derrin, the leader of this hardy community of fisherman&nbsp;has sent a request to the King of Lugate asking him to send the strongest knights and magus he can spare&nbsp;to quell these storms and debunk these rumours so that trade can continue and this last access to the sea will not be lost.</em></p>\r\n<p><em>The Lugate King has spoken with the Brazene, Hutar and even the Norn and they have all agreed to &nbsp;send the most experienced of their heroes to secure this isolated but critical bastion.</em></p>",
+      "fullDescription": "<p>This will be event information</p>",
+      "promoDescription": "<p>This is an example for a Twisted Tales event</p>",
+      "overflowQueue": true,
+      "eventTickets": [
+        "6571ac83ce054ef52cf87265"
+      ],
+      "attendees": [],
+      "allowBookings": true,
+      "externalBooking": "",
+      "hostImg": "",
+      "sanctioningOfficer": ""
+    },
+    {
+      "img": {
+        "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702046287/lrpEvents/vf6qak7op2qltsq1sbce.png",
+        "filename": "lrpEvents/vf6qak7op2qltsq1sbce"
+      },
+      "limits": {
+        "playerLimit": 3,
+        "playerBunkLimit": 10,
+        "monsterLimit": 10,
+        "monsterBunkLimit": null,
+        "staffLimit": 3,
+        "staffBunkLimit": null
+      },
+      "financials": {
+        "siteFee": 1500,
+        "insurance": 150,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "name": "A Spire To A Throne",
+      "eventStart": "2024-02-17T00:00:00.000Z",
+      "eventEnd": "2024-02-19T00:00:00.000Z",
+      "hostName": "6557dd59ea68a41937ba2902",
+      "hostImg": "/img/hosts/tarantulas.jpg",
+      "location": "Donington Park Farmhouse, Melbourne Rd,  Castle Donnington,  Derby,  DE74 2RN",
+      "icInvitation": "<p>To the people of the Tarantula and Gryphon Nations,</p>\r\n<p>As you know a great evil has befallen our lands. The unliving Lich Triel and the King of Eastern Lyonesse Briar, both have designs for our sacred land and seek the ruin of our people.</p>\r\n<p>In this dire time I Chancellor Prince Bethanor Beltano, with the power granted to me by the Sylvan Senate hereby open the Senate doors and invite you to a formal banquet where we may discuss the current situation and come up with a viable plan to fight back.</p>\r\n<p>I would be honour if you would join us on the 17th of the second month 1124 for such an event and with the great minds of our three nations alongside those of the other Heartland Nations we can finally put an end to this evil and save our sacred land.</p>\r\n<p>Yours in friendship,&nbsp;<br><strong>Prince Bethanor Beltano</strong> <br><em>Chancellor of the Sylvan Senate</em></p>",
+      "fullDescription": "<p>This event is open to players of all ages and characters of all pattern states.</p>\r\n<h4>Twisted Tales LRP Presents, On Behalf Of The Gryphons And Tarantula Factions, A One Night Event&nbsp;</h4>\r\n<p>Time in 5pm <br>Time out Midnight</p>\r\n<p>Event Staff bookings by prior arrangement</p>\r\n<p>Monsters by arrangement please contact either Gryphon or Tarantula Plot</p>\r\n<p><em>Please note ticket prices are based on the food costs and as such are based on the sites age banding for costs. </em></p>\r\n<p><strong>FOR ALL Under 16 players please contact us on enquiries@twisted-tales.org.uk to arrange their tickets. </strong></p>\r\n<p><em>Ticket price includes a 3 course sit down meal (you will be contacted before the event to record your menu choices) </em></p>\r\n<h4>Menu</h4>\r\n<p><strong>Starters<br></strong><span style=\"font-size: 10pt;\">Pate, chutney &amp; baked bread <br>Roasted tomato soup &amp; basked bread <br>Mint and pea fritters &amp; chutney </span></p>\r\n<p><span style=\"font-size: 10pt;\"><strong>Mains</strong> <br>Roasted vension &amp; spiced red wine sauce <br>Beetroot wellington &amp; vegetarian gravy <br>Pork loin &amp; apple cider sauce <br>Served with bowls of veg and gravy to the table <br>Served with roast potatoes </span></p>\r\n<p><span style=\"font-size: 10pt;\"><strong>Desserts</strong> <br>Baked egg custard &amp; raspberry sorbet <br>Ginger cake (GFO) <br>Selection of sorbets (V)(GF)(VG)</span></p>",
+      "promoDescription": "<p>Triel Cruentatus and King Briar have aligned themselves against the Tarantula's and the Gryphons. Join us to discuss and plan our solutions to this joint problem.</p>",
+      "eventTickets": [
+        "654faf3a9e5cae96cbc647e8",
+        "654faf5c9e5cae96cbc647fc",
+        "654faf889e5cae96cbc6480f",
+        "654fafb59e5cae96cbc64822",
+        "655363685d8bb24ecb54791d",
+        "6554e40e0b9c958d14e2fee5",
+        "65564f419c184b5a744640f4",
+        "655661372cc9262eaaea1405"
+      ],
+      "allowBookings": true,
+      "eventApproved": true,
+      "sanctioningOfficer": "",
+      "attendees": [],
+      "allowBookings": true,
+      "externalBooking": "https://grangelrp.com/Jade-Throne.php",
+      "hostImg": "",
+      "sanctioningOfficer": ""
+    },
+    {
+      "limits": {
+        "playerLimit": null,
+        "playerBunkLimit": null,
+        "monsterLimit": null,
+        "monsterBunkLimit": null,
+        "staffLimit": null,
+        "staffBunkLimit": null
+      },
+      "financials": {
+        "siteFee": 0,
+        "insurance": 0,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "overflowQueue": true,
+      "name": "Montol",
+      "eventStart": "2023-12-02T00:00:00.000Z",
+      "eventEnd": "2023-12-02T00:00:00.000Z",
+      "visible": true,
+      "hostName": "655b4e49ab0672ff2b4ec7ff",
+      "hostImg": "/img/hosts/harts.jpg",
+      "location": "Guildhall Northampton",
+      "eventApproved": true,
+      "icInvitation": "<p>To one and all!</p>\r\n<p>The people of Cornwall invite you to attend the Cornish mid-winter party of Montol. With the coming of a Cornish Queen, the people of the duchy are excited to celebrate mid-winter with the rest of Albion and friends further a field. This is an evening of merriment, song and the selection of the High Winter, who will deliver the blessing of mid-winter to one and all.</p>\r\n<p>The High Winter, will be chosen by the Royal Council from those who wear a mid-winter mask. All are invited!</p>\r\n<p>Queen Cara and the people of Cornwall.&nbsp;<br><em>Mid-winter masks are optional.</em></p>",
+      "fullDescription": "<p>This is a Harts of Albion run event, using the rules of and sanctioned by the Lorien Trust.</p>\r\n<p>The event is a non combat social for those aged 18 and up.</p>\r\n<p>The event will take place on Saturday 2nd December 2023 at the Northampton Guildhall.</p>\r\n<p>Time in at 1800hrs Time out 2300hrs</p>\r\n<p>Food is included in the event cost. Sausage or Bacon rolls, wedges and a variety of sauces. Dietary requirements catered for, please make sure you fill in the booking form with your dietary requirements. This is not a sit down meal.</p>\r\n<p>There is a bar selling alcoholic drinks, you may be asked for ID.</p>\r\n<p>The event cost is &pound;45. Payments should be made by 31/08/2023.</p>",
+      "promoDescription": "<p>Join the Harts for the mid-winter party of Montol.</p>",
+      "eventTickets": [
+        "655b539742c5376e407e0970"
+      ],
+      "attendees": [],
+      "allowBookings": true,
+      "externalBooking": "",
+      "sanctioningOfficer": "",
+      "cancelled": false
+    },
+    {
+      "limits": {
+        "playerLimit": null,
+        "playerBunkLimit": null,
+        "monsterLimit": null,
+        "monsterBunkLimit": null,
+        "staffLimit": null,
+        "staffBunkLimit": null
+      },
+      "financials": {
+        "siteFee": 0,
+        "insurance": 0,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "overflowQueue": true,
+      "name": "Dragon's Winter Solstice",
+      "eventStart": "2022-12-10T00:00:00.000Z",
+      "eventEnd": "2022-12-10T00:00:00.000Z",
+      "hostName": "6557dd58ea68a41937ba28ee",
+      "hostImg": "/img/hosts/dragons.jpg",
+      "location": "Donington Park Farmhouse, Melbourne Rd,  Castle Donnington,  Derby,  DE74 2RN",
+      "icInvitation": "<p>Fellow Dragons and friends from other nations! As we come to the end of the turn of another year you are cordially invited to BallyClare this solstice to celebrate our victories and mourn our losses. We shall sing songs, tell tales, play games and rebuild broken bridges, speak of issues ongoing in our lands, and bend the ear of our new Queen of the Dragons. All living and magical patterns are welcome, regardless of age. Regretfully, unliving patterns remain uninvited on Dragon lands. While under our hospitality, we aim to ensure your safety from outside forces. Thorkin Steward of Erin and Cymria</p>",
+      "promoDescription": "<p>Join the Dragons at BallyClare for the winter solstice, celebrate the highs of the year and mourn the losses.</p>",
+      "allowBookings": true,
+      "eventApproved": true,
+      "fullDescription": "",
+      "sanctioningOfficer": "",
+      "attendees": [],
+      "eventTickets": [],
+      "externalBooking": "https://events.tarantulafaction.com",
+      "visible": true,
+      "cancelled": false
+    },
+    {
+      "limits": {
+        "playerLimit": 50,
+        "playerBunkLimit": null,
+        "monsterLimit": 30,
+        "monsterBunkLimit": null,
+        "staffLimit": 10,
+        "staffBunkLimit": null
+      },
+      "financials": {
+        "siteFee": 0,
+        "insurance": 0,
+        "sanctioningFee": 80,
+        "props": 0,
+        "admin": 0,
+        "otherCosts": 0
+      },
+      "overflowQueue": true,
+      "name": "Grey Matters",
+      "eventStart": "2022-11-18T00:00:00.000Z",
+      "eventEnd": "2022-10-23T00:00:00.000Z",
+      "hostName": "6557dd58ea68a41937ba28f0",
+      "hostImg": "/img/hosts/gryphons.jpg",
+      "location": "John's Lee Wood Scout Campsite, Markfield Lane, Markfield, Leicestershire, LE67 9PS",
+      "icInvitation": "<p>A strange power stirs within the mountains of Manon Tor. A power not native to Erdreja who's origins are unknown but their purpose a direct affront to the safety and security of the Gryphon peoples and potentially all of the Hartlands should we not deal with this threat now. I, Lady Gryphon, Niobie Dea Drussus ask all to take up arms, rally to this cause, make ready the call for the banners to be raised. Loyal Gryphons and stalwart allies I call upon you to gather on the eve of the 18th day of the 11th month to ensure the opportunity our Legion has created is not wasted. To strike at the core of this threat and see it eradicated from the face of the Erdreja, and for the good of all upon the egg. We meet in Khaz Kurack in Lyonesse All For One!</p>",
+      "promoDescription": "<p>A strange power stirs within the mountains of Manon Tor. A power not native to Erdreja who's origins are unknown but their purpose a direct affront to the safety and security of the Gryphon peoples and potentially all of the Hartlands should we not deal with this threat now.</p>",
+      "allowBookings": false,
+      "eventApproved": false,
+      "fullDescription": "",
+      "sanctioningOfficer": "",
+      "attendees": [],
+      "eventTickets": [],
+      "externalBooking": "",
+      "cancelled": false
+    }
+  ]

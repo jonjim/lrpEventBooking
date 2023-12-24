@@ -67,7 +67,7 @@ const store = MongoStore.create({
 
 const sessionConfig = {
     store: store,
-    name: 'ltSanctionedEvent.sid',
+    name: 'larpEventBooking.sid',
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,

@@ -53,7 +53,7 @@ module.exports.createEvent = async(req, res, next) => {
     req.body.event.visible = false;
     const event = await new Event(req.body.event);
     await event.save();
-    res.redirect(`/admin/events/${event._id}`);
+    res.redirect(`/admin/events/${event._id}/edit`);
 };
 
 module.exports.deleteEvent = async(req, res, next) => {

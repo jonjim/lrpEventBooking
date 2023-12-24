@@ -6,10 +6,12 @@ const mongoose = require('mongoose');
 const eventHost = require('../models/eventHost');
 const lorienTrustHosts = require('./lorienTrust.json');
 const jadeThroneHosts = require('./jadeThrone.json');
+const sampleEvents = require('./sampleEvents.json');
 const faq = require('./faq.json');
 const siteConfig = require('../models/siteConfig');
 const EventSystems = require('../models/eventSystems');
 const FAQ = require('../models/faq')
+const LrpEvent = require('../models/lrpEvent');
 
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URL)
@@ -204,7 +206,9 @@ const seedDB = async() => {
   for (f of faq) {
     await new FAQ(f).save();
   }
-  
+  for (lrpEvent of sampleEvents) {
+    await new LrpEvent(lrpEvent).save();
+  }
 };
 
 seedDB().then(() => {
