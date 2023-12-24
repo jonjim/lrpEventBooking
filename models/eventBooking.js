@@ -20,7 +20,8 @@ const eventBookingSchema = new mongoose.Schema({
     },
     bookingMade: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     },
     bookingPaid: Date,
     paid: {

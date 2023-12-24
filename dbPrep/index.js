@@ -6,8 +6,10 @@ const mongoose = require('mongoose');
 const eventHost = require('../models/eventHost');
 const lorienTrustHosts = require('./lorienTrust.json');
 const jadeThroneHosts = require('./jadeThrone.json');
+const faq = require('./faq.json');
 const siteConfig = require('../models/siteConfig');
 const EventSystems = require('../models/eventSystems');
+const FAQ = require('../models/faq')
 
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URL)
@@ -32,6 +34,7 @@ const seedDB = async() => {
             siteName: 'LARP Event Bookings',
             siteDescription: 'LARP Event Bookings - Event information and booking for LRP events across the United Kingdom'
         }).save();
+    
     const lorienTrust = await new EventSystems({
         "img": {
             "filename": "lrpEvents/habdxwu8tk18kwkouckh",
@@ -197,7 +200,11 @@ const seedDB = async() => {
     for (host of jadeThroneHosts) {
         host.eventSystem = jadeThrone._id;
         await new eventHost(host).save();
-    }
+  }
+  for (f of faq) {
+    await new FAQ(f).save();
+  }
+  
 };
 
 seedDB().then(() => {

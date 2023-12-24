@@ -1,0 +1,18 @@
+[
+    {
+        "question": "Do I need a PayPal account to book?",
+        "answer": "<p><strong>No.</strong> Whilst we use PayPal to process payments, you can do so using a debit/credit card without the need to register with PayPal.&nbsp;</p>"
+    },
+    {
+        "question": "Can I book a ticket for someone else?",
+        "answer": "<p><strong>Yes!&nbsp;</strong>If you book and pay for a ticket for yourself, you can then gift your completed booking to another player. The only condition is that player needs to be registered on this system to be able to transfer the booking to them.&nbsp;</p>"
+    },
+    {
+        "question": "Can I change my booking?",
+        "answer": "<p>We allow some modification of bookings. Optional tickets, such as meal tickets or requests for bunk space, can be made by viewing your original booking. To change the type of booking you would need to cancel the booking.</p>"
+    },
+    {
+        "question": "How do I contact event organisers?",
+        "answer": "<p>On each event page their is an e-mail contact link for the organisers of that particular event.&nbsp;</p>"
+    }
+]
