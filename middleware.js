@@ -2,7 +2,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl;
         req.flash('error', 'You must be logged in to do that!');
-        return res.render('auth/login', { title: 'Login' });
+        return res.render('user/login', { title: 'Login' });
     }
     if (req.originalUrl == '/logout') next();
     if ((typeof req.user.username == 'undefined') && (req.originalUrl.split('/')[1] != 'account' || (req.originalUrl.split('/')[1] != 'account' && req.originalUrl.split('/')[2] != 'character'))) {

@@ -5,5 +5,11 @@
     ],
     "appService.defaultWebAppToDeploy": "/subscriptions/2913e659-b7a4-4a32-9505-3cc38a7377bd/resourceGroups/ltSanctionedEvents/providers/Microsoft.Web/sites/ltSanctionedEvents",
     "appService.deploySubpath": ".",
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "emmet.includeLanguages": {
+        "ejs": "html",
+      },
+     "[html]": {
+        "editor.defaultFormatter": "j69.ejs-beautify"
+      },
 }

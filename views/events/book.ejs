@@ -1,278 +1,285 @@
 <% layout('layouts/boilerplate') %>
-    <div class="row">
-        <div class="col">
-            <div class="card shadow py-3 px-3 mb-3">
-                <div class="card-header bg-white">
-                    <h4>
-                        <%= event.name %> - Ticket Booking
-                    </h4>
+<% var playerTickets = event.eventTickets.filter(e => ['player','playerchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
+<% var monsterTickets = event.eventTickets.filter(e => ['monster','monsterchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
+<% var staffTickets = event.eventTickets.filter(e => ['staff'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
+<div class="row">
+  <div class="col">
+    <div class="card shadow py-3 px-3 mb-3">
+      <div class="card-header bg-white">
+        <h4>
+          <%= event.name %> - Ticket Booking
+        </h4>
+      </div>
+      <% var mealTickets = event.eventTickets.filter(e => ['mealticket','mealticketchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
+      <div class="card-body">
+        <% if (event.attendees.find(a => a.user?.equals(currentUser._id)) && !changeUser) { %>
+        <div class="alert alert-warning">
+          You already have a booking for this event! <a href="/account/bookings" class="alert-link">Click here</a> to view your booking.
+        </div>
+        <% } %>
+        <% if (changeUser) { %>
+        <div class="alert alert-warning">
+          <h4 class="alert-heading">ADMIN
+            <%= manual ? 'MANUAL ' : '' %>BOOKING</h4>
+          <p>Please be aware you are currently booking for another user account</p>
+          <% if (manual) { %>
+          <p>Manual Bookings will never be displayed on event pages</p>
+          <% }%>
+        </div>
+        <% } %>
+        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+          <% if (playerTickets.length > 0) { %>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link link-dark active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"><i class="bi bi-ticket-detailed"></i> Player Bookings</a>
+          </li>
+          <% } if (monsterTickets.length > 0) { %>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link link-dark" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"><i class='bi bi-bug-fill nav_icon'></i> Monster Bookings</button>
+          </li> <% } if (staffTickets.length > 0) { %>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link link-dark" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i class="bi bi-stopwatch"></i> Staff Bookings</button>
+          </li><% } %>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <% if (playerTickets.length > 0) { %>
+          <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+            <p>Book to play <b>
+                <%= event.name %>!</b></p>
+            <form id="playerTickets" class="validated-form" action="/events/<%= event._id %>/book" method="POST" novalidate>
+              <% if (event.playerSpaces === 0 && !event.overflowQueue) { %>
+              <div class="alert alert-danger" role="alert">
+                Sorry! Player tickets are currently fully booked.
+              </div>
+              <% } else { %>
+              <% if (event.playerSpaces === 0 && event.overflowQueue) { %>
+              <div class="alert alert-danger" role="alert">
+                Player tickets are currently fully booked. You can still book however you will be entered into a waiting list.
+              </div>
+              <% } if(changeUser) { %>
+              <% if (manual) { %>
+              <div class="row">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="firstname">First Name</label>
+                    <input required type="text" name="firstname" class="form-control">
+                  </div>
                 </div>
-                <% var mealTickets = event.eventTickets.filter(e => ['mealticket','mealticketchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
-                    <div class="card-body">
-                        <% if (event.attendees.find(a => a.user?.equals(currentUser._id)) && !changeUser) { %>
-                            <div class="alert alert-warning">
-                                You already have a booking for this event! <a href="/account/bookings" class="alert-link">Click here</a> to view your booking.
-                            </div>
-                            <% } %>
-                                <% if (changeUser) { %>
-                                    <div class="alert alert-warning">
-                                        <h4 class="alert-heading">ADMIN
-                                            <%= manual ? 'MANUAL ' : '' %>BOOKING</h4>
-                                        <p>Please be aware you are currently booking for another user account</p>
-                                        <% if (manual) { %>
-                                            <p>Manual Bookings will never be displayed on event pages</p>
-                                            <% }%>
-                                    </div>
-                                    <% } %>
-                                        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
-                                            <li class="nav-item" role="presentation">
-                                                <a class="nav-link link-dark active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"><i class="bi bi-ticket-detailed"></i> Player Bookings</a>
-                                            </li>
-                                            <li class="nav-item" role="presentation">
-                                                <button class="nav-link link-dark" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"><i class='bi bi-bug-fill nav_icon'></i> Monster Bookings</button>
-                                            </li>
-                                            <li class="nav-item" role="presentation">
-                                                <button class="nav-link link-dark" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i class="bi bi-stopwatch"></i> Staff Bookings</button>
-                                            </li>
-                                        </ul>
-                                        <div class="tab-content" id="pills-tabContent">
-                                            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                                                <p>Book to play <b>
-                            <%= event.name %>!</b></p>
-                                                <form id="playerTickets" class="validated-form" action="/events/<%= event._id %>/book" method="POST" novalidate>
-
-                                                    <% if (event.playerSpaces === 0 && !event.overflowQueue) { %>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            Sorry! Player tickets are currently fully booked.
-                                                        </div>
-                                                        <% } else { %>
-                                                            <% if (event.playerSpaces === 0 && event.overflowQueue) { %>
-                                                                <div class="alert alert-danger" role="alert">
-                                                                    Player tickets are currently fully booked. You can still book however you will be entered into a waiting list.
-                                                                </div>
-                                                                <% } if(changeUser) { %>
-                                                                    <% if (manual) { %>
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <div class="mb-3">
-                                                                                    <label for="firstname">First Name</label>
-                                                                                    <input required type="text" name="firstname" class="form-control">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <div class="mb-3">
-                                                                                    <label for="surname">Surname</label>
-                                                                                    <input required type="text" name="surname" class="form-control">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <% } else { %>
-                                                                            <div class="mb-3">
-                                                                                <label for="username">E-mail Address</label>
-                                                                                <input class="form-control" type="email" name="username" required>
-                                                                                <div class="invalid-feedback">Please enter a valid e-mail address</div>
-                                                                            </div>
-                                                                            <% }} %>
-                                                                                <p>The following tickets are available to play</p>
-                                                                                <% var playerTickets = event.eventTickets.filter(e => ['player','playerchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="surname">Surname</label>
+                    <input required type="text" name="surname" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <% } else { %>
+              <div class="mb-3">
+                <label for="username">E-mail Address</label>
+                <input class="form-control" type="email" name="username" required>
+                <div class="invalid-feedback">Please enter a valid e-mail address</div>
+              </div>
+              <% }} %>
+              <p>The following tickets are available to play</p>
+              <% 
                                 for (ticket of playerTickets) { %>
-                                                                                    <div class="mb-3 form-check">
-                                                                                        <input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerTickets]">
-                                                                                        <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                        <div class="invalid-feedback">You must select a ticket</div>
-                                                                                    </div>
-                                                                                    <%  } %>
-                                                                                        <% var playerBunkTickets = event.eventTickets.filter(e => ['playerbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerTickets]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+                <div class="invalid-feedback">You must select a ticket</div>
+              </div>
+              <%  } %>
+              <% var playerBunkTickets = event.eventTickets.filter(e => ['playerbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
                                 if (playerBunkTickets.length > 0){ %>
-                                                                                            <hr>
-                                                                                            <h5>Indoor Bunks</h5>
-                                                                                            <% if (event.playerBunkSpaces === 0) { %>
-                                                                                                <div class="alert alert-danger" role="alert">
-                                                                                                    Sorry! Player bunks are currently fully booked.
-                                                                                                </div>
-                                                                                                <% } else { %>
-                                                                                                    <% for (ticket of playerBunkTickets){ %>
-                                                                                                        <div class="mb-3 form-check">
-                                                                                                            <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerBunks]">
-                                                                                                            <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                                        </div>
-                                                                                                        <% } } } %>
+              <hr>
+              <h5>Indoor Bunks</h5>
+              <% if (event.playerBunkSpaces === 0) { %>
+              <div class="alert alert-danger" role="alert">
+                Sorry! Player bunks are currently fully booked.
+              </div>
+              <% } else { %>
+              <% for (ticket of playerBunkTickets){ %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerBunks]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+              </div>
+              <% } } } %>
 
 
-                                                                                                            <% if (mealTickets.length > 0){ %>
-                                                                                                                <hr>
-                                                                                                                <h5>Meal Tickets</h5>
-                                                                                                                <% for (ticket of mealTickets){ %>
-                                                                                                                    <div class="mb-3 form-check">
-                                                                                                                        <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerMeal]">
-                                                                                                                        <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                                                    </div>
-                                                                                                                    <% } } %>
-                                                                                                                        <div class=" mb-3">
-                                                                                                                            <button class="btn btn-success"><h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book a Player Ticket</h5></button>
-                                                                                                                        </div>
-                                                                                                                        <% } %>
-                                                </form>
+              <% if (mealTickets.length > 0){ %>
+              <hr>
+              <h5>Meal Tickets</h5>
+              <% for (ticket of mealTickets){ %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerMeal]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+              </div>
+              <% } } %>
+              <div class=" mb-3">
+                <button class="btn btn-success">
+                  <h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book a Player Ticket</h5>
+                </button>
+              </div>
+              <% } %>
+            </form>
 
-                                            </div>
-                                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-                                                <p>Book to monster/crew <b>
-                            <%= event.name %>!</b></p>
-                                                <form id="monsterTickets" class="validated-form" action="/events/<%= event._id %>/book" method="POST" novalidate>
-                                                    <% if (event.monsterSpaces === 0) { %>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            Sorry! Monster tickets are currently fully booked.
-                                                        </div>
-                                                        <% } else { %>
-                                                            <% if (event.monsterSpaces === 0 && event.overflowQueue) { %>
-                                                                <div class="alert alert-danger" role="alert">
-                                                                    Player tickets are currently fully booked. You can still book however you will be entered into a waiting list.
-                                                                </div>
-                                                                <% } if(changeUser) { %>
-                                                                    <% if (manual) { %>
-                                                                        <% } else { %>
-                                                                            <div class="mb-3">
-                                                                                <label for="username">E-mail Address</label>
-                                                                                <input class="form-control" type="email" name="username" required>
-                                                                                <div class="invalid-feedback">Please enter a valid e-mail address</div>
-                                                                            </div>
-                                                                            <% }} %>
-                                                                                <p>The following tickets are available to monster</p>
-                                                                                <% var monsterTickets = event.eventTickets.filter(e => ['monster','monsterchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
-                                for (ticket of monsterTickets) { %>
-                                                                                    <div class="mb-3 form-check">
-                                                                                        <input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterTicket]">
-                                                                                        <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                        <div class="invalid-feedback">You must select a ticket</div>
-                                                                                    </div>
-                                                                                    <% }} %>
+          </div> <% } if (monsterTickets.length > 0) {%>
+          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+            <p>Book to monster/crew <b>
+                <%= event.name %>!</b></p>
+            <form id="monsterTickets" class="validated-form" action="/events/<%= event._id %>/book" method="POST" novalidate>
+              <% if (event.monsterSpaces === 0) { %>
+              <div class="alert alert-danger" role="alert">
+                Sorry! Monster tickets are currently fully booked.
+              </div>
+              <% } else { %>
+              <% if (event.monsterSpaces === 0 && event.overflowQueue) { %>
+              <div class="alert alert-danger" role="alert">
+                Player tickets are currently fully booked. You can still book however you will be entered into a waiting list.
+              </div>
+              <% } if(changeUser) { %>
+              <% if (manual) { %>
+              <% } else { %>
+              <div class="mb-3">
+                <label for="username">E-mail Address</label>
+                <input class="form-control" type="email" name="username" required>
+                <div class="invalid-feedback">Please enter a valid e-mail address</div>
+              </div>
+              <% }} %>
+              <p>The following tickets are available to monster</p>
+              <%  for (ticket of monsterTickets) { %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterTicket]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+                <div class="invalid-feedback">You must select a ticket</div>
+              </div>
+              <% }} %>
 
-                                                                                        <% var monsterBunkTickets = event.eventTickets.filter(e => ['monsterbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
+              <% var monsterBunkTickets = event.eventTickets.filter(e => ['monsterbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
                                 if (monsterBunkTickets.length > 0){ %>
-                                                                                            <hr>
-                                                                                            <h5>Indoor Bunks</h5>
-                                                                                            <% if (event.monsterBunkSpaces === 0) { %>
-                                                                                                <div class="alert alert-danger" role="alert">
-                                                                                                    Sorry! Monster tickets are currently fully booked.
-                                                                                                </div>
-                                                                                                <% } else { %>
-                                                                                                    <% for (ticket of monsterBunkTickets){ %>
-                                                                                                        <div class="mb-3 form-check">
-                                                                                                            <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterBunk]">
-                                                                                                            <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                                        </div>
-                                                                                                        <% } } }%>
+              <hr>
+              <h5>Indoor Bunks</h5>
+              <% if (event.monsterBunkSpaces === 0) { %>
+              <div class="alert alert-danger" role="alert">
+                Sorry! Monster tickets are currently fully booked.
+              </div>
+              <% } else { %>
+              <% for (ticket of monsterBunkTickets){ %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterBunk]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+              </div>
+              <% } } }%>
 
-                                                                                                            <% if (mealTickets.length > 0){ %>
-                                                                                                                <hr>
-                                                                                                                <h5>Meal Tickets</h5>
-                                                                                                                <% for (ticket of mealTickets){ %>
-                                                                                                                    <div class="mb-3 form-check">
-                                                                                                                        <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterMeal]">
-                                                                                                                        <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                                                    </div>
-                                                                                                                    <% } } %>
-                                                                                                                        <button class="btn btn-danger mb-3"><h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Monster Ticket</h5></button>
-                                                </form>
-                                            </div>
-                                            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
-                                                <p>Book to staff <b>
-                            <%= event.name %>!</b></p>
-                                                <p>The following tickets are available for staff</p>
-                                                <form id="staffTickets" class="validated-form" action="/events/<%= event._id %>/book" method="POST" novalidate>
-                                                    <% if (event.staffSpaces === 0 && !event.overflowQueue) { %>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            Sorry! Staff tickets are currently fully booked.
-                                                        </div>
-                                                        <% } else { %>
-                                                            <% if (event.staffSpaces === 0 && event.overflowQueue) { %>
-                                                                <div class="alert alert-danger" role="alert">
-                                                                    Staff tickets are currently fully booked. You can still book however you will be entered into a waiting list.
-                                                                </div>
-                                                                <% } if(changeUser) { %>
-                                                                    <% if (manual) { %>
-                                                                        <% } else { %>
-                                                                            <div class="mb-3">
-                                                                                <label for="username">E-mail Address</label>
-                                                                                <input class="form-control" type="email" name="username" required>
-                                                                                <div class="invalid-feedback">Please enter a valid e-mail address</div>
-                                                                            </div>
-                                                                            <% }} %>
-                                                                                <% var staffTickets = event.eventTickets.filter(e => ['staff'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
-                                for (ticket of staffTickets) { %>
-                                                                                    <div class="mb-3 form-check">
-                                                                                        <input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffTicket]">
-                                                                                        <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                        <div class="invalid-feedback">You must select a ticket</div>
-                                                                                    </div>
-                                                                                    <% }} %>
+              <% if (mealTickets.length > 0){ %>
+              <hr>
+              <h5>Meal Tickets</h5>
+              <% for (ticket of mealTickets){ %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterMeal]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+              </div>
+              <% } } %>
+              <button class="btn btn-danger mb-3">
+                <h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Monster Ticket</h5>
+              </button>
+            </form>
+          </div> <% } if (staffTickets.length > 0) {%>
+          <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+            <p>Book to staff <b>
+                <%= event.name %>!</b></p>
+            <p>The following tickets are available for staff</p>
+            <form id="staffTickets" class="validated-form" action="/events/<%= event._id %>/book" method="POST" novalidate>
+              <% if (event.staffSpaces === 0 && !event.overflowQueue) { %>
+              <div class="alert alert-danger" role="alert">
+                Sorry! Staff tickets are currently fully booked.
+              </div>
+              <% } else { %>
+              <% if (event.staffSpaces === 0 && event.overflowQueue) { %>
+              <div class="alert alert-danger" role="alert">
+                Staff tickets are currently fully booked. You can still book however you will be entered into a waiting list.
+              </div>
+              <% } if(changeUser) { %>
+              <% if (manual) { %>
+              <% } else { %>
+              <div class="mb-3">
+                <label for="username">E-mail Address</label>
+                <input class="form-control" type="email" name="username" required>
+                <div class="invalid-feedback">Please enter a valid e-mail address</div>
+              </div>
+              <% }} %>
+              <% for (ticket of staffTickets) { %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffTicket]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+                <div class="invalid-feedback">You must select a ticket</div>
+              </div>
+              <% }} %>
 
-                                                                                        <% var staffBunkTickets = event.eventTickets.filter(e => ['staffbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
+              <% var staffBunkTickets = event.eventTickets.filter(e => ['staffbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
                                 if (staffBunkTickets.length > 0){ %>
-                                                                                            <hr>
-                                                                                            <h5>Indoor Bunks</h5>
-                                                                                            <% for (ticket of staffBunkTickets){ %>
-                                                                                                <div class="mb-3 form-check">
-                                                                                                    <input class="form-check-input" type="check" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffBunk]">
-                                                                                                    <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                                </div>
-                                                                                                <% } } %>
+              <hr>
+              <h5>Indoor Bunks</h5>
+              <% for (ticket of staffBunkTickets){ %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="check" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffBunk]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+              </div>
+              <% } } %>
 
-                                                                                                    <% if (mealTickets.length > 0){ %>
-                                                                                                        <hr>
-                                                                                                        <h5>Meal Tickets</h5>
-                                                                                                        <% for (ticket of mealTickets){ %>
-                                                                                                            <div class="mb-3 form-check">
-                                                                                                                <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffMeal]">
-                                                                                                                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
-                                            <%= ticket.cost %> - <%= ticket.description %></label>
-                                                                                                            </div>
-                                                                                                            <% } } %>
-                                                                                                                <button class="btn btn-primary mb-3"><h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Staff Ticket</h5></button>
-                                                </form>
-                                                <i>Please note: Staff tickets are usually by invitation only. Please do not book as staff without speaking to the event organisers first.</i>
-                                            </div>
-                                        </div>
-
-
-
-                    </div>
-            </div>
+              <% if (mealTickets.length > 0){ %>
+              <hr>
+              <h5>Meal Tickets</h5>
+              <% for (ticket of mealTickets){ %>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffMeal]">
+                <label class="form-check-label" for="ticket_<%= ticket._id %>">£
+                  <%= ticket.cost %> - <%= ticket.description %></label>
+              </div>
+              <% } } %>
+              <button class="btn btn-primary mb-3">
+                <h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Staff Ticket</h5>
+              </button>
+            </form>
+            <i>Please note: Staff tickets are usually by invitation only. Please do not book as staff without speaking to the event organisers first.</i>
+          </div>
+          <% } %>
         </div>
-        <div class="col-md-3">
-            <%- include('../partials/eventSidebar')%>
-        </div>
+      </div>
     </div>
-    <% if (event.img.url) { %>
-            <script>
-                document.getElementById('eventImg').addEventListener('mouseenter', () => {
-                    document.getElementById('eventImg').classList.add('event-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo');
-                })
-                document.getElementById('eventImg').addEventListener('mouseleave', () => {
-                    document.getElementById('eventImg').classList.remove('event-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo');
-                })
+  </div>
+  <div class="col-md-3">
+    <%- include('../partials/eventSidebar')%>
+  </div>
+</div>
+<% if (event.img.url) { %>
+<script>
+  document.getElementById('eventImg').addEventListener('mouseenter', () => {
+    document.getElementById('eventImg').classList.add('event-logo-fade');
+    document.getElementById('hostLogo').classList.remove('host-logo-fade');
+    document.getElementById('hostLogo').classList.add('host-logo');
+  })
+  document.getElementById('eventImg').addEventListener('mouseleave', () => {
+    document.getElementById('eventImg').classList.remove('event-logo-fade');
+    document.getElementById('hostLogo').classList.add('host-logo-fade');
+    document.getElementById('hostLogo').classList.remove('host-logo');
+  })
 
-                document.getElementById('hostLogo').addEventListener('mouseenter', () => {
-                    document.getElementById('eventImg').classList.add('event-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo');
-                })
-                document.getElementById('hostLogo').addEventListener('mouseleave', () => {
-                    document.getElementById('eventImg').classList.remove('event-logo-fade');
-                    document.getElementById('hostLogo').classList.add('host-logo-fade');
-                    document.getElementById('hostLogo').classList.remove('host-logo');
-                })
-            </script>
-            <% } %>
+  document.getElementById('hostLogo').addEventListener('mouseenter', () => {
+    document.getElementById('eventImg').classList.add('event-logo-fade');
+    document.getElementById('hostLogo').classList.remove('host-logo-fade');
+    document.getElementById('hostLogo').classList.add('host-logo');
+  })
+  document.getElementById('hostLogo').addEventListener('mouseleave', () => {
+    document.getElementById('eventImg').classList.remove('event-logo-fade');
+    document.getElementById('hostLogo').classList.add('host-logo-fade');
+    document.getElementById('hostLogo').classList.remove('host-logo');
+  })
+</script>
+<% } %>

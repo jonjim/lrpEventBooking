@@ -51,24 +51,29 @@ html {
 }
 
 .system-logo {
+    transition:all ease 500ms;
     max-height: 60px;
     opacity: 0.5;
     margin-bottom: -15px;
 }
 
 .system-logo:hover {
+    transition:all ease 500ms;
     opacity: 1.0;
 }
 
 .event-logo-fade {
+    transition:all ease 500ms;
     opacity: 0.5;
 }
 
 .event-logo {
+    transition:all ease 500ms;
     max-width: 180px;
 }
 
 .host-logo-fade {
+    transition:all ease 500ms;
     position: absolute;
     top: 5px;
     left: 55px;
@@ -78,6 +83,7 @@ html {
 }
 
 .host-logo {
+    transition:all ease 500ms;
     position: absolute;
     top: 0px;
     left: 46px;
