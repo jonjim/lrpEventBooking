@@ -46,53 +46,8 @@
                                     </div>
                                 </div>
                                 <% } %>
-                                <% if (attendee.ticketType == 'player' && attendee.user) { %>
-                                    <hr>
-                                    <b>Character Details</b>
-                                    <h6 class="text-center"><%= attendee.user?.character.characterName %></h6>
-                                    <p id="characterRace" class="text-center mb-0">
-                                        <%= attendee.user?.character.race %>
-                                    </p>
-                                    <p class="text-center mb-0">
-                                        <%= attendee.user?.character.faction %>
-                                    </p>
-                                    <p id="characterGroup" class="text-center mb-0">
-                                        <%= attendee.user?.character.groupname %>
-                                    </p>
-                                    <div class="row mb-3">
-                                        <div class="col">
-                                            <small>
-                                            <ul class="list-unstyled" id="characterCS">
-                                                <% if (currentUser.character) { for (var i=0; i < currentUser.character.characterSkills.length; i++){ %>
-                                                    <li class="small">
-                                                        <%= attendee.user?.character.characterSkills[i].name %>
-                                                    </li>
-                                                    <% } %>
-            
-                                                        <br>
-                                                        <% for (var i=0; i <attendee.user?.character.occupationalSkills.length;i++){ if (attendee.user?.character.occupationalSkills[i].script) { %>
-                                                            <li class="small">
-                                                                <%= attendee.user?.character.occupationalSkills[i].name %>
-                                                            </li>
-                                                            <% }}} %>
-                                            </ul>
-                                        </small>
-                                        </div>
-                                        <div class="col">
-                                            <small>
-                                            <ul class="list-unstyled" id="characterOS">
-                                                <% if (attendee.user?.character) { for (var i=0; i < attendee.user?.character.occupationalSkills.length;i++){ if(!attendee.user?.character.occupationalSkills[i].script) { %>
-                                                    <li class="small">
-                                                        <%= attendee.user?.character.occupationalSkills[i].name %>
-                                                    </li>
-                                                    <% }}} %>
-                                            </ul>
-                                        </small>
-                                        </div>
-                                    </div>
-                                <% } %>
                             </td>
                         </tr>
-                        <% }  %>
+                    <% }  %>
             </tbody>
         </table>

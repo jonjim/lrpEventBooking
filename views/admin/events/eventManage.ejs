@@ -8,18 +8,18 @@
         </ol>
     </nav>
     <div class="card shadow py-3 px-3">
-        <div class="card-header mb-3 bg-white row g-5">
+        <div class="card-header mb-3 bg-white row">
             <div class="d-none d-md-block col-md-2 mb-2">                
-                <div class="img align-middle text-center">
-                    <img id="eventImg" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                <% if (event.img.url) { %><img id="hostLogo" style="top:-70px !important; left:10px !important;" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
+                <div class="img align-middle text-center"><img id="eventImg" <% if (event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= event.eventHost.name %>" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+      
                 </div>
             </div>
             <div class="col">
                 <h2>
                     <a href="/events/<%= event._id %>" class="link-dark">
-                        <%= event.name %> <% if (event.eventHost.eventSystem.img?.url) { %><img height="60px" style="top:-20px" src="<%= event.eventHost.eventSystem.img.url %>" alt=""> <% } %>
-                    </a>
+                        <%= event.name %> <% if (event.eventHost.eventSystem.img?.url) { %> <% } %>
+                    </a><br/>
+                    <img height="60px" style="top:-20px" src="<%= event.eventHost.eventSystem.img.url %>" alt="">
                     <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %>
                 </h2>
                 <a class="small" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(event.location) %>">
