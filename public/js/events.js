@@ -33,15 +33,6 @@ tinymce.init({
      `
 });
 
-function setLtHost() {
-    document.getElementById('eventLocation').value = 'Locko Park, Spondon, Derbyshire, DE7 4PQ';
-    document.getElementById('eventHost').value = 'Lorien Trust';
-    document.getElementById('eventApproved').checked = true;
-    document.getElementById('eventVisible').checked = true;
-    document.getElementById('eventImageUrl').value = '/img/lorienTrustx4.png';
-    document.getElementById('eventImg').src = '/img/lorienTrustx4.png';
-}
-
 function setHostImageUrl(host) {
     let url;
     let hostName = host.value ? host.value : host;

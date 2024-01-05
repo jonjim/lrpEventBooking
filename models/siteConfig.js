@@ -12,7 +12,12 @@ const siteConfigSchema = new mongoose.Schema({
         url: String,
         filename: String
     },
-    siteDescription: String
+    siteDescription: String,
+    hostingCharge: {
+        type: Number,
+        default: 0
+    },
+    hostingPaypal: String
 })
 
 module.exports = mongoose.model('siteConfig', siteConfigSchema);

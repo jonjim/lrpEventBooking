@@ -145,5 +145,10 @@ const lrpEventSchema = new mongoose.Schema({
     toObject: { virtuals: true },
 })
 
+lrpEventSchema.virtual('img.path')
+    .set(function(value) {
+        this.img.url = value;
+    })
+
 
 module.exports = mongoose.model('lrpEvent', lrpEventSchema);
