@@ -131,7 +131,7 @@ const lrpEventSchema = new mongoose.Schema({
         },
         ticketsAvailable: {
             get() {
-                return this.eventTickets.find(a => new Date(a.availableFrom) <= new Date() && new Date(a.availableTo) >= new Date()) ? true : false
+                return this.eventTickets.find(a => new Date(a.availableFrom) <= new Date() && new Date(a.availableTo) >= new Date() && a.available) ? true : false
             }
         },
         imgThumbnail: {

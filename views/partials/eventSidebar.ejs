@@ -64,7 +64,7 @@
                         <%= event.eventHost.contactAddress %>
                     </a>
                     <% if (event.eventHost.eventSystem.terms) { %>
-                        <br /><a href="/system/<%= event.eventHost.eventSystem.systemRef %>">Terms & Conditions</a>
+                        <br /><a class="" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms">Terms & Conditions</a>
                     <% } %>
                 </li>
             </ul>
@@ -78,6 +78,9 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a class="link-dark" href="/admin/events/<%= event._id %>/edit"><i class="bi bi-pencil-square pe-2"></i>Edit Event</a>
+                </li>
+				<li class="list-group-item">
+                    <a class="link-dark" href="/admin/events/<%= event._id %>/manage"><i class="bi bi-bar-chart-line pe-2"></i>Manage Event</a>
                 </li>
             </ul>
         </div>

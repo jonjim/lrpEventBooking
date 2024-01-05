@@ -38,7 +38,6 @@ module.exports.showEventBooking = async(req, res, next) => {
     if (eventTickets.length > 0) {
         if (systemCheck(req, res, event.eventHost.eventSystem, req.user))
             return res.render('events/book', { title: event.name, event, changeUser, manual });
-        console.log('systemCheck failed')
     }
         req.flash('error', `${event.name} is not currently open for bookings!`);
         return res.redirect(`/events/${event._id}`)

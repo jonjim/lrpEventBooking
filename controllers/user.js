@@ -63,7 +63,8 @@ module.exports.accountUpdate = async (req, res, next) => {
     req.body.displayBookings = typeof req.body.displayBookings != 'undefined' ? req.body.displayBookings == 'on' ? true : false : false;
     const user = await User.findByIdAndUpdate(req.user._id, {...req.body }, { new: true, strict:false })
     req.user = user;
-    res.redirect('/account');
+    const redirectUrl = req.session.returnTo || '/account';
+    res.redirect(redirectUrl);
 };
 
 module.exports.renderLoginForm = (req, res) => {
