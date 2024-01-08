@@ -1,88 +1,88 @@
 <% layout('layouts/boilerplate') %>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb small">
-            <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
-            <li class="breadcrumb-item active" aria-current="page">
-                <%= event.name %> 
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <%= event.name %>
+    </li>
+  </ol>
+</nav>
+<div class="card shadow py-3 px-3">
+  <div class="card-header mb-3 bg-white row">
+    <div class="d-none d-md-block col-md-2 mb-2">
+      <div class="img align-middle text-center"><img id="eventImg" <% if (event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= event.eventHost.name %>" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+
+      </div>
+    </div>
+    <div class="col">
+      <h2>
+        <a href="/events/<%= event._id %>" class="link-dark">
+          <%= event.name %> <% if (event.eventHost.eventSystem.img?.url) { %> <% } %>
+        </a><br />
+        <img height="60px" style="top:-20px" src="<%= event.eventHost.eventSystem.img.url %>" alt="">
+        <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %>
+      </h2>
+      <a class="small" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(event.location) %>">
+        <%= event.location %>
+      </a><br>
+      <span class="small">
+        <%= new Date(event.eventStart).toLocaleDateString() %>
+        <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+        <%= new Date(event.eventEnd).toLocaleDateString() %>
+        <% } %></span><br>
+
+      <a class="link-dark small" href="/admin/events/<%= event._id %>/edit"><i class="bi bi-pencil-square pe-2"></i>Edit Event</a>
+    </div>
+    <div class="col col-md-3 text-end">
+      <div class="btn-group-vertical" role="group">
+        <div class="btn-group mt-5">
+          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-receipt"></i> Event Reports
+          </a>
+
+          <ul class="dropdown-menu text-end">
+            <li><a class="dropdown-item" href="/admin/events/<%= event._id %>/print/signin">Sign In Sheet</a></li>
+            <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/attendees">Attendees Report</a></li>
+            <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/medical">Medical Details</a></li>
+            <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/dietary">Dietary Details</a></li>
+            <% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
+            <li>
+              <hr class="dropdown-divider">
             </li>
-        </ol>
-    </nav>
-    <div class="card shadow py-3 px-3">
-        <div class="card-header mb-3 bg-white row">
-            <div class="d-none d-md-block col-md-2 mb-2">                
-                <div class="img align-middle text-center"><img id="eventImg" <% if (event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= event.eventHost.name %>" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-      
-                </div>
-            </div>
-            <div class="col">
-                <h2>
-                    <a href="/events/<%= event._id %>" class="link-dark">
-                        <%= event.name %> <% if (event.eventHost.eventSystem.img?.url) { %> <% } %>
-                    </a><br/>
-                    <img height="60px" style="top:-20px" src="<%= event.eventHost.eventSystem.img.url %>" alt="">
-                    <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %>
-                </h2>
-                <a class="small" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(event.location) %>">
-                    <%= event.location %>
-                </a><br>
-                <span class="small">
-            <%= new Date(event.eventStart).toLocaleDateString() %>
-                    <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-                        <%= new Date(event.eventEnd).toLocaleDateString() %>
-                            <% } %></span><br>
-
-                <a class="link-dark small" href="/admin/events/<%= event._id %>/edit"><i class="bi bi-pencil-square pe-2"></i>Edit Event</a>
-            </div>
-            <div class="col col-md-3 text-end">
-                    <div class="btn-group-vertical" role="group">
-                        <div class="btn-group mt-5">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-receipt"></i> Event Reports
-                            </a>
-
-                            <ul class="dropdown-menu text-end">
-                                <li><a class="dropdown-item" href="/admin/events/<%= event._id %>/print/signin">Sign In Sheet</a></li>
-                                <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/attendees">Attendees Report</a></li>
-                                <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/medical">Medical Details</a></li>
-                                <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/dietary">Dietary Details</a></li>
-                                <% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="/admin/events/<%= event._id %>/print/pid">Player IDs CSV</a></li>
-                                <% } %>
-                            </ul>
-                        </div>
-                        <div class="btn-group">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-ticket-detailed"></i> Bookings
-                            </a>
-
-                            <ul class="dropdown-menu text-end">
-                                <li><a class="dropdown-item" title="This will require you to know their e-mail address and for them to have an active account" href="/events/<%= event._id %>/book?alt=true">Add Booking</a></li>
-                                <li><a href="/events/<%= event._id %>/book?alt=true&manual=true" class="dropdown-item" title="This option should only be used if the player does not have a booking account"><i>Add Manual Booking</i></a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a href="/admin/events/<%= event._id %>/waitinglist" class="dropdown-item">View Unpaid & Waiting List</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-            </div>
+            <li><a class="dropdown-item" href="/admin/events/<%= event._id %>/print/pid">Player IDs CSV</a></li>
+            <% } %>
+          </ul>
         </div>
-        <div class="card-body">
-            <div class="accordion accordion-flush mb-3" id="accordionFinance">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingFinance">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFinance" aria-expanded="true" aria-controls="collapseFinance">
-                          View Financial Summary
-                        </button>
-                      </h2>
-                </div>
-                <div id="collapseFinance" class="accordion-collapse collapse" aria-labelledby="headingFinance" data-bs-parent="#accordionFinance">
-                    <div class="accordion-body">
-                        <% let totalBookings = 0; 
+        <div class="btn-group">
+          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-ticket-detailed"></i> Bookings
+          </a>
+
+          <ul class="dropdown-menu text-end">
+            <li><a class="dropdown-item" title="This will require you to know their e-mail address and for them to have an active account" href="/events/<%= event._id %>/book?alt=true">Add Booking</a></li>
+            <li><a href="/events/<%= event._id %>/book?alt=true&manual=true" class="dropdown-item" title="This option should only be used if the player does not have a booking account"><i>Add Manual Booking</i></a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a href="/admin/events/<%= event._id %>/waitinglist" class="dropdown-item">View Unpaid & Waiting List</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="accordion accordion-flush mb-3" id="accordionFinance">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingFinance">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFinance" aria-expanded="true" aria-controls="collapseFinance">
+            View Financial Summary
+          </button>
+        </h2>
+      </div>
+      <div id="collapseFinance" class="accordion-collapse collapse" aria-labelledby="headingFinance" data-bs-parent="#accordionFinance">
+        <div class="accordion-body">
+          <% let totalBookings = 0; 
                         let totalPaid = 0;
                         let totalFees = 0;
                         let totalMeal = 0;
@@ -102,344 +102,345 @@
                             totalPaid += tmpPaid;
                             totalFees += eventBooking.paypalPaymentId ? (((tmpPaid / 100) * config.paypalPercentage) + config.paypalFixedFee) : 0;
                         } %>
-                                <div class="row">
-                                    <div class="col">
-                                        <h5>Income</h5>
-                                        <table class="table table-hover table-sm">
-                                            <tr>
-                                                <td>Total Expected:</td>
-                                                <td class="text-end">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings) %>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Paid:</td>
-                                                <td class="text-end">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalPaid) %>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Due:</td>
-                                                <td class="text-end" title="Bookings that have yet to pay">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalPaid) %>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Total Income:</b></td>
-                                                <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalPaid - totalFees) %></b></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="col">
-                                        <h5>Expenses</h5>
-                                        <table class="table table-hover table-sm">
-                                            <% if (event.financials.siteFee > 0) {%>
-                                                <tr>
-                                                    <td>Site Fee:</td>
-                                                    <td class="text-end">
-                                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.siteFee) %>
-                                                    </td>
-                                                </tr>
-                                                <% } %>
-                                                    <% if (event.financials.insurance > 0) {%>
-                                                        <tr>
-                                                            <td>Insurance:</td>
-                                                            <td class="text-end">
-                                                                <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.insurance) %>
-                                                            </td>
-                                                        </tr>
-                                                        <% } %>
-                                                            <% if (event.financials.sanctioningFee > 0){ %>
-                                                                <tr>
-                                                                    <td>Sanctioning Fee:</td>
-                                                                    <td class="text-end">
-                                                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.sanctioningFee) %>
-                                                                    </td>
-                                                                </tr>
-                                                                <% } %>
-                                                                    <% if (event.financials.props > 0) {%>
-                                                                        <tr>
-                                                                            <td>Props & Costume:</td>
-                                                                            <td class="text-end">
-                                                                                <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.props) %>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <% } %>
-                                                                            <% if (event.financials.admin > 0) { %>
-                                                                                <tr>
-                                                                                    <td>Admin Costs:</td>
-                                                                                    <td class="text-end">
-                                                                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.admin) %>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <% } %>
-                                                                                    <tr>
-                                                                                        <td>Total Paypal Fees:</td>
-                                                                                        <td class="text-end" title="<%= config.paypalPercentage %>% + <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(config.paypalFixedFee) %> for each transaction">
-                                                                                            <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalFees) %>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <% if (totalMeal > 0) { %>
-                                                                                        <tr>
-                                                                                            <td>Meal Tickets:</td>
-                                                                                            <td class="text-end">
-                                                                                                <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalMeal) %>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <% } %>
-                                                                                            <% if(event.financials.otherCosts > 0) { %>
-                                                                                                <tr>
-                                                                                                    <td>Other Costs:</td>
-                                                                                                    <td class="text-end">
-                                                                                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.otherCosts) %>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <% } %>
-                                                                                                    <tr>
-                                                                                                        <td><b>Total Expenses:</b></td>
-                                                                                                        <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0) + totalFees + totalMeal) %></b></td>
-                                                                                                    </tr>
-                                        </table>
-                                    </div>
-                                    <div class="col">
-                                        <h5>Profit & Loss</h5>
-                                        <table class="table table-hover table-sm">
-                                            <tr title="Not including PayPal Fees or Meal Tickets">
-                                                <td>Expenses:</td>
-                                                <td class="text-end">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0)) %>
-                                                </td>
-                                            </tr>
-                                            <tr title="Minus PayPal Fees, including Meal Tickets">
-                                                <td>Current Income:</td>
-                                                <td class="text-end">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees) %>
-                                                </td>
-                                            </tr>
-                                            <tr class="<%= (totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
-                                                <td><b>Current Balance:</b></td>
-                                                <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b></td>
-                                            </tr>
-                                            <tr title="<%= event.limits.playerLimit %> Player Tickets + <%= event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit %> Meal Tickets">
-                                                <td>Projected Income:</td>
-                                                <td class="text-end">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets + projectedMealTickets) %>
-                                                </td>
-                                            </tr>
-                                            <tr title="<%= event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit %> Meal Tickets">
-                                                <td>Projected Meal Tickets:</td>
-                                                <td class="text-end">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedMealTickets) %>
-                                                </td>
-                                            </tr>
-                                            <tr title="<%= event.limits.playerLimit %> Player Tickets + <%= event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit %> Meal Tickets">
-                                                <td>Projected PayPal Fees:</td>
-                                                <td class="text-end">
-                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedFees) %>
-                                                </td>
-                                            </tr>
-                                            <tr class="<%= (projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
-                                                <td><b>Projected Balance:</b></td>
-                                                <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                                <hr>
-                    </div>
-                </div>
+          <div class="row">
+            <div class="col">
+              <h5>Income</h5>
+              <table class="table table-hover table-sm">
+                <tr>
+                  <td>Total Expected:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Total Paid:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalPaid) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Total Due:</td>
+                  <td class="text-end" title="Bookings that have yet to pay">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalPaid) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Total Income:</b></td>
+                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalPaid - totalFees) %></b></td>
+                </tr>
+              </table>
             </div>
-                <div id="bookinglist" class="row">
-                    <% if (event.limits.playerLimit > 0){ %>
-                        <div class="col">
-                            <h5 class="text-center">Player Bookings</h5>
-                            <div class="progress">
-                                <div class="progress-bar overflow-visible progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="<%= event.limits.playerLimit - event.playerSpaces %>" aria-valuemin="0" aria-valuemax="<%= event.limits.playerLimit %>"
-                                    style="width: 75%"></div>
-                                <div title="Breakeven at <%= breakevenPlayers %> players" class="progress-bar-marker" role="progressbar" style="width: <%= ((100 * breakevenPlayers) / event.limits.playerLimit) - (100 * (event.limits.playerLimit - event.playerSpaces) / event.limits.playerLimit)   %>%"
-                                    aria-valuenow="46.573611111111106" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <p class="text-center lead mb-0">
-                                <%= event.limits.playerLimit - event.playerSpaces %> /
-                                    <%= event.limits.playerLimit %>
-                            </p>
-                            <% if (event.limits.playerBunkLimit > 0) { %>
-                                <p class="text-center small">(Bunks:
-                                    <%= event.limits.playerBunkLimit - event.playerBunkSpaces %> /
-                                        <%= event.limits.playerBunkLimit %> )</p>
-                                <% } %>
-
-                        </div>
-                        <% } %>
-                            <% if (event.limits.monsterLimit > 0){ %>
-                                <div class="col">
-                                    <h5 class="text-center">Monster Bookings</h5>
-                                    <div class="progress">
-                                        <div class="progress-bar overflow-visible progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="<%= event.limits.monsterLimit - event.monsterSpaces %>" aria-valuemin="0" aria-valuemax="<%= event.limits.monsterLimit %>"
-                                            style="width: 75%"></div>
-                                    </div>
-                                    <p class="text-center lead">
-                                        <%= event.limits.monsterLimit - event.monsterSpaces %> /
-                                            <%= event.limits.monsterLimit %>
-                                    </p>
-                                    <% if (event.limits.monsterBunkLimit > 0) { %>
-                                        <p class="text-center small">(Bunks:
-                                            <%= event.limits.monsterBunkLimit - event.monsterBunkSpaces %> /
-                                                <%= event.limits.monsterBunkLimit %> )</p>
-                                        <% } %>
-
-                                </div>
-                                <% } %>
-                                    <% if (event.limits.staffLimit > 0){ %>
-                                        <div class="col">
-                                            <h5 class="text-center">Staff Bookings</h5>
-                                            <div class="progress">
-                                                <div class="progress-bar overflow-visible progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="<%= event.limits.staffLimit - event.staffSpaces %>" aria-valuemin="0" aria-valuemax="<%= event.limits.staffLimit %>" style="width: 75%"></div>
-                                            </div>
-                                            <p class="text-center lead">
-                                                <%= event.limits.staffLimit - event.staffSpaces %> /
-                                                    <%= event.limits.staffLimit %>
-                                            </p>
-                                            <% if (event.limits.staffBunkLimit > 0) { %>
-                                                <p class="text-center small">(Bunks:
-                                                    <%= event.limits.staffBunkLimit - event.staffBunkSpaces %> /
-                                                        <%= event.limits.staffBunkLimit %> )</p>
-                                                <% } %>
-
-                                        </div>
-                                        <% } %>
-                </div>
-                <div class="row">
-                    <% if (event.limits.playerLimit > 0){ %>
-                        <div class="col-md">
-                            <h5 class="d-inline-block d-md-none">Player Bookings</h5>
-                            <table  id="playerBookings" class="table table-sm table-hover mt-3 players">
-                                <thead>
-                                    <th class="players" scope="col">
-                                        <div class="row">
-                                            <div class="col-auto">Name</div>
-                                            <div class="col"><input id="playerSearch"  type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
-                                        </div> </th>
-                                    <th scope="col-1">Paid</th>
-                                    <th scope="col-1"></th>
-                                </thead>
-                                <tbody class="players">
-                                    <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['player','playerchild'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) { %>
-                                        <tr class="players">
-                                            <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
-                                                <% if (booking._doc.eventTickets.find(t => t.ticketType == 'playerbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
-                                                    <% } %>
-                                                        <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
-                                                            <% } %>
-                                            </td>
-                                            <td scope="row">
-                                                <% if (booking.paid){ %>
-                                                    <% if (booking.paypalPaymentId) { %>
-                                                        <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
-                                                        <% } else {%>
-                                                            <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
-                                                            <% }} else if (booking.payOnGate) { %>
-                                                                <i class="bi bi-door-open-fill"></i>
-                                                                <% } else if (booking.inQueue){ %>
-                                                                    <i class="bi bi-person-lines-fill text-primary"></i>
-                                                                    <% } else { %>
-                                                                        <i class="bi bi-x-circle text-danger"></i>
-                                                                        <% } %>
-                                            </td>
-                                            <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>"><i class="bi bi-pencil-square"></i></a></td>
-                                        </tr>
-                                        <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-                        <% } %>
-                            <% if (event.limits.monsterLimit > 0){ %>
-                                <div class="col-md">
-                                    <h5 class="d-inline-block d-md-none">Monster Bookings</h5>
-                                    <table id="monsterBookings" class="table table-sm table-hover mt-3 monsters">
-                                        <thead>
-                                            <th class="monsters" scope="col">
-                                                <div class="row">
-                                                    <div class="col-auto">Name</div>
-                                                    <div class="col"><input id="monsterSearch"  type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
-                                                </div> </th>
-                                            <th scope="col-1">Paid</th>
-                                            <th scope="col-1"></th>
-                                        </thead>
-                                        <tbody class="monsters">
-                                            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['monster','monsterchild'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
-                                                <tr class="monsters">
-                                                    <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
-                                                        <% if (booking._doc.eventTickets.find(t => t.ticketType == 'monsterbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
-                                                            <% } %>
-                                                                <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
-                                                                    <% } %>
-                                                    </td>
-                                                    <td scope="row">
-                                                        <% if (booking.paid){ %>
-                                                            <% if (booking.paypalPaymentId) { %>
-                                                                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
-                                                                <% } else {%>
-                                                                    <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
-                                                                    <% }} else if (booking.payOnGate) { %>
-                                                                        <i class="bi bi-door-open-fill"></i>
-                                                                        <% } else if (booking.inQueue){ %>
-                                                                            <i class="bi bi-person-lines-fill text-primary"></i>
-                                                                            <% } else { %>
-                                                                                <i class="bi bi-x-circle text-danger"></i>
-                                                                                <% } %>
-                                                    </td>
-                                                    <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>"><i class="bi bi-pencil-square"></i></a></td>
-                                                </tr>
-                                                <% } %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <% } %>
-                                    <% if (event.limits.staffLimit > 0){ %>
-                                        <div class="col-md">
-                                            <h5 class="d-inline-block d-md-none">Staff Bookings</h5>
-                                            <table id="staffBookings" class="table table-sm table-hover mt-3 staff">
-                                                <thead>
-                                                    <th class="staff" scope="col">
-                                                        <div class="row">
-                                                            <div class="col-auto">Name</div>
-                                                            <div class="col"><input id="staffSearch"  type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
-                                                        </div> </th>
-                                                    <th scope="col-1">Paid</th>
-                                                    <th scope="col-1"></th>
-                                                </thead>
-                                                <tbody class="staff">
-                                                    <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['staff'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
-                                                        <tr class="staff">
-                                                            <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
-                                                                <% if (booking._doc.eventTickets.find(t => t.ticketType == 'staffbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
-                                                                    <% } %>
-                                                                        <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
-                                                                            <% } %>
-                                                            </td>
-                                                            <td scope="row">
-                                                                <% if (booking.paid){ %>
-                                                                    <% if (booking.paypalPaymentId) { %>
-                                                                        <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
-                                                                        <% } else {%>
-                                                                            <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
-                                                                            <% }} else if (booking.payOnGate) { %>
-                                                                                <i class="bi bi-door-open-fill"></i>
-                                                                                <% } else if (booking.inQueue){ %>
-                                                                                    <i class="bi bi-person-lines-fill text-primary"></i>
-                                                                                    <% } else { %>
-                                                                                        <i class="bi bi-x-circle text-danger"></i>
-                                                                                        <% } %></td>
-                                                            <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>"><i class="bi bi-pencil-square"></i></a></td>
-                                                        </tr>
-                                                        <% } %>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <% } %>
-                </div>
-
+            <div class="col">
+              <h5>Expenses</h5>
+              <table class="table table-hover table-sm">
+                <% if (event.financials.siteFee > 0) {%>
+                <tr>
+                  <td>Site Fee:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.siteFee) %>
+                  </td>
+                </tr>
+                <% } %>
+                <% if (event.financials.insurance > 0) {%>
+                <tr>
+                  <td>Insurance:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.insurance) %>
+                  </td>
+                </tr>
+                <% } %>
+                <% if (event.financials.sanctioningFee > 0){ %>
+                <tr>
+                  <td>Sanctioning Fee:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.sanctioningFee) %>
+                  </td>
+                </tr>
+                <% } %>
+                <% if (event.financials.props > 0) {%>
+                <tr>
+                  <td>Props & Costume:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.props) %>
+                  </td>
+                </tr>
+                <% } %>
+                <% if (event.financials.admin > 0) { %>
+                <tr>
+                  <td>Admin Costs:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.admin) %>
+                  </td>
+                </tr>
+                <% } %>
+                <tr>
+                  <td>Total Paypal Fees:</td>
+                  <td class="text-end" title="<%= config.paypalPercentage %>% + <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(config.paypalFixedFee) %> for each transaction">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalFees) %>
+                  </td>
+                </tr>
+                <% if (totalMeal > 0) { %>
+                <tr>
+                  <td>Meal Tickets:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalMeal) %>
+                  </td>
+                </tr>
+                <% } %>
+                <% if(event.financials.otherCosts > 0) { %>
+                <tr>
+                  <td>Other Costs:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.otherCosts) %>
+                  </td>
+                </tr>
+                <% } %>
+                <tr>
+                  <td><b>Total Expenses:</b></td>
+                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0) + totalFees + totalMeal) %></b></td>
+                </tr>
+              </table>
+            </div>
+            <div class="col">
+              <h5>Profit & Loss</h5>
+              <table class="table table-hover table-sm">
+                <tr title="Not including PayPal Fees or Meal Tickets">
+                  <td>Expenses:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0)) %>
+                  </td>
+                </tr>
+                <tr title="Minus PayPal Fees, including Meal Tickets">
+                  <td>Current Income:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees) %>
+                  </td>
+                </tr>
+                <tr class="<%= (totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
+                  <td><b>Current Balance:</b></td>
+                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b></td>
+                </tr>
+                <tr title="<%= event.limits.playerLimit %> Player Tickets + <%= event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit %> Meal Tickets">
+                  <td>Projected Income:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets + projectedMealTickets) %>
+                  </td>
+                </tr>
+                <tr title="<%= event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit %> Meal Tickets">
+                  <td>Projected Meal Tickets:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedMealTickets) %>
+                  </td>
+                </tr>
+                <tr title="<%= event.limits.playerLimit %> Player Tickets + <%= event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit %> Meal Tickets">
+                  <td>Projected PayPal Fees:</td>
+                  <td class="text-end">
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedFees) %>
+                  </td>
+                </tr>
+                <tr class="<%= (projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
+                  <td><b>Projected Balance:</b></td>
+                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <hr>
         </div>
+      </div>
     </div>
-    <script src="/js/manageEvent.js"></script>
+    <div id="bookinglist" class="row">
+      <% if (event.limits.playerLimit > 0){ %>
+      <div class="col">
+        <h5 class="text-center">Player Bookings</h5>
+        <div class="progress">
+          <div class="progress-bar overflow-visible progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="<%= event.limits.playerLimit - event.playerSpaces %>" aria-valuemin="0" aria-valuemax="<%= event.limits.playerLimit %>" style="width: 75%"></div>
+          <div title="Breakeven at <%= breakevenPlayers %> players" class="progress-bar-marker" role="progressbar" style="width: <%= ((100 * breakevenPlayers) / event.limits.playerLimit) - (100 * (event.limits.playerLimit - event.playerSpaces) / event.limits.playerLimit)   %>%" aria-valuenow="46.573611111111106" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <p class="text-center lead mb-0">
+          <%= event.limits.playerLimit - event.playerSpaces %> /
+          <%= event.limits.playerLimit %>
+        </p>
+        <% if (event.limits.playerBunkLimit > 0) { %>
+        <p class="text-center small">(Bunks:
+          <%= event.limits.playerBunkLimit - event.playerBunkSpaces %> /
+          <%= event.limits.playerBunkLimit %> )</p>
+        <% } %>
+
+      </div>
+      <% } %>
+      <% if (event.limits.monsterLimit > 0){ %>
+      <div class="col">
+        <h5 class="text-center">Monster Bookings</h5>
+        <div class="progress">
+          <div class="progress-bar overflow-visible progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="<%= event.limits.monsterLimit - event.monsterSpaces %>" aria-valuemin="0" aria-valuemax="<%= event.limits.monsterLimit %>" style="width: 75%"></div>
+        </div>
+        <p class="text-center lead">
+          <%= event.limits.monsterLimit - event.monsterSpaces %> /
+          <%= event.limits.monsterLimit %>
+        </p>
+        <% if (event.limits.monsterBunkLimit > 0) { %>
+        <p class="text-center small">(Bunks:
+          <%= event.limits.monsterBunkLimit - event.monsterBunkSpaces %> /
+          <%= event.limits.monsterBunkLimit %> )</p>
+        <% } %>
+
+      </div>
+      <% } %>
+      <% if (event.limits.staffLimit > 0){ %>
+      <div class="col">
+        <h5 class="text-center">Staff Bookings</h5>
+        <div class="progress">
+          <div class="progress-bar overflow-visible progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="<%= event.limits.staffLimit - event.staffSpaces %>" aria-valuemin="0" aria-valuemax="<%= event.limits.staffLimit %>" style="width: 75%"></div>
+        </div>
+        <p class="text-center lead">
+          <%= event.limits.staffLimit - event.staffSpaces %> /
+          <%= event.limits.staffLimit %>
+        </p>
+        <% if (event.limits.staffBunkLimit > 0) { %>
+        <p class="text-center small">(Bunks:
+          <%= event.limits.staffBunkLimit - event.staffBunkSpaces %> /
+          <%= event.limits.staffBunkLimit %> )</p>
+        <% } %>
+
+      </div>
+      <% } %>
+    </div>
+    <div class="row">
+      <% if (event.limits.playerLimit > 0){ %>
+      <div class="col-md">
+        <h5 class="d-inline-block d-md-none">Player Bookings</h5>
+        <table id="playerBookings" class="table table-sm table-hover mt-3 players">
+          <thead>
+            <th class="players" scope="col">
+              <div class="row">
+                <div class="col-auto">Name</div>
+                <div class="col"><input id="playerSearch" type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+              </div>
+            </th>
+            <th scope="col-1">Paid</th>
+            <th scope="col-1"></th>
+          </thead>
+          <tbody class="players">
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['player','playerchild'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) { %>
+            <tr class="players">
+              <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
+                <% if (booking._doc.eventTickets.find(t => t.ticketType == 'playerbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
+                <% } %>
+                <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
+                <% } %>
+              </td>
+              <td scope="row">
+                <% if (booking.paid){ %>
+                <% if (booking.paypalPaymentId) { %>
+                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <% } else {%>
+                <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <% }} else if (booking.payOnGate) { %>
+                <i class="bi bi-door-open-fill"></i>
+                <% } else if (booking.inQueue){ %>
+                <i class="bi bi-person-lines-fill text-primary"></i>
+                <% } else { %>
+                <i class="bi bi-x-circle text-danger"></i>
+                <% } %>
+              </td>
+              <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>"><i class="bi bi-pencil-square"></i></a></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+      <% if (event.limits.monsterLimit > 0){ %>
+      <div class="col-md">
+        <h5 class="d-inline-block d-md-none">Monster Bookings</h5>
+        <table id="monsterBookings" class="table table-sm table-hover mt-3 monsters">
+          <thead>
+            <th class="monsters" scope="col">
+              <div class="row">
+                <div class="col-auto">Name</div>
+                <div class="col"><input id="monsterSearch" type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+              </div>
+            </th>
+            <th scope="col-1">Paid</th>
+            <th scope="col-1"></th>
+          </thead>
+          <tbody class="monsters">
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['monster','monsterchild'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
+            <tr class="monsters">
+              <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
+                <% if (booking._doc.eventTickets.find(t => t.ticketType == 'monsterbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
+                <% } %>
+                <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
+                <% } %>
+              </td>
+              <td scope="row">
+                <% if (booking.paid){ %>
+                <% if (booking.paypalPaymentId) { %>
+                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <% } else {%>
+                <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <% }} else if (booking.payOnGate) { %>
+                <i class="bi bi-door-open-fill"></i>
+                <% } else if (booking.inQueue){ %>
+                <i class="bi bi-person-lines-fill text-primary"></i>
+                <% } else { %>
+                <i class="bi bi-x-circle text-danger"></i>
+                <% } %>
+              </td>
+              <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>"><i class="bi bi-pencil-square"></i></a></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+      <% if (event.limits.staffLimit > 0){ %>
+      <div class="col-md">
+        <h5 class="d-inline-block d-md-none">Staff Bookings</h5>
+        <table id="staffBookings" class="table table-sm table-hover mt-3 staff">
+          <thead>
+            <th class="staff" scope="col">
+              <div class="row">
+                <div class="col-auto">Name</div>
+                <div class="col"><input id="staffSearch" type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+              </div>
+            </th>
+            <th scope="col-1">Paid</th>
+            <th scope="col-1"></th>
+          </thead>
+          <tbody class="staff">
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['staff'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
+            <tr class="staff">
+              <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
+                <% if (booking._doc.eventTickets.find(t => t.ticketType == 'staffbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
+                <% } %>
+                <% if (booking._doc.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType))) { %> <i class="fa fa-cutlery me-1" title="Meal Ticket Requested" aria-hidden="true"> </i>
+                <% } %>
+              </td>
+              <td scope="row">
+                <% if (booking.paid){ %>
+                <% if (booking.paypalPaymentId) { %>
+                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <% } else {%>
+                <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <% }} else if (booking.payOnGate) { %>
+                <i class="bi bi-door-open-fill"></i>
+                <% } else if (booking.inQueue){ %>
+                <i class="bi bi-person-lines-fill text-primary"></i>
+                <% } else { %>
+                <i class="bi bi-x-circle text-danger"></i>
+                <% } %>
+              </td>
+              <td scope="row"><a class="link-dark" href="/admin/bookings/<%=booking._id %>"><i class="bi bi-pencil-square"></i></a></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+
+  </div>
+</div>
+<script src="/js/manageEvent.js"></script>

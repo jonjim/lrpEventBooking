@@ -52,6 +52,7 @@ module.exports.createEvent = async(req, res, next) => {
     req.body.event.eventApproved = false;
     req.body.event.visible = false;
     const event = await new Event(req.body.event);
+    event.registrationFee.value = res.locals.config.hostingCharge;
     await event.save();
     res.redirect(`/admin/events/${event._id}/edit`);
 };
@@ -96,7 +97,7 @@ module.exports.updateEvent = async(req, res, next) => {
     req.body.event.eventApproved = req.body.event.eventApproved ? req.body.event.eventApproved == 'on' ? true : false : false;
     req.body.event.visible = req.body.event.visible ? req.body.event.visible == 'on' ? true : false : false;
     req.body.event.overflowQueue = req.body.event.overflowQueue ? req.body.event.overflowQueue == 'on' ? true : false : false;
-    const event = await Event.findByIdAndUpdate(id, {...req.body.event }, { new: true });
+    const event = await Event.findByIdAndUpdate(id, { $set: {...req.body.event } }, { new: true });
     if (req.file) {
         event.img = req.file;
         await event.save();

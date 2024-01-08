@@ -1,5 +1,6 @@
 const EventBooking = require('../models/eventBooking');
 const Event = require('../models/lrpEvent');
+const SiteConfig = require('../models/siteConfig');
 const mongoose = require('mongoose');
 const base = "https://api-m.sandbox.paypal.com";
 const emailService = require('../utils/email');
@@ -42,20 +43,21 @@ const createOrder = async(cart) => {
     //   "shopping cart information passed from the frontend createOrder() callback:",
     //   cart,
     // );
-    const eventBooking = await EventBooking.findById(cart[0].id).populate('eventTickets').populate('event').populate({path: 'event', populate: {path: 'eventHost'}});
+    const event = await Event.findById(cart[0].id)
+    const siteConfig = await SiteConfig.findOne();
     const accessToken = await generateAccessToken();
     const url = `${base}/v2/checkout/orders`;
     const payload = {
         intent: "CAPTURE",
         purchase_units: [{
             reference_id: cart[0].id,
-            description: `Event Booking for: ${eventBooking.event.name}`,
+            description: `Registration Fee for: ${event.name}`,
             amount: {
                 currency_code: "GBP",
-                value: eventBooking.eventTickets.reduce((acc, a) => acc + a.cost, 0)
+                value: event.registrationFee.value
             },
             payee: {
-                email_address: eventBooking.event.eventHost.paypalAddress
+                email_address: siteConfig.hostingPaypal
             }
         }, ],
     };
@@ -112,22 +114,14 @@ const captureOrder = async(req, orderID) => {
     } else {
         // (3) Successful transaction -> Show confirmation or thank you message
         // Or go to another URL:  actions.redirect('thank_you.html');
-        var eventBooking = await EventBooking.findById(responseData.jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user');
-        var event = await Event.findById(eventBooking.event).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
-        
-        eventBooking.paid = true;
-        eventBooking.paypalPaymentId = responseData.jsonResponse.id;
-        eventBooking.totalPaid = eventBooking.totalDue;
-        eventBooking.bookingPaid = Date.now();
-        eventBooking.paypalPayer = responseData.jsonResponse.payer.email_address;
-        eventBooking.payOnGate = false;
-        eventBooking.firstname = req.user.firstname;
-        eventBooking.surname = req.user.surname;
-        eventBooking.displayBooking = req.user.displayBookings;
-        await eventBooking.save();
-        await Event.findByIdAndUpdate(booking.event, {
-            $push: {
-                attendees: { ...await attendeeUpdate(event.eventHost.eventSystem,eventBooking)}
+        var event = await Event.findById(responseData.jsonResponse.purchase_units[0].reference_id)
+        await Event.findByIdAndUpdate(responseData.jsonResponse.purchase_units[0].reference_id, {
+            registrationFee: {
+                value: event.registrationFee.value,
+                totalPaid: event.registrationFee.value,
+                datePaid: Date.now(),
+                paypalPaymentId: responseData.jsonResponse.id,
+                paypalPayer: responseData.jsonResponse.payer.email_address
             }
         })
         req.flash('success', `Payment complete!`);
@@ -164,11 +158,12 @@ module.exports.capturePayment = async(req, res, next) => {
     try {
         const { orderID } = req.params;
         const { jsonResponse, httpStatusCode } = await captureOrder(req, orderID);
-        var eventBooking = await EventBooking.findById(jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user').populate('event');
-        res.render('email/paidBooking', { booking: eventBooking }, async function (err, str) {
-            emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str);
-            res.status(httpStatusCode).json(jsonResponse);
-        })
+        //var eventBooking = await EventBooking.findById(jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user').populate('event');
+        // res.render('email/paidRegistration', { booking: eventBooking }, async function (err, str) {
+        //     emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str);
+        //     res.status(httpStatusCode).json(jsonResponse);
+        // })
+        return res.status(httpStatusCode).json(jsonResponse);
     } catch (error) {
         console.error("Failed to create order:", error);
         res.status(500).json({ error: "Failed to capture order." });
@@ -181,5 +176,5 @@ module.exports.success = async(req, res, next) => {
 
 module.exports.cancelled = async(req, res, next) => {
     req.flash('error', "Payment was not completed successfully");
-    res.redirect('/account/bookings');
+    res.redirect('/admin/events');
 }

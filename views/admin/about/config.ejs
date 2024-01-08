@@ -31,6 +31,19 @@
                             <label for="techContactEmail">Technical Contact E-mail</label>
                             <input type="email" name="techContactEmail" class="form-control" id="techContactEmail" value="<%= config.techContactEmail %>">
                         </div>
+                        <div class="mb-3 row">
+                            <div class="col">
+                                <label for="hostingCharge">Hosting Registration Fee</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">£</span>
+                                    <input class="form-control form-control-sm mt-0" type="number" id="hostingCharge" name="hostingCharge" value="<%= config.hostingCharge %>"></div>
+                                </div>
+                            
+                            <div class="col">
+                                <label for="hostingPaypal">PayPal Email for Hosting Fees</label>
+                                <input class="form-control" type="email" name="hostingPaypal" id="hostingPaypal" value="<%= config.hostingPaypal %>">
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label for="siteDescription">System Description</label>
                             <textarea name="siteDescription" class="form-control" id="siteDescription" cols="30" rows="10"><%= config.siteDescription %></textarea>

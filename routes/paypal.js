@@ -3,7 +3,8 @@ var router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
 
 const controllerPaypal = require('../controllers/paypal');
-const { isLoggedIn } = require('../middleware');
+const adminPaypal = require('../controllers/adminPaypal');
+const { isLoggedIn, isEventHost } = require('../middleware');
 
 router.route('/create')
     .post(catchAsync(controllerPaypal.createOrder))
@@ -13,5 +14,14 @@ router.route('/capture/:orderID')
 
 router.route('/cancelled')
     .get(catchAsync(controllerPaypal.cancelled))
+
+router.route('/registration/create')
+    .post(isLoggedIn, isEventHost, catchAsync(adminPaypal.createOrder))
+
+router.route('/registration/capture/:orderID')
+    .post(isLoggedIn, isEventHost, catchAsync(adminPaypal.capturePayment))
+
+router.route('/registration/cancelled')
+    .get(isLoggedIn,isEventHost, catchAsync(adminPaypal.cancelled))
 
 module.exports = router;

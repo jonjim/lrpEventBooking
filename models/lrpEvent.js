@@ -29,6 +29,19 @@ const lrpEventSchema = new mongoose.Schema({
         url: String,
         filename: String
     },
+    registrationFee:{
+        value: {
+            type: Number,
+            default: 0
+        }, 
+        totalPaid: {
+            type: Number,
+            default: 0
+        },
+        datePaid: Date,
+        paypalPaymentId: String,
+        paypalPayer: String,
+    },
     hostName: String,
     hostImg: String,
     location: String,
