@@ -44,15 +44,18 @@ async function attendeeUpdate(eventSystem,eventBooking) {
         firstname: eventBooking.firstname,
     };
     if (typeof eventBooking.user != 'undefined'){
-        const characterData = eventBooking.user[eventSystem.systemRef]; 
+        const userRecord = JSON.parse(JSON.stringify(eventBooking.user))
+        const systemRecord = JSON.parse(JSON.stringify(eventSystem))
+        const systemData = userRecord[systemRecord.systemRef];
+        //const characterData = eventBooking.user[eventSystem.systemRef]; 
         attendeeData.user = eventBooking.user;
-        attendeeData.icName = characterData.character.characterName;
+        attendeeData.icName = systemData.character.characterName;
         if (typeof eventSystem.customFields !== 'undefined') {
             for (field of eventSystem.customFields.filter(a => a.display)) {
                 if (field.section === 'player')
-                    attendeeData[field.name] = characterData[field.name];
+                    attendeeData[field.name] = systemData[field.name];
                 else if (field.section === 'character')
-                    attendeeData[field.name] = characterData.character[field.name];
+                    attendeeData[field.name] = systemData.character[field.name];
             }
         }
     }
