@@ -42,8 +42,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="sanctioningFee">Sanctioning Fee</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">£</span>
+                                            <input type="number" class="form-control" name="sanctioningFee" id="sanctioningFee" value="<%= eventSystem.sanctioningFee %>">
+                                        </div>
+                                        <p class="form-text">Does the system impose a fee for running an event with their rules?</p>
+                                    </div>
+                                </div>
+                                <div class="mb-3 mt-0">
                                     <label for="systemWebsite">Website</label>
                                     <input type="url" id="systemWebsite" name="website" class="form-control" value="<%= eventSystem.website %>">
                                 </div>

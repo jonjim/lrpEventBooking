@@ -69,7 +69,7 @@ const lrpEventSchema = new mongoose.Schema({
     financials: {
         siteFee: { type: Number, default: 0 },
         insurance: { type: Number, default: 0 },
-        sanctioningFee: { type: Number, default: 80 },
+        sanctioningFee: { type: Number, default: 0 },
         props: { type: Number, default: 0 },
         admin: { type: Number, default: 0 },
         otherCosts: { type: Number, default: 0 }

@@ -42,7 +42,11 @@ const eventSystemSchema = new mongoose.Schema({
             }
         }
     ],
-    customTools:[{ type: String }]
+    customTools:[{ type: String }],
+    sanctioningFee: {
+        type: Number,
+        default: 0
+    }
 })
 
 eventSystemSchema.virtual('img.path')

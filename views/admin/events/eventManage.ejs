@@ -92,15 +92,15 @@
                         let projectedMealTickets = 0; 
                         projectedMealTickets += event.eventTickets.find(t => ['mealticket'].includes(t.ticketType)) ? event.eventTickets.find(t => ['mealticket'].includes(t.ticketType)).cost * (event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit) : 0;
                         let projectedFees = 0;
-                        projectedFees = ((((projectedPlayerTickets + projectedMealTickets) / 100) * config.paypalPercentage) + (config.paypalFixedFee * (event.limits.playerLimit + (event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit))));
-                        let ticketCost = event.eventTickets.find(t => ['player'].includes(t.ticketType)) ? ((event.eventTickets.find(t => ['player'].includes(t.ticketType)).cost / config.paypalPercentage) - config.paypalFixedFee) : 0;
+                        projectedFees = ((((projectedPlayerTickets + projectedMealTickets) / 100) * event.eventHost.paypalPercentage) + (event.eventHost.paypalFixedFee * (event.limits.playerLimit + (event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit))));
+                        let ticketCost = event.eventTickets.find(t => ['player'].includes(t.ticketType)) ? ((event.eventTickets.find(t => ['player'].includes(t.ticketType)).cost / event.eventHost.paypalPercentage) - event.eventHost.paypalFixedFee) : 0;
                         let breakevenPlayers = Math.ceil(Object.values(event.financials).reduce((a,b) => a + b,0) / ticketCost) + 1;
                         for (eventBooking of eventBookings){
                             totalBookings += eventBooking.eventTickets.reduce((acc, a) => acc + a.cost, 0);
                             totalMeal += eventBooking.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType)) ? eventBooking.eventTickets.find(t => ['mealticket','mealticketchild'].includes(t.ticketType)).cost : 0;
                             let tmpPaid = eventBooking.totalPaid;
                             totalPaid += tmpPaid;
-                            totalFees += eventBooking.paypalPaymentId ? (((tmpPaid / 100) * config.paypalPercentage) + config.paypalFixedFee) : 0;
+                            totalFees += eventBooking.paypalPaymentId ? (((tmpPaid / 100) * event.eventHost.paypalPercentage) + event.eventHost.paypalFixedFee) : 0;
                         } %>
           <div class="row">
             <div class="col">
@@ -133,6 +133,14 @@
             <div class="col">
               <h5>Expenses</h5>
               <table class="table table-hover table-sm">
+                <% if (event.registrationFee.value > 0) { %>
+                  <tr>
+                    <td>Registration Fee:</td>
+                    <td class="text-end">
+                      <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.registrationFee.value) %>
+                    </td>
+                  </tr>
+                <% } %>
                 <% if (event.financials.siteFee > 0) {%>
                 <tr>
                   <td>Site Fee:</td>
@@ -175,7 +183,7 @@
                 <% } %>
                 <tr>
                   <td>Total Paypal Fees:</td>
-                  <td class="text-end" title="<%= config.paypalPercentage %>% + <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(config.paypalFixedFee) %> for each transaction">
+                  <td class="text-end" title="<%= event.eventHost.paypalPercentage %>% + <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.eventHost.paypalFixedFee) %> for each transaction">
                     <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalFees) %>
                   </td>
                 </tr>
@@ -197,7 +205,7 @@
                 <% } %>
                 <tr>
                   <td><b>Total Expenses:</b></td>
-                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0) + totalFees + totalMeal) %></b></td>
+                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0) + totalFees + totalMeal + event.registrationFee.value) %></b></td>
                 </tr>
               </table>
             </div>
@@ -207,7 +215,7 @@
                 <tr title="Not including PayPal Fees or Meal Tickets">
                   <td>Expenses:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0)) %>
+                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0) + event.registrationFee.value + totalFees) %>
                   </td>
                 </tr>
                 <tr title="Minus PayPal Fees, including Meal Tickets">
@@ -218,7 +226,7 @@
                 </tr>
                 <tr class="<%= (totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
                   <td><b>Current Balance:</b></td>
-                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b></td>
+                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0)) - event.registrationFee.value ) %></b></td>
                 </tr>
                 <tr title="<%= event.limits.playerLimit %> Player Tickets + <%= event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit %> Meal Tickets">
                   <td>Projected Income:</td>
@@ -240,7 +248,7 @@
                 </tr>
                 <tr class="<%= (projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
                   <td><b>Projected Balance:</b></td>
-                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b></td>
+                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets - projectedFees - event.registrationFee.value - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b></td>
                 </tr>
               </table>
             </div>
