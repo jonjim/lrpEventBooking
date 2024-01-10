@@ -44,11 +44,14 @@
                             case 'eventHost': %>Event Host
                                         <%
                             break;
+                            case 'systemAdmin' : %>Event System Administrator <%
+                            break;
                             case 'admin': %>Administrator
                                             <%
                             break;
                             case 'superAdmin': %>Super Administrator
                                                 <%
+                            break;
                         } %>
                             </td>
                             <td scope="row"><a href="/admin/users/<%= user._id %>" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>

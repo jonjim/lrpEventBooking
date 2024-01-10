@@ -59,13 +59,37 @@
                                     <select name="role" id="userRole" class="form-select">
                                 <option value="user" <%= user.role == 'user' ? 'selected' : '' %>>User</option>
                                 <option value="eventHost" <%= user.role == 'eventHost' ? 'selected' : '' %>>Event Host</option>
+                                <option value="systemAdmin" <%= user.role == 'systemAdmin' ? 'selected' : '' %>>Event System Admin</option>
                                 <option value="admin" <%= user.role == 'admin' ? 'selected' : '' %>>Administrator</option>
                                 <option value="superAdmin" <%= user.role == 'superAdmin' ? 'selected' : '' %>>Super Administrator</option>
                             </select>
                                 </div>
                                 <div class="col">
-                                    <label for="playerId">Player ID</label>
-                                    <input type="text" class="form-control" id="playerId" name="playerId" value="<%= user.playerId %>">
+                                    <div class="row gx-1">
+                                        <div class="col-10">
+                                            <label for="eventSystems">Add as a System Host</label>
+                                            <select id="eventSystems" class="form-select">
+                                        <% for (system of eventSystems) { %>
+                                            <option value="<%= system._id %>"><%= system.name %></option>
+                                        <% } %>
+                                    </select>
+                                        </div>
+                                        <div class="col-1 pt-4">
+                                            <a href="#" onclick="addSystem('<%= user._id %>')" class="btn btn-success"><i class="bi bi-plus-circle-fill"></i></a>
+                                        </div>
+                                    </div>
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <% for (system of user.eventSystems) { %>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <%= system.name %>
+                                                    </td>
+                                                    <td scope="row"><a href="#" onclick="delSystem('<%= user._id %>','<%= system._id %>')" class="link-dark"><i class="bi bi-trash"></i></a></td>
+                                                </tr>
+                                                <% } %>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

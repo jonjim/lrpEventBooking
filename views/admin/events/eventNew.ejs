@@ -38,7 +38,7 @@
                                     <option  value="Lorien Trust">Lorien Trust</option>
                                     <% } %>
                                     <% for (host of eventHosts.sort((a, b) => a.eventSystem.name.localeCompare(b.eventSystem.name) || a.name.localeCompare(b.name))) { %>
-                                        <% if ((currentUser.role == 'eventHost' && currentUser.eventHosts.filter(a => a._id.equals(host._id)).length > 0) || ['admin','superAdmin'].includes(currentUser.role)) { %>
+                                        <% if ((currentUser.eventHosts.filter(a => a._id.equals(host._id)).length > 0) || currentUser.eventSystems.filter(a => a._id.equals(host.eventSystem._id)).length > 0|| ['admin','superAdmin'].includes(currentUser.role)) { %>
                                         <option data-img="<%= host.img %>" value="<%= host._id %>"><%= host.eventSystem.name %>
                                             <%= host.display ? ` - ${host.name}` : '' %></option>
                                         <% } %>

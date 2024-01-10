@@ -26,7 +26,7 @@
                 </thead>
                 <tbody class="hosts">
                     <% for (eventHost of eventHosts.sort((a,b) => a.eventSystem.name.localeCompare(b.eventSystem.name) || a.name.localeCompare(b.name))) { %>
-                        <% if (adminGroups.includes(currentUser.role) || currentUser.eventHosts.filter(a => a._id.equals(eventHost._id)).length > 0) { %>
+                        <% if (adminGroups.includes(currentUser.role) || currentUser.eventHosts.filter(a => a._id.equals(eventHost._id)).length > 0 || currentUser.eventSystems.filter(a => a._id.equals(eventHost.eventSystem._id)).length > 0) { %>
                             <tr >
                                 <td scope="row">
                                     <%= eventHost.eventSystem?.name %>

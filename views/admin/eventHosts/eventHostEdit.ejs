@@ -26,8 +26,9 @@
                                     <label for="eventSystem">Event System</label>
                                     <select class="form-select" name="eventSystem" id="eventSystem">
                                 <% for (eventSystem of eventSystems.sort((a,b) => a.name.localeCompare(b.name))){ %>
+                                    <% if (currentUser.eventSystems.filter(a => a._id.equals(eventSystem._id)).length > 0 || adminGroups.includes(currentUser.role)) { %>
                                     <option <%= eventSystem._id.equals(host.eventSystem._id) ? 'selected' : '' %> value="<%= eventSystem._id %>"><%= eventSystem.name %></option>
-                                <% } %>
+                                <% }} %>
                             </select>
                                 </div>
                             </div>

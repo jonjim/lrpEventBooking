@@ -16,6 +16,7 @@
                         </thead>
                         <tbody>
                             <% for (eventSystem of eventSystems) { %>
+                                <% if (currentUser.eventSystems.filter(a => a._id.equals(eventSystem._id)).length > 0 || adminGroups.includes(currentUser.role)){ %>
                                 <tr>
                                     <td scope="row">
                                         <%= eventSystem.name %>
@@ -23,7 +24,7 @@
                                     </td>
                                     <td scope="row"><a href="/admin/systems/<%= eventSystem._id %>" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>
                                 </tr>
-                                <% } %>
+                                <% }} %>
                         </tbody>
                     </table>
                     <ul id="systemsNavPosition" class="pagination pager-nav justify-content-center"></ul>

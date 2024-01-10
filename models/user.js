@@ -34,9 +34,13 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'eventHost'
     }],
+    eventSystems: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'eventSystems'
+    }],
     role: {
         type: String,
-        enum: ['user', 'eventHost', 'admin', 'superAdmin'],
+        enum: ['user', 'eventHost','systemAdmin', 'admin', 'superAdmin'],
         default: 'user'
     },
     dob: Date,

@@ -10,7 +10,7 @@
                     <a class="nav-link active" aria-current="page" href="/">Upcoming Events</a>
                 </li>
                 <% if (currentUser) { %>
-                    <% if (['eventHost','admin','superAdmin'].includes(currentUser.role)) { %>
+                    <% if (['eventHost','systemAdmin','admin','superAdmin'].includes(currentUser.role)) { %>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
                             <ul class="dropdown-menu">
@@ -20,37 +20,27 @@
                                     </h4>
                                 </li>
                                 <li><a class="dropdown-item text-muted" href="/admin/events">Manage My Events</a></li>
-                                <% if (['admin','superAdmin'].includes(currentUser.role)) { %>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <h6 class="dropdown-header">
-                                            System Administration
-                                        </h6>
-                                    </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <h6 class="dropdown-header">
+                                        System Administration
+                                    </h6>
+                                </li>
+                                <li><a class="dropdown-item text-muted" href="/admin/hosts">Manage Event Hosts</a></li>
+                                <% if (['systemAdmin','admin','superAdmin'].includes(currentUser.role)) { %>
                                     <li><a class="dropdown-item text-muted" href="/admin/events/all">Manage Events</a></li>
-                                    <li><a class="dropdown-item text-muted" href="/admin/users">Manage Users</a></li>
-                                    <li><a class="dropdown-item text-muted" href="/admin/hosts">Manage Event Hosts</a></li>
                                     <li><a href="/admin/systems" class="dropdown-item text-muted">Manage Event Systems</a></li>
                                     <% if (['superAdmin'].includes(currentUser.role)) { %>
+                                        <li><a class="dropdown-item text-muted" href="/admin/users">Manage Users</a></li>
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
                                         <li><a href="/admin/policies" class="dropdown-item text-muted">Manage Site Policies</a></li>
                                         <li><a href="/admin/faq" class="dropdown-item text-muted">Manage FAQ</a></li>
                                         <li><a href="/admin/config" class="dropdown-item text-muted">System Config</a></li>
-                                        <% }} else if (currentUser.role == 'eventHost'){ %>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
-                                            <li>
-                                                <h6 class="dropdown-header">
-                                                    System Administration
-                                                </h6>
-                                            </li>
-                                            <li><a class="dropdown-item text-muted" href="/admin/hosts">Manage Event Hosts</a></li>
-                                            <% } %>
+                                        <% }} %>
                             </ul>
                         </li>
                         <% } %>

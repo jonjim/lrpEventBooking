@@ -14,28 +14,42 @@ module.exports.isLoggedIn = (req, res, next) => {
 }
 
 module.exports.isMatchingEventHost = (req, res, next) => {
-    if (['eventHost', 'admin', 'superAdmin'].includes(req.user.role) && (req.user.eventHosts.filter(a => a._id.equals(req.params.id)).length > 0) || ['admin', 'superAdmin'].includes(req.user.role)) {
+    if (['eventHost','systemAdmin','admin', 'superAdmin'].includes(req.user.role) && (req.user.eventHosts.filter(a => a._id.equals(req.params.id)).length > 0) || ['systemAdmin','admin', 'superAdmin'].includes(req.user.role)) {
         next();
     } else {
-        req.session.returnTo = req.originalUrl;
         req.flash('error', "You don't have permission to do that!");
         return res.redirect('/');
     }
 }
 
 module.exports.isEventHost = (req, res, next) => {
-    if (!['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
-        req.session.returnTo = req.originalUrl;
+    if (!['eventHost','systemAdmin', 'admin', 'superAdmin'].includes(req.user.role)) {
         req.flash('error', "You don't have permission to do that!");
         return res.redirect('/');
     }
     next();
 }
 
+module.exports.isSystemAdmin = (req,res,next) => {
+    if (!['systemAdmin','admin', 'superAdmin'].includes(req.user.role)) {
+        req.flash('error', "You don't have permission to do that!");
+        return res.redirect('/');
+    }
+    next();
+}
+
+module.exports.isMatchingSystemAdmin = (req,res,next) => {
+    if ((['systemAdmin','admin', 'superAdmin'].includes(req.user.role) && req.user.eventSystems.filter(a => a._id.equals(req.params.id)).length > 0) || ['admin', 'superAdmin'].includes(req.user.role)) {
+        next();
+    }
+    else { 
+        req.flash('error', "You don't have permission to do that!");
+        return res.redirect('/');
+    }
+}
+
 module.exports.isAdmin = (req, res, next) => {
     if (!['admin', 'superAdmin'].includes(req.user.role)) {
-        console.log(req.user.role)
-        req.session.returnTo = req.originalUrl;
         req.flash('error', "You don't have permission to do that!");
         return res.redirect('/');
     }
@@ -44,7 +58,6 @@ module.exports.isAdmin = (req, res, next) => {
 
 module.exports.isSuperAdmin = (req, res, next) => {
     if (!['superAdmin'].includes(req.user.role)) {
-        req.session.returnTo = req.originalUrl;
         req.flash('error', "You don't have permission to do that!");
         return res.redirect('/');
     }

@@ -12,8 +12,14 @@ module.exports.eventHosts = async(req, res, next) => {
 
 module.exports.eventHostEdit = async(req, res, next) => {
     const host = await eventHost.findById(req.params.id).populate('eventSystem');
-    const eventSystems = await EventSystems.find();
-    res.render('admin/eventHosts/eventHostEdit', { title: `Edit ${host.name}`, host, eventSystems });
+    if (req.user.eventSystems.includes(host.eventSystem._id) || res.locals.currentUser.eventHosts.includes(host._id) || res.locals.adminGroups.includes(req.user.role)){
+        const eventSystems = await EventSystems.find();
+        return res.render('admin/eventHosts/eventHostEdit', { title: `Edit ${host.name}`, host, eventSystems });
+    }
+    else{
+        req.flash('error','You are not authorised to do that!')
+        return res.redirect('/')
+    }
 }
 
 module.exports.eventHostUpdate = async(req, res, next) => {
@@ -59,9 +65,10 @@ module.exports.listUsers = async(req, res, next) => {
 };
 
 module.exports.editUser = async(req, res, next) => {
-    const user = await User.findById(req.params.id).populate('eventHosts');
+    const user = await User.findById(req.params.id).populate('eventHosts').populate('eventSystems');
     const hosts = await eventHost.find();
-    return res.render('admin/users/editUser', { title: `Edit User: ${user.firstname} ${user.surname}`, user, eventHosts: hosts })
+    const systems = await EventSystems.find();
+    return res.render('admin/users/editUser', { title: `Edit User: ${user.firstname} ${user.surname}`, user, eventHosts: hosts, eventSystems: systems })
 }
 
 module.exports.delUser = async(req, res, next) => {
@@ -89,6 +96,16 @@ module.exports.addHostToUser = async(req, res, next) => {
 
 module.exports.delHostFromUser = async(req, res, next) => {
     const user = await User.findByIdAndUpdate(req.params.id, { $pull: { eventHosts: req.params.host } });
+    return res.redirect(`/admin/users/${req.params.id}`)
+}
+
+module.exports.addSystemToUser = async(req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.params.id, { $push: { eventSystems: req.params.system } });
+    return res.redirect(`/admin/users/${req.params.id}`)
+}
+
+module.exports.delSystemFromUser = async(req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.params.id, { $pull: { eventSystems: req.params.system } });
     return res.redirect(`/admin/users/${req.params.id}`)
 }
 

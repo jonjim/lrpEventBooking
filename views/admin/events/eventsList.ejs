@@ -18,6 +18,7 @@
                 </thead>
                 <tbody>
                     <% for (event of events) { %>
+                        <% if (currentUser.eventSystems.filter(a => a._id.equals(event.eventHost.eventSystem._id)).length > 0 || currentUser.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0) { %>
                         <tr>
                             <td scope="row">
                                 <a href="/admin/events/<%= event._id %>/manage" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Event"><i class="bi bi-pencil-square link-dark"></i></a>
@@ -46,7 +47,7 @@
                                 <%- event.allowBookings ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
                             </td>
                         </tr>
-                        <% } %>
+                        <% }} %>
                 </tbody>
             </table>
             <ul id="eventsNavPosition" class="pagination pager-nav justify-content-center"></ul>

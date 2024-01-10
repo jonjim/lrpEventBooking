@@ -48,11 +48,11 @@ function toTitleCase(str) {
               <label for="eventHost">Event Host</label>
               <select class="form-select" aria-label="Default select example" onchange="setHostImageUrl(this)" id="eventHost" name="event[eventHost]">
                 <option <%= event.eventHost.name === '' ? 'selected' : '' %>>Select an Event Host</option>
-                <option <%= event.eventHost.name === 'Lorien Trust' ? 'selected' : '' %> value="Lorien Trust">Lorien Trust</option>
                 <% for (host of eventHosts.sort((a, b) => a.eventSystem.name.localeCompare(b.eventSystem.name) || a.name.localeCompare(b.name))) { %>
+                  <% if ((currentUser.eventHosts.filter(a => a._id.equals(host._id)).length > 0) || currentUser.eventSystems.filter(a => a._id.equals(host.eventSystem._id)).length > 0|| ['admin','superAdmin'].includes(currentUser.role)) { %>
                 <option <%= event.eventHost._id.equals(host._id) ? 'selected' : '' %> data-img="<%= host.img %>" value="<%= host._id %>"> <%= host.eventSystem.name %>
                   <%= host.display ? ` - ${host.name}` : '' %></option>
-                <% } %>
+                <% }} %>
               </select>
               <input type="hidden" class="form-control" id="eventImageUrl" onblur="setHostImageUrl(this)" name="event[hostImg]" readonly value="<%= event.hostImg %>">
             </div>

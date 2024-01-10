@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
-const { isLoggedIn, isAdmin, isSuperAdmin, isEventHost, isMatchingEventHost, usernameToLowerCase } = require('../middleware');
+const { isLoggedIn, isAdmin, isSuperAdmin, isEventHost, isMatchingEventHost, isMatchingSystemAdmin, isSystemAdmin, usernameToLowerCase } = require('../middleware');
 const multer = require('multer');
 const { storage } = require('../utils/cloudinary');
 const upload = multer({ storage });
@@ -19,11 +19,17 @@ router.route('/users/:id')
     .post(isLoggedIn, isAdmin, catchAsync(adminController.updateUser))
     .delete(isLoggedIn, isAdmin, catchAsync(adminController.delUser))
 
-router.route('/users/:id/add/:host')
+router.route('/users/:id/add/host/:host')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.addHostToUser));
 
-router.route('/users/:id/del/:host')
+router.route('/users/:id/del/host/:host')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.delHostFromUser));
+
+router.route('/users/:id/add/system/:system')
+    .get(isLoggedIn, isAdmin, catchAsync(adminController.addSystemToUser));
+
+router.route('/users/:id/del/system/:system')
+    .get(isLoggedIn, isAdmin, catchAsync(adminController.delSystemFromUser));
 
 router.route('/users/:id/reset')
     .post(isLoggedIn, isAdmin, catchAsync(adminController.resetUserPassword));
@@ -32,8 +38,8 @@ router.route('/hosts')
     .get(isLoggedIn, isEventHost, catchAsync(adminController.eventHosts))
 
 router.route('/hosts/new')
-    .get(isLoggedIn, isAdmin, catchAsync(adminController.eventHostNewForm))
-    .post(isLoggedIn, isAdmin, catchAsync(adminController.createEventHost))
+    .get(isLoggedIn, isSystemAdmin, catchAsync(adminController.eventHostNewForm))
+    .post(isLoggedIn, isSystemAdmin, catchAsync(adminController.createEventHost))
 
 router.route('/hosts/:id')
     .get(isLoggedIn, isMatchingEventHost, catchAsync(adminController.eventHostEdit))
@@ -41,33 +47,33 @@ router.route('/hosts/:id')
     .delete(isLoggedIn, isAdmin, catchAsync(adminAboutController.deleteEventHost))
 
 router.route('/hosts/:id/image')
-    .delete(isLoggedIn, isAdmin, catchAsync(adminAboutController.deleteEventHostImg))
+    .delete(isLoggedIn, isMatchingEventHost, catchAsync(adminAboutController.deleteEventHostImg))
 
 router.route('/systems')
-    .get(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemList));
+    .get(isLoggedIn, isSystemAdmin, catchAsync(adminController.eventSystemList));
 
 router.route('/systems/new')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemNewForm))
     .post(isLoggedIn, isAdmin, upload.single('image'), catchAsync(adminController.eventSystemNew))
 
 router.route('/systems/:id')
-    .get(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemEdit))
-    .post(isLoggedIn, isAdmin, upload.single('image'), catchAsync(adminController.eventSystemUpdate))
+    .get(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemEdit))
+    .post(isLoggedIn, isMatchingSystemAdmin, upload.single('image'), catchAsync(adminController.eventSystemUpdate))
     .delete(isLoggedIn, isSuperAdmin, catchAsync(adminController.eventSystemDelete))
 
 router.route('/systems/:id/fields')
-    .post(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemAddField))
-    .put(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemUpdateField))
-    .delete(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemDeleteField))
+    .post(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemAddField))
+    .put(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemUpdateField))
+    .delete(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemDeleteField))
 
 router.route('/systems/:id/image')
-    .delete(isLoggedIn, isAdmin, catchAsync(adminController.eventSystemDelImg))
+    .delete(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemDelImg))
 
 router.route('/events')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.listHostedEvents));
 
 router.route('/events/all')
-    .get(isLoggedIn, isAdmin, catchAsync(adminEventsController.listEvents))
+    .get(isLoggedIn, isSystemAdmin, catchAsync(adminEventsController.listEvents))
 
 router.route('/events/new')
     .get(isLoggedIn, catchAsync(adminEventsController.createEventForm))
