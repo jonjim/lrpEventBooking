@@ -65,14 +65,9 @@ userSchema.post('findOneAndUpdate', async function(doc) {
         for (e of events) {
             for (attendee of e.attendees) {
                 if (attendee.user?.equals(doc._id)) {
-                    await Event.findByIdAndUpdate(e._id, {
-                        $pull: {
-                            attendees: { booking: attendee.booking }
-                        }
-                    })
                     const attendeeData = JSON.parse(JSON.stringify(attendee))
                     attendeeData.display = doc.displayBookings;
-                    const characterData = doc[e.eventHost.eventSystem.systemRef]; 
+                    const characterData = JSON.parse(JSON.stringify(doc))[e.eventHost.eventSystem.systemRef]; 
                     attendeeData.customFields = [];
                     if (typeof e.eventHost.eventSystem.customFields !== 'undefined') {
                         for (field of e.eventHost.eventSystem.customFields.filter(a => a.display)) {
@@ -88,6 +83,11 @@ userSchema.post('findOneAndUpdate', async function(doc) {
                                 });
                         }
                     }
+                    await Event.findByIdAndUpdate(e._id, {
+                        $pull: {
+                            attendees: { booking: attendee.booking }
+                        }
+                    })
                     await Event.findByIdAndUpdate(e._id, {
                         $push: {
                             attendees: {...attendeeData }

@@ -116,7 +116,8 @@ const captureOrder = async(req, orderID) => {
         var event = await Event.findById(eventBooking.event).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
         
         eventBooking.paid = true;
-        eventBooking.paypalPaymentId = responseData.jsonResponse.id;
+        eventBooking.paypalPaymentId = responseData.jsonResponse.purchase_units[0].payments.captures[0].id;
+        eventBooking.paypalOrderId = responseData.jsonResponse.id;
         eventBooking.totalPaid = eventBooking.totalDue;
         eventBooking.bookingPaid = Date.now();
         eventBooking.paypalPayer = responseData.jsonResponse.payer.email_address;
@@ -125,7 +126,7 @@ const captureOrder = async(req, orderID) => {
         eventBooking.surname = req.user.surname;
         eventBooking.displayBooking = req.user.displayBookings;
         await eventBooking.save();
-        await Event.findByIdAndUpdate(booking.event, {
+        await Event.findByIdAndUpdate(eventBooking.event, {
             $push: {
                 attendees: { ...await attendeeUpdate(event.eventHost.eventSystem,eventBooking)}
             }

@@ -30,7 +30,6 @@ module.exports.register = async(req, res, next) => {
 
 module.exports.listEventBookingsUser = async(req, res, next) => {
     const eventBookings = await EventBooking.find({ user: req.user._id }).populate('eventTickets').populate('event').populate({ path: 'event', populate: { path: 'eventHost' } }).populate({ path: 'event', populate: { path: 'eventHost', populate: { path: 'eventSystem'} } }).sort({ bookingMade: 'desc' });
-    console.log(eventBookings[0].event.eventHost);
     if (eventBookings.length > 0)
         return res.render('user/eventList', { title: `Your Event Bookings`, eventBookings: eventBookings, event: eventBookings[0].event });
     else {
@@ -65,6 +64,7 @@ module.exports.accountUpdate = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user._id, {...req.body }, { new: true, strict:false })
     req.user = user;
     const redirectUrl = req.session.returnTo || '/account';
+    req.session.returnTo = undefined;
     res.redirect(redirectUrl);
 };
 

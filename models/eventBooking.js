@@ -41,7 +41,9 @@ const eventBookingSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    paypalOrderId: String,
     paypalPaymentId: String,
+    paypalReferenceId: String,
     paypalPayer: String,
     displayBooking: Boolean,
     playerId: Number,
