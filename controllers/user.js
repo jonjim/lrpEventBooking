@@ -29,7 +29,8 @@ module.exports.register = async(req, res, next) => {
 };
 
 module.exports.listEventBookingsUser = async(req, res, next) => {
-    const eventBookings = await EventBooking.find({ user: req.user._id }).populate('eventTickets').populate('event').populate({ path: 'event', populate: { path: 'eventHost' } }).sort({ bookingMade: 'desc' });
+    const eventBookings = await EventBooking.find({ user: req.user._id }).populate('eventTickets').populate('event').populate({ path: 'event', populate: { path: 'eventHost' } }).populate({ path: 'event', populate: { path: 'eventHost', populate: { path: 'eventSystem'} } }).sort({ bookingMade: 'desc' });
+    console.log(eventBookings[0].event.eventHost);
     if (eventBookings.length > 0)
         return res.render('user/eventList', { title: `Your Event Bookings`, eventBookings: eventBookings, event: eventBookings[0].event });
     else {
