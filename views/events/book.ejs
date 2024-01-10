@@ -2,6 +2,7 @@
 <% var playerTickets = event.eventTickets.filter(e => ['player','playerchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
 <% var monsterTickets = event.eventTickets.filter(e => ['monster','monsterchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
 <% var staffTickets = event.eventTickets.filter(e => ['staff'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
+<% const prefix = ['i','e','a','o','u'].includes(event.eventHost.eventSystem.name.toLowerCase().charAt(0)) ? 'An' : 'A'; %>
 <div class="row">
 	<div class="col">
 		<div class="card shadow py-3 px-3 mb-3">
@@ -118,6 +119,18 @@
 									<%= ticket.cost %> - <%= ticket.description %></label>
 							</div>
 							<% } } %>
+							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
+								<input type="checkbox" name="terms" id="termsPlayer" class="form-check-input" required>
+								<label for="termsPlayer">I agree to <%= config.siteName %> <a class="link-dark" href="/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book an event hosted by <%= config.siteName %> you must agree to our Terms & Conditions</div>
+							</div>
+							<% if (event.eventHost.eventSystem.terms) { %>
+								<div class="mb-3 form-check">
+								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
+								<label for="termsSystemPlayer">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= prefix %> <%= event.eventHost.eventSystem.name %> you must agree to their Terms & Conditions</div>
+							</div>
+                    		<% } %>
 							<div class=" mb-3">
 								<button class="btn btn-success">
 									<h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book a Player Ticket</h5>
@@ -186,6 +199,18 @@
 									<%= ticket.cost %> - <%= ticket.description %></label>
 							</div>
 							<% } } %>
+							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
+								<input type="checkbox" name="terms" id="termsMonster" class="form-check-input" required>
+								<label for="termsMonster">I agree to <%= config.siteName %> <a class="link-dark" href="/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book an event hosted by <%= config.siteName %> you must agree to our Terms & Conditions</div>
+							</div>
+							<% if (event.eventHost.eventSystem.terms) { %>
+								<div class="mb-3 form-check">
+								<input type="checkbox" name="terms" id="termsSystemMonster" class="form-check-input" required>
+								<label for="termsSystemMonster">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= prefix %> <%= event.eventHost.eventSystem.name %> you must agree to their Terms & Conditions</div>
+							</div>
+                    		<% } %>
 							<button class="btn btn-danger mb-3">
 								<h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Monster Ticket</h5>
 							</button>
@@ -245,6 +270,18 @@
 									<%= ticket.cost %> - <%= ticket.description %></label>
 							</div>
 							<% } } %>
+							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
+								<input type="checkbox" name="terms" id="termsStaff" class="form-check-input" required>
+								<label for="termsStaff">I agree to <%= config.siteName %> <a class="link-dark" href="/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book an event hosted by <%= config.siteName %> you must agree to our Terms & Conditions</div>
+							</div>
+							<% if (event.eventHost.eventSystem.terms) { %>
+								<div class="mb-3 form-check">
+								<input type="checkbox" name="terms" id="termsSystemStaff" class="form-check-input" required>
+								<label for="termsSystemStaff">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= prefix %> <%= event.eventHost.eventSystem.name %> you must agree to their Terms & Conditions</div>
+							</div>
+                    		<% } %>
 							<button class="btn btn-primary mb-3">
 								<h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Staff Ticket</h5>
 							</button>
@@ -253,9 +290,6 @@
 					</div>
 					<% } %>
 				</div>
-
-
-
 			</div>
 		</div>
 	</div>
