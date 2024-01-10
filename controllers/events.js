@@ -4,7 +4,7 @@ const EventBooking = require('../models/eventBooking');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 const emailService = require('../utils/email');
-const { systemCheck } = require('../utils/systemCheck');
+const { systemCheck, attendeeUpdate } = require('../utils/systemCheck');
 
 module.exports.upcomingEvents = async(req, res, next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
@@ -104,45 +104,29 @@ module.exports.createEventBooking = async(req, res, next) => {
     if (manual) {
         booking.firstname = req.body.firstname;
         booking.surname = req.body.surname;
-        displayBooking = false;
+        booking.displayBooking = false;
     } else {
         booking.user = user._id;
         booking.originalUser = user._id;
         booking.firstname = user.firstname;
         booking.surname = user.surname;
-        displayBooking = user.displayBookings;
+        booking.displayBooking = user.displayBookings;
     }
     booking.eventTickets.push(...tickets);
     if (booking.totalDue == 0) {
         booking.paid = true;
+        booking.displayBooking = user.displayBookings;
         booking.bookingPaid = Date.now()
     }
     await booking.save();
     var eventBooking = await EventBooking.findById(booking._id).populate('eventTickets').populate('user').populate('event');
     var event = await Event.findById(eventBooking.event,{strict:false}).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
     if (booking.totalDue == 0) {
-        for (ticket of eventBooking.eventTickets.filter(e => !['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(e.ticketType))) {
-            const characterData = eventBooking.user[event.eventHost.eventSystem.systemRef]; 
-            const attendeeData = {
-                user: eventBooking.user,
-                booking: eventBooking,
-                ticketType: ticket.ticketType,
-                display: req.user.displayBookings,
-                surname: eventBooking.surname,
-                firstname: eventBooking.firstname,
-                icName: manual ? req.body.characterName : characterData.character.characterName
-            };
-            if (typeof event.eventHost.eventSystem.customFields !== 'undefined') {
-                for (field of event.eventHost.eventSystem.customFields.filter(a => a.display)) {
-                    if (field.section === 'player')
-                        attendeeData[field.name] = characterData[field.name];
-                    else if (field.section === 'character')
-                        attendeeData[field.name] = characterData.character[field.name];
-                }
+        await Event.findByIdAndUpdate(eventBooking.event, {
+            $push: {
+                attendees: { ...await attendeeUpdate(event.eventHost.eventSystem,eventBooking)}
             }
-            event.attendees.push(attendeeData);
-        }
-        event.save();
+        }, {strict: false})
     }
     if (booking.paid) {
         res.render('email/paidBooking', { booking: eventBooking }, async function(err, str) {
