@@ -52,7 +52,8 @@ module.exports.createEvent = async(req, res, next) => {
     req.body.event.eventApproved = false;
     req.body.event.visible = false;
     const event = await new Event(req.body.event);
-    const host = await eventHost.findById(req.body.eventHost).populate('eventSystem');
+    const host = await eventHost.findById(req.body.event.eventHost).populate('eventSystem');
+    //console.log(req.body.eventHost);
     event.financials.sanctioningFee = host.eventSystem.sanctioningFee;
     event.registrationFee.value = res.locals.config.hostingCharge;
     await event.save();

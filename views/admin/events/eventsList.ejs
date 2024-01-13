@@ -18,7 +18,7 @@
                 </thead>
                 <tbody>
                     <% for (event of events) { %>
-                        <% if (currentUser.eventSystems.filter(a => a._id.equals(event.eventHost.eventSystem._id)).length > 0 || currentUser.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0) { %>
+                        <% if ((currentUser.eventSystems.filter(a => a._id.equals(event.eventHost.eventSystem._id)).length > 0 || currentUser.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0) || adminGroups.includes(currentUser.role)) { %>
                         <tr>
                             <td scope="row">
                                 <a href="/admin/events/<%= event._id %>/manage" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Event"><i class="bi bi-pencil-square link-dark"></i></a>
