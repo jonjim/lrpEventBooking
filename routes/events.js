@@ -8,6 +8,9 @@ const controller = require('../controllers/events');
 router.route('/')
     .get(catchAsync(controller.upcomingEvents));
 
+router.route('/events.ics')
+    .get(catchAsync(controller.icsEvents))
+
 router.route('/events/booking/gift')
     .post(isLoggedIn, catchAsync(controller.giftBooking));
 

@@ -5,6 +5,8 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 const emailService = require('../utils/email');
 const { systemCheck, attendeeUpdate } = require('../utils/systemCheck');
+const ics = require('ics');
+const moment = require("moment")
 
 module.exports.upcomingEvents = async(req, res, next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
@@ -19,6 +21,32 @@ module.exports.upcomingEvents = async(req, res, next) => {
         meta
     })
 };
+
+module.exports.icsEvents = async(req,res,next) => {
+    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    const icsList = [];
+    function dateConvert(date){
+        return [];
+    }
+
+    for (e of eventList){
+        icsList.push({
+            title: e.name,
+            start: moment(e.eventStart).format('YYYY-M-D-H-m').split("-").map((a) => parseInt(a)),
+            end: moment(e.eventEnd).format('YYYY-M-D-H-m').split("-").map((a) => parseInt(a)),
+            description: e.promoDescription,
+            location: e.location,
+            url: `${res.locals.rootUrl}/events/${e._id}`,
+            organizer: {
+                name: e.eventHost.display ? `${e.eventHost.eventSystem.name}: ${e.eventHost.name}` : e.eventHost.eventSystem.name,
+                email: e.eventHost.contactAddress
+            },
+            uid: e._id
+        })
+    }
+    res.contentType("text/calendar");
+    res.send(ics.createEvents(icsList).value);
+}
 
 module.exports.showEvent = async(req, res) => {
     const event = await Event.findById(req.params.id).populate('eventTickets').populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
