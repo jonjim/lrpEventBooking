@@ -11,6 +11,10 @@ imgSchema.virtual('thumbnail').get(function() {
 
 const lrpEventSchema = new mongoose.Schema({
     name: String,
+    created:{
+        type: Date,
+        default: Date.now
+    },
     eventStart: {
         type: Date,
         index: true

@@ -7,6 +7,7 @@ const emailService = require('../utils/email');
 const { systemCheck, attendeeUpdate } = require('../utils/systemCheck');
 const ics = require('ics');
 const moment = require("moment")
+const RSS = require('rss');
 
 module.exports.upcomingEvents = async(req, res, next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
@@ -42,6 +43,28 @@ module.exports.icsEvents = async(req,res,next) => {
     }
     res.contentType("text/calendar");
     res.send(ics.createEvents(icsList).value);
+}
+
+module.exports.rssEvents = async(req,res,next) => {
+    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    var feed = new RSS({
+        title: res.locals.config.siteName,
+        description: res.locals.config.siteDescription,
+        site_url: res.locals.rootUrl,
+        image_url: res.locals.config.siteLogo.url,
+        feed_url: `${res.locals.rootUrl}/rss`
+    })
+    for (e of eventList){
+        feed.item({
+            title: e.name,
+            description: e.promoDescription,
+            url: `${res.locals.rootUrl}/events/${e._id}`,
+            guid: e._id,
+            date: e.eventStart
+        })
+    }
+    res.contentType("application/xml");
+    res.send(feed.xml({indent: true}));
 }
 
 module.exports.showEvent = async(req, res) => {

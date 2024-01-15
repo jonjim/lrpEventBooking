@@ -11,6 +11,9 @@ router.route('/')
 router.route('/events.ics')
     .get(catchAsync(controller.icsEvents))
 
+router.route('/rss')
+    .get(catchAsync(controller.rssEvents))
+
 router.route('/events/booking/gift')
     .post(isLoggedIn, catchAsync(controller.giftBooking));
 
