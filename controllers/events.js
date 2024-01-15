@@ -25,10 +25,6 @@ module.exports.upcomingEvents = async(req, res, next) => {
 module.exports.icsEvents = async(req,res,next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
     const icsList = [];
-    function dateConvert(date){
-        return [];
-    }
-
     for (e of eventList){
         icsList.push({
             title: e.name,
