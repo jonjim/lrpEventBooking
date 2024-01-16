@@ -26,19 +26,22 @@ module.exports.upcomingEvents = async(req, res, next) => {
 module.exports.icsEvents = async(req,res,next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
     const icsList = [];
+    function stripHtml(html){
+        return html.replace('<p>','').replace('</p>')
+    }
     for (e of eventList){
         icsList.push({
             title: e.name,
             start: moment(e.eventStart).format('YYYY-M-D-H-m').split("-").map((a) => parseInt(a)),
             end: moment(e.eventEnd).format('YYYY-M-D-H-m').split("-").map((a) => parseInt(a)),
-            description: e.promoDescription,
+            description: stripHtml(e.promoDescription),
             location: e.location,
             url: `${res.locals.rootUrl}/events/${e._id}`,
             organizer: {
                 name: e.eventHost.display ? `${e.eventHost.eventSystem.name}: ${e.eventHost.name}` : e.eventHost.eventSystem.name,
                 email: e.eventHost.contactAddress
             },
-            uid: e._id
+            uid: `${e._id}`
         })
     }
     res.contentType("text/calendar");
