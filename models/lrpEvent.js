@@ -113,7 +113,36 @@ const lrpEventSchema = new mongoose.Schema({
             name: String,
             value: {}
         }]
-    }]
+    }],
+    returnPack: {
+        timeInOut:{
+            arrivalTimeIn: String,
+            dailyTimeIn: String, 
+            dailyTimeOut: String,
+            departureTimeOut: String,
+            notes: String
+        },
+        arrivalDeparture:{
+            arrivalTime: String,
+            departureTime: String,
+            notes: String
+        },
+        eventStaff:{
+            gamesOperations: String,
+            plotActuation: String, 
+            firstAid: String,
+            plotTeam: String,
+            referees: String,
+            otherStaff: [{
+                title: String, 
+                members: String
+            }]
+        },
+        parking: String,
+        camping: String,
+        bunks: String,
+        otherNotes: String
+    }
 }, {
     virtuals: {
         playerSpaces: {

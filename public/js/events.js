@@ -1,4 +1,6 @@
 tinymce.init({
+    content_css: ['/css/style.css','https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'],
+    content_css_cords: true,
     selector: 'textarea',
     plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
@@ -26,12 +28,13 @@ tinymce.init({
     },
     content_style: `
             body {
+                margin: 10px 10px 5px 10px;
               background: #fff;
               font-size: 10pt;
             }
         …
      `
-});
+ });
 
 function setHostImageUrl(host) {
     let url;

@@ -55,3 +55,23 @@ module.exports.attendeesEvent = async(req, res, next) => {
         return res.redirect('/');
     }
 };
+
+module.exports.eventPack = async(req,res,next) => {
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        if (req.query.preview) {
+            const event = await Event.findById(req.params.id).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
+            return res.render('print/eventPack', { title: `Event Pack: ${event.name}`, event });
+        }
+        else {
+            const event = await Event.findByIdAndUpdate(req.params.id, req.body,{new:true}).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
+            res.render('print/eventPack', { title: `Manage ${event.name}`, event }, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await pdfService.sendPDF(res, str, `${event.name} Event Pack.pdf`);
+            })
+        }
+    } else {
+        req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+}

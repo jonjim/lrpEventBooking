@@ -27,3 +27,32 @@ for (progress of progressArray) {
     let percentage = (100 * current) / max;
     progress.style.width = percentage + '%';
 }
+
+const parkingSwitch = document.getElementById('parkingSwitch');
+const parkingText = document.getElementById('parking');
+const campingSwitch = document.getElementById('campingSwitch');
+const campingText = document.getElementById('camping');
+const bunkSwitch = document.getElementById('bunkSwitch');
+const bunksText = document.getElementById('bunks');
+const notesSwitch = document.getElementById('notesSwitch');
+const notesText = document.getElementById('notes');
+
+parkingSwitch.addEventListener('change', () => {
+        parkingText.classList.toggle('d-none');
+        parkingText.disabled = !parkingSwitch.checked;
+})
+
+campingSwitch.addEventListener('change', () => {
+    campingText.classList.toggle('d-none');
+    campingText.disabled = !campingSwitch.checked;
+})
+
+bunkSwitch.addEventListener('change', () => {
+    bunksText.classList.toggle('d-none');
+    bunksText.disabled = !bunkSwitch.checked;
+})
+
+notesSwitch.addEventListener('change', () => {
+    notesText.classList.toggle('d-none');
+    notesText.disabled = !notesSwitch.checked;
+})

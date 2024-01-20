@@ -1,0 +1,110 @@
+<% layout('layouts/print') %>
+
+<div class="row mb-3">
+    <div class="col-4">
+        <img id="eventImg" <% if (event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= event.eventHost.name %>" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+    </div>
+    <div class="col">
+        <h2 class="display-4">
+            <a href="/events/<%= event._id %>" class="link-underline link-underline-opacity-0 link-dark">
+              <%= event.name %> <% if (event.eventHost.eventSystem.img?.url) { %> <% } %>
+            </a>
+          </h2>
+          <img height="60px" style="margin-top:-20px" src="<%= event.eventHost.eventSystem.img.url %>" alt="">
+            <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %><br/>
+          <a class="small" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(event.location) %>">
+            <%= event.location %>
+          </a><br>
+          <span class="small">
+            <%= new Date(event.eventStart).toLocaleDateString() %>
+            <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+            <%= new Date(event.eventEnd).toLocaleDateString() %>
+            <% } %>
+          </span>
+    </div>
+</div>
+<div class="mb-3 mx-5">
+  <%- event.icInvitation %>
+</div>
+<div class="mb-3">
+  <p class="display-5">Event Information</p>
+  <p>This event is <%= event.eventHost.display ? `hosted by the ${event.eventHost.name} and ` : '' %>run as part of <%= event.eventHost.eventSystem.name %> using their game rules.</p>
+  <p>Please ensure you bring along anything you require to play your character. If you are missing anything, please contact the event organisers before the event.</p>
+  <p>Please also ensure you bring anything you may require to ensure your safety and comfort during your time at our event.</p>
+  <p>If you have any queries regarding this event or any of the information provided here, please contact the event team at <a href="mailto:<%= event.eventHost.contactAddress %>"><%= event.eventHost.contactAddress %></a></p>
+</div>
+
+<div class="mb-3" style="page-break-before:always;">
+  <p class="display-6" >Arrival & Departure</p>
+  <p><strong>Attendee's are welcome to arrive at the event venue from <%= event.returnPack?.arrivalDeparture?.arrivalTime %></strong></p>
+  <p><em>Upon arrival please check-in with the Event Organiser to confirm that you are on-site. If you need to leave the site at time prior to the expected end-of-event please let the Event Organiser know that you will be leaving the event venue.</em></p>
+  <p><strong>Attendee's are asked to please leave the event venue by <%= event.returnPack?.arrivalDeparture?.departureTime %></strong></p>
+  <p><em>Please ensure you have tidied after yourself and leave the event venue as you found it.</em></p>
+  <hr>
+</div>
+
+<div class="mb-3">
+  <p class="display-6">Time-In & Time-out</p>
+  <p><strong>Arrival Time-In: <%= event.returnPack?.timeInOut?.arrivalTimeIn %></strong></p>
+  <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> 
+    <p><strong>Daily Time-In: <%= event.returnPack?.timeInOut?.dailyTimeIn %> - <%= event.returnPack?.timeInOut?.dailyTimeOut %></strong></p>
+  <% } %>
+  <p><strong>Final Time-Out: <%= event.returnPack?.timeInOut?.departureTimeOut %></strong></p>
+  <%- event.returnPack?.timeInOut?.notes %>
+  <hr>
+</div>
+
+<div class="mb-3">
+  <p class="display-6">Event Staff</p>
+  <p>The following people are the only official members of event staff.</p>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Games Operations:</strong> <%= event.returnPack?.eventStaff?.gamesOperations %></li>
+    <li class="list-group-item"><strong>Plot Actuation:</strong> <%= event.returnPack?.eventStaff?.plotActuation %></li>
+    <li class="list-group-item"><strong>Plot Team:</strong> <%= event.returnPack?.eventStaff?.plotTeam %></li>
+    <li class="list-group-item"><strong>Referees:</strong> <%= event.returnPack?.eventStaff?.referees %></li>
+    <li class="list-group-item"><strong>First Aid:</strong> <%= event.returnPack?.eventStaff?.gamesOperations %></li>
+    <% if (event.returnPack?.eventStaff?.otherStaff) { %>
+    <% for (staff of event.returnPack?.eventStaff?.otherStaff) { %>
+      <li class="list-group-item"><strong><%= staff.title %></strong> <%= staff.members %></li>
+    <% }} %>
+  </ul>
+  <hr>
+</div>
+
+<div class="mb-3" style="page-break-inside:avoid;">
+  <p class="display-6">Parking</p>
+  <p>All attendee's are asked to park with consideration for other guests, and please ensure there is always adequate access for emergency services.</p>
+  <%- event.returnPack?.parking %>
+  <hr>
+</div>
+
+<% if (event.returnPack?.camping) { %>
+  <div class="mb-3" style="page-break-inside:avoid;">
+    <div class="display-6" >Camping</div>
+    <p>All attendee's are asked to camp considerately and safely. Please be aware of the time of day and any noise, and consider if this may impact your neighbours.</p>
+    <p>Please ensure your campsite is left tidy during your stay and upon leaving.</p>
+    <%- event.returnPack?.camping %>
+  </div>
+<% } %>
+
+<% if (event.returnPack?.bunks) { %>
+  <div class="mb-3" style="page-break-inside:avoid;">
+    <div class="display-6">Bunks</div>
+    <p>All attendee's are asked to use the venue's bunks considerately.</p>
+    <p>Please ensure your bunk room is left tidy during your stay and upon leaving.</p>
+    <%- event.returnPack?.bunks %>
+  </div>
+<% } %>
+
+<% if (event.eventHost.eventSystem.terms) { %>
+<p class="display-5" style="page-break-before:always;">Terms & Conditions</p>
+<h3><%= event.eventHost.eventSystem.name %></h3>
+<div class="small" style="font-size:8pt !important">
+    <%- event.eventHost.eventSystem.terms %>
+</div>
+<% } %>
+<p class="display-5" style="page-break-before:always;">Terms & Conditions</p>
+<h3><%= config.siteName %></h3>
+<div class="small" style="font-size:8pt !important">
+    <%- config.terms %>
+</div>

@@ -5,7 +5,7 @@ async function sendPDF(res, html, filename) {
         browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,headless: true })
         const page = await browser.newPage();
         await page.setContent(html);
-        const pdf = await page.pdf({ format: "A4" });
+        const pdf = await page.pdf({ format: "A4", margin: { top: "40px", bottom: "40px" } });
         res.contentType("application/pdf");
         res.setHeader(
             "Content-Disposition",
@@ -26,7 +26,7 @@ async function sendConfidentialPDF(res, html, filename) {
             format: "A4",
             margin: {
                 top: "40px",
-                botom: "40px"
+                bottom: "40px"
             }
         });
         res.contentType("application/pdf");

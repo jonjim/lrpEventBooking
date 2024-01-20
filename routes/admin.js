@@ -108,6 +108,10 @@ router.route('/events/:id/print/dietary')
 router.route('/events/:id/print/pid')
     .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.pidEvent))
 
+router.route('/events/:id/print/eventPack')
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.eventPack))
+    .post(isLoggedIn, isEventHost, catchAsync(adminPrintController.eventPack))
+
 router.route('/events/:id/tickets/new')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.createEventTicket))
     .post(isLoggedIn, isEventHost, catchAsync(adminEventsController.createEventTicketPost))
