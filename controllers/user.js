@@ -17,10 +17,13 @@ module.exports.register = async(req, res, next) => {
         const registeredUser = await User.register(newUser, password);
         req.login(registeredUser, err => {
             if (err) return next();
-            req.flash('success', `Welcome to ${res.locals.config.siteName} ${registeredUser.username}!`);
-            const redirectUrl = req.session.returnTo || '/';
-            delete req.session.returnTo;
-            return res.redirect(redirectUrl);
+            res.render('email/registration', async function(err, str) {
+                emailService.sendEmail(req.user.username, `Welcome to ${res.locals.config.siteName}`, str);
+                req.flash('success', `Welcome to ${res.locals.config.siteName} ${registeredUser.username}!`);
+                const redirectUrl = req.session.returnTo || '/';
+                delete req.session.returnTo;
+                return res.redirect(redirectUrl);
+            })
         });
     } catch (e) {
         req.flash('error', e.message);

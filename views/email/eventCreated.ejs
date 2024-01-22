@@ -1,0 +1,13 @@
+<% layout('layouts/email') %>
+<h2 align="center" style="margin-bottom:5;"><b><%= event.name %> Created</b> </h2>
+<p align="center" style="margin-top: 0;">
+    <%= new Date(event.eventStart).toLocaleDateString() %>
+    <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+    <%= new Date(event.eventEnd).toLocaleDateString() %>
+    <% } %>
+</p>
+<% if (event.registrationFee.value != event.registrationFee.totalPaid) { %>
+<p align="center">To make your event live, a registration fee of <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.registrationFee.value) %> is due to be paid.</p>
+<% } %>
+<p align="center"><a href="<%= rootUrl %>/admin/events/<%= event._id %>/edit">Click here to edit your event</a></p>
+<p align="center"><a href="<%= rootUrl %>/admin/events/<%= event._id %>/manage">Click here to manage your event</a></p>

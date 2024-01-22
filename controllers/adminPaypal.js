@@ -169,11 +169,11 @@ module.exports.capturePayment = async(req, res, next) => {
     try {
         const { orderID } = req.params;
         const { jsonResponse, httpStatusCode } = await captureOrder(req, orderID);
-        //var eventBooking = await EventBooking.findById(jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user').populate('event');
-        // res.render('email/paidRegistration', { booking: eventBooking }, async function (err, str) {
-        //     emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str);
-        //     res.status(httpStatusCode).json(jsonResponse);
-        // })
+        var event = await Event.findById(jsonResponse.purchase_units[0].reference_id);
+        res.render('email/eventRegistrationPaid', { event: event }, async function (err, str) {
+            emailService.sendEmail(req.user.username, `Payment receipt for registering ${event.name}`, str);
+            return res.status(httpStatusCode).json(jsonResponse);
+        })
         return res.status(httpStatusCode).json(jsonResponse);
     } catch (error) {
         console.error("Failed to create order:", error);
