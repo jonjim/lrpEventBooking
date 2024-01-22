@@ -18,6 +18,18 @@ const siteConfigSchema = new mongoose.Schema({
         default: 0
     },
     hostingPaypal: String
+}, {
+    virtuals: {
+        imgThumbnail: {
+            get() {
+                return this.siteLogo.url.replace('/upload', '/upload/c_fill,w_250,h_113');
+            }
+        }
+    }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
 })
+
 
 module.exports = mongoose.model('siteConfig', siteConfigSchema);
