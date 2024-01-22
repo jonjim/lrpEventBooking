@@ -159,6 +159,7 @@ app.use( async (req, res, next) => {
     res.locals.rootUrl = process.env.ROOT_URL
     res.locals.systemData = getSystemData
     res.locals.config = await loadConfig()
+    res.locals.paypalScript = `https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_ID : process.env.PAYPAL_CLIENT_ID}&currency=GBP`
     next();
 })
 

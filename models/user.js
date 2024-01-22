@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'EventTicket'
     }]
-})
+}, {strict:false})
 
 userSchema.virtual('jadeThrone.character.faction')
 .set(function () {

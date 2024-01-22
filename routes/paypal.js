@@ -16,12 +16,12 @@ router.route('/cancelled')
     .get(catchAsync(controllerPaypal.cancelled))
 
 router.route('/registration/create')
-    .post(isLoggedIn, isEventHost, catchAsync(adminPaypal.createOrder))
+    .post(catchAsync(adminPaypal.createOrder))
 
 router.route('/registration/capture/:orderID')
-    .post(isLoggedIn, isEventHost, catchAsync(adminPaypal.capturePayment))
+    .post(catchAsync(adminPaypal.capturePayment))
 
 router.route('/registration/cancelled')
-    .get(isLoggedIn,isEventHost, catchAsync(adminPaypal.cancelled))
+    .get(catchAsync(adminPaypal.cancelled))
 
 module.exports = router;

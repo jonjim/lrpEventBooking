@@ -1,7 +1,9 @@
 const EventBooking = require('../models/eventBooking');
 const Event = require('../models/lrpEvent');
 const mongoose = require('mongoose');
-const base = "https://api-m.sandbox.paypal.com";
+const base = process.env.PAYPAL_SANDBOX == 'true' ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com";
+const paypalClientId = process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_ID : process.env.PAYPAL_CLIENT_ID;
+const paypalSecret = process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_SECRET : process.env.PAYPAL_CLIENT_SECRET;
 const emailService = require('../utils/email');
 const {attendeeUpdate} = require('../utils/systemCheck')
 
@@ -11,11 +13,18 @@ const {attendeeUpdate} = require('../utils/systemCheck')
  */
 const generateAccessToken = async() => {
     try {
-        if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
-            throw new Error("MISSING_API_CREDENTIALS");
+        if (!process.env.PAYPAL_SANDBOX == 'true')
+            if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
+                throw new Error("MISSING_API_CREDENTIALS");
+            }
+        else {
+            if (!process.env.PAYPAL_SANDBOX_CLIENT_ID || !process.env.PAYPAL_SANDBOX_CLIENT_SECRET) {
+                throw new Error("MISSING_API_CREDENTIALS");
+            }
         }
+
         const auth = Buffer.from(
-            process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_CLIENT_SECRET,
+            paypalClientId + ":" + paypalSecret,
         ).toString("base64");
         const response = await fetch(`${base}/v1/oauth2/token`, {
             method: "POST",

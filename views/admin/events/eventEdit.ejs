@@ -344,6 +344,6 @@ function toTitleCase(str) {
   <% } %>
   <script src="/js/events.js"></script>
   <% if (event.registrationFee.value != event.registrationFee.totalPaid) { %>
-  <script src="https://www.paypal.com/sdk/js?client-id=AZr-Xodo9qz8Q-0Njgl8w_oKSWtKJBdZNo_wMhQmEjN3WvXWeBR7mk36zmCZImmz03JWjbMmJoegZqmg&currency=GBP"></script>
+  <script src="<%= paypalScript %>"></script>
 <script src="/js/registrationPaypal.js"></script>
 <% } %>
