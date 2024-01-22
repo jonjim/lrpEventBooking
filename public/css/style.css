@@ -69,7 +69,7 @@ html {
 
 .event-logo {
     transition:all ease 500ms;
-    max-width: 180px;
+    max-width: 140px;
 }
 
 .host-logo-fade {
@@ -88,7 +88,7 @@ html {
     top: 0px;
     left: 46px;
     opacity: 1.0;
-    max-width: 180px;
+    max-width: 140px;
     mix-blend-mode: multiply;
 }
 
@@ -98,7 +98,7 @@ div.img {
 }
 
 .upcoming-logo {
-    max-width: 180px;
+    max-width: 140px;
 }
 
 @media (max-width: 991.98px) {

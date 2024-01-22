@@ -1,54 +1,60 @@
 <% layout('layouts/boilerplate') %>
 
-    <% if (!events) { %>
-        <div class="mt-5 pt-5">
-            <h3 class="text-center mt-5">There are currently no events available for booking</h3>
-        </div>
+<% if (!events) { %>
+<div class="mt-5 pt-5">
+  <h3 class="text-center mt-5">There are currently no events available for booking</h3>
+</div>
 
-        <% } else { %>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <% for (event of events) { %>
-                    <div class="col">
-                        <div class="card shadow h-100 py-3 px-3">
-                            <div class="row h-100 g-5 pb-0">
-                                <div class="col-4 col-md-4">
-                                    <div class="img align-middle text-center ms-2"><img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo"<% } %> class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                                        <% if (event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
-                                    </div>
-                                </div>
-                                <div class="col-8 col-md-8">
-                                    <div class="card-body pb-0">
-                                        <h4 class="card-title">
-                                            <a class="link-dark" href="/events/<%= event._id %>">
-                                                <%= event.name %>
-                                            </a>
-                                        </h4>
-                                        <p class="card-text">
-                                            <i>
-                                <%= new Date(event.eventStart).toLocaleDateString() %> -
-                                    <%= new Date(event.eventEnd).toLocaleDateString() %><br /><small>
-                                            <%= event.location.split(',')[0] %>
-                                        </small>
-                            </i>
-                                            <p class="card-text">
-                                                <%- event.promoDescription %>
-                                            </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer eventFooter mt-3">
-                                <div class="row h-100">
-                                    <div class="col"><a class="link-dark" target="_blank" href="/system/<%= event.eventHost.eventSystem.systemRef %>"><% if (event.eventHost.eventSystem.img?.url) { %><img class="system-logo" style="max-width:250px;" src="<%= event.eventHost.eventSystem.img.url %>" alt="<%= event.eventHost.eventSystem.name %>"><% } else { %><%= event.eventHost.eventSystem.name %><% } %></a></div>
-                                    <div class="col text-end mb-0 my-auto">
-                                        <% if (event.eventHost.display) { %><small class="text-muted">Hosted by the <%= event.eventHost.name
-                                    %></small>
-                                            <% } %>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<% } else { %>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  <% for (event of events) { %>
+  <div class="col">
+    <div class="card shadow h-100 py-3 px-3">
+        <div class="card-header bg-white">
+            <h4 class="card-title">
+                <a class="link-dark" href="/events/<%= event._id %>">
+                  <%= event.name %>
+                </a>
+              </h4>
+        </div>
+      <div class="row h-100 pb-0">
+        <div class="col">
+            <div class="row g-3">
+                <div class="col-4 col-md-4 pt-2" >
+                    <div height="140px" class="img align-middle text-center ms-2"><img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo" <% } %> width="140px" class="rounded event-logo" width="140px" height="140px" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                      <% if (event.img.url) { %><img style="top:-58px !important; left:0px !important;" w id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
                     </div>
-                    <% }  %>
+                  </div>
+                  <div class="col-8 col-md-8">
+                    <div class="card-body pb-0">
+                      <p class="card-text ms-2 pt-2">
+                        <i>
+                          <%= new Date(event.eventStart).toLocaleDateString() %> -
+                          <%= new Date(event.eventEnd).toLocaleDateString() %><br /><small>
+                            <%= event.location.split(',')[0] %>
+                          </small>
+                        </i>
+                        <% if (event.eventHost.display) { %><p><small class="text-muted ms-2">Hosted by the <%= event.eventHost.name %></small></p><% } %>
+                    </p>
+                    </div>
+                  </div>
             </div>
-            <% } %>
-            <script src="/js/eventLogo.js"></script>
+        </div>
+        <div class="card-text">
+            <%- event.promoDescription %>
+        </div>
+      </div>
+      <div class="card-footer eventFooter">
+        <div class="row h-100">
+          <div class="col"><a class="link-dark" target="_blank" href="/system/<%= event.eventHost.eventSystem.systemRef %>"><% if (event.eventHost.eventSystem.img?.url) { %><img class="system-logo" style="max-width:250px;" src="<%= event.eventHost.eventSystem.img.url %>" alt="<%= event.eventHost.eventSystem.name %>"><% } else { %><%= event.eventHost.eventSystem.name %><% } %></a></div>
+          <div class="col text-end mb-0 my-auto">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% }  %>
+</div>
+<% } %>
+<script src="/js/eventLogo.js"></script>

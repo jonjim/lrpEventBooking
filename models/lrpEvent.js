@@ -182,7 +182,7 @@ const lrpEventSchema = new mongoose.Schema({
         },
         imgThumbnail: {
             get() {
-                return this.img.url.replace('/upload', '/upload/c_fill,w_180,h_180');
+                return this.img.url.replace('/upload', '/upload/c_fill,w_140,h_140');
             }
         }
     }
