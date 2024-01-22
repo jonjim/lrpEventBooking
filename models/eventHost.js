@@ -24,6 +24,7 @@ const eventHostSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'eventSystems'
     },
+    terms: String
 })
 
 eventHostSchema.virtual('img.path')

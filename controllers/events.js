@@ -18,13 +18,13 @@ module.exports.upcomingEvents = async(req, res, next) => {
     }
     res.render('events/list', {
         title: 'Upcoming Events',
-        events: eventList,
+        events: eventList.filter(a => a.eventHost.eventSystem.active == true),
         meta
     })
 };
 
 module.exports.icsEvents = async(req,res,next) => {
-    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' }).filter(a => a.eventHost.eventSystem.active == true);
     const icsList = [];
     function stripHtml(html){
         return html.replace('<p>','').replace('</p>')
@@ -49,7 +49,7 @@ module.exports.icsEvents = async(req,res,next) => {
 }
 
 module.exports.rssEvents = async(req,res,next) => {
-    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' }).filter(a => a.eventHost.eventSystem.active == true);
     var feed = new RSS({
         title: res.locals.config.siteName,
         description: res.locals.config.siteDescription,

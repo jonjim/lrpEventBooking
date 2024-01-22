@@ -174,7 +174,7 @@ module.exports.capturePayment = async(req, res, next) => {
     try {
         const { orderID } = req.params;
         const { jsonResponse, httpStatusCode } = await captureOrder(req, orderID);
-        var eventBooking = await EventBooking.findById(jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user').populate('event');
+        var eventBooking = await EventBooking.findById(jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user').populate('event').populate({path: 'event', populate: 'eventHost'});
         res.render('email/paidBooking', { booking: eventBooking }, async function (err, str) {
             emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str);
             res.status(httpStatusCode).json(jsonResponse);

@@ -2,7 +2,8 @@
 <% var playerTickets = event.eventTickets.filter(e => ['player','playerchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
 <% var monsterTickets = event.eventTickets.filter(e => ['monster','monsterchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
 <% var staffTickets = event.eventTickets.filter(e => ['staff'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
-<% const prefix = ['i','e','a','o','u'].includes(event.eventHost.eventSystem.name.toLowerCase().charAt(0)) ? 'An' : 'A'; %>
+<% const systemPrefix = ['i','e','a','o','u'].includes(event.eventHost.eventSystem.name.toLowerCase().charAt(0)) ? 'an' : 'a'; %>
+<% const hostPrefix = ['i','e','a','o','u'].includes(event.eventHost.name.toLowerCase().charAt(0)) ? 'an' : 'a'; %>
 <div class="row">
 	<div class="col">
 		<div class="card shadow py-3 px-3 mb-3">
@@ -121,14 +122,21 @@
 							<% } } %>
 							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
 								<input type="checkbox" name="terms" id="termsPlayer" class="form-check-input" required>
-								<label for="termsPlayer">I agree to <%= config.siteName %> <a class="link-dark" href="/terms" target="_blank">Terms & Conditions</a></label>
+								<label for="termsPlayer">I agree to <%= config.siteName %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#termsModal" href="/terms" target="_blank">Terms & Conditions</a></label>
 								<div class="invalid-feedback">In order to book an event hosted by <%= config.siteName %> you must agree to our Terms & Conditions</div>
 							</div>
 							<% if (event.eventHost.eventSystem.terms) { %>
+								<div class="<%= !event.eventHost.terms ? 'mb-3' : '' %> form-check">
+								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
+								<label for="termsSystemPlayer">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#systemTermsModal" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= systemPrefix %> <%= event.eventHost.eventSystem.name %> event you must agree to their Terms & Conditions</div>
+							</div>
+                    		<% } %>
+							<% if (event.eventHost.terms) { %>
 								<div class="mb-3 form-check">
 								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
-								<label for="termsSystemPlayer">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
-								<div class="invalid-feedback">In order to book <%= prefix %> <%= event.eventHost.eventSystem.name %> you must agree to their Terms & Conditions</div>
+								<label for="termsSystemPlayer">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= hostPrefix %> <%= event.eventHost.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>
 							<div class=" mb-3">
@@ -205,10 +213,17 @@
 								<div class="invalid-feedback">In order to book an event hosted by <%= config.siteName %> you must agree to our Terms & Conditions</div>
 							</div>
 							<% if (event.eventHost.eventSystem.terms) { %>
+								<div class="<%= !event.eventHost.terms ? 'mb-3' : '' %> form-check">
+								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
+								<label for="termsSystemPlayer">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#systemTermsModal" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= systemPrefix %> <%= event.eventHost.eventSystem.name %> event you must agree to their Terms & Conditions</div>
+							</div>
+                    		<% } %>
+							<% if (event.eventHost.terms) { %>
 								<div class="mb-3 form-check">
-								<input type="checkbox" name="terms" id="termsSystemMonster" class="form-check-input" required>
-								<label for="termsSystemMonster">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
-								<div class="invalid-feedback">In order to book <%= prefix %> <%= event.eventHost.eventSystem.name %> you must agree to their Terms & Conditions</div>
+								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
+								<label for="termsSystemPlayer">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= hostPrefix %> <%= event.eventHost.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>
 							<button class="btn btn-danger mb-3">
@@ -276,10 +291,17 @@
 								<div class="invalid-feedback">In order to book an event hosted by <%= config.siteName %> you must agree to our Terms & Conditions</div>
 							</div>
 							<% if (event.eventHost.eventSystem.terms) { %>
+								<div class="<%= !event.eventHost.terms ? 'mb-3' : '' %> form-check">
+								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
+								<label for="termsSystemPlayer">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#systemTermsModal" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= systemPrefix %> <%= event.eventHost.eventSystem.name %> event you must agree to their Terms & Conditions</div>
+							</div>
+                    		<% } %>
+							<% if (event.eventHost.terms) { %>
 								<div class="mb-3 form-check">
-								<input type="checkbox" name="terms" id="termsSystemStaff" class="form-check-input" required>
-								<label for="termsSystemStaff">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
-								<div class="invalid-feedback">In order to book <%= prefix %> <%= event.eventHost.eventSystem.name %> you must agree to their Terms & Conditions</div>
+								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
+								<label for="termsSystemPlayer">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
+								<div class="invalid-feedback">In order to book <%= hostPrefix %> <%= event.eventHost.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>
 							<button class="btn btn-primary mb-3">
@@ -297,6 +319,58 @@
 		<%- include('../partials/eventSidebar')%>
 	</div>
 </div>
+
+<div class="modal fade" id="hostTermsModal" tabindex="-1" aria-labelledby="hostTermsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="hostTermsModalLabel"><%= event.eventHost.name %> Terms & Conditions</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%- event.eventHost.terms %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="systemTermsModal" tabindex="-1" aria-labelledby="systemTermsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="systemTermsModalLabel"><%= event.eventHost.eventSystem.name %> Terms & Conditions</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%- event.eventHost.eventSystem.terms %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="termsModalLabel"><%= config.siteName %> Terms & Conditions</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%- config.terms %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <% if (event.img.url) { %>
 <script>
 	document.getElementById('eventImg')

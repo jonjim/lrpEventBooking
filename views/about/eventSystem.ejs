@@ -1,6 +1,12 @@
 <% layout('layouts/boilerplate') %>
 <div class="row">
     <div class="col-md-9">
+        <% if (!eventSystem.active) { %>
+            <div class="alert alert-warning text-center">
+                <p class="lead">This event system is not currently accepting bookings through this website.</p>
+                <p>Please be aware any information here may not be accurate, and you should check with the event organiser directly.</p>
+            </div>
+        <% } %>
         <% if (!events) { %>
             <div class="mt-5 pt-5">
                 <h3 class="text-center mt-5">There are currently no events available for booking</h3>

@@ -7,7 +7,7 @@
   <% } %>
 </p>
 <p style="margin-bottom:0;">This is your receipt for
-  <%= booking.event.name %>.</p>
+  <%= booking.event.name %>. If you have paid through PayPal this will appear as having been paid to <%= booking.event.eventHost.paypalAddress %>.</p>
 <p style="margin-bottom:0;">Thank you for booking the event! You have booked the following event tickets</p>
 <ul style="margin-top:0;">
   <% for (ticket of booking.eventTickets) { %>

@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate') %>
+<script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb small">
             <li class="breadcrumb-item"><a href="/admin/hosts" class="link-dark">Manage Event Hosts</a></li>
@@ -13,9 +14,9 @@
             <h4>Edit Event Host</h4>
         </div>
         <div class="card-body">
+            <form action="/admin/hosts/<%= host._id %>" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col">
-                    <form action="/admin/hosts/<%= host._id %>" method="POST" enctype="multipart/form-data">
                         <% if (adminGroups.includes(currentUser.role)) { %>
                             <div class="row mb-3">
                                 <div class="col">
@@ -67,13 +68,8 @@
                                     </div>
                                     <p class="form-text">These values don't change often and are only used for generating financial reports for you. <br/>They do not affect your PayPal payments in anyway.</p>
                                 </div>
-                                <div class="mb-3">
-                                    <% if (adminGroups.includes(currentUser.role)) { %>
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger">Delete</a>
-                                        <% } %>
-                                            <button class="btn btn-success">Update</button>
-                                </div>
-                    </form>
+                                
+                    
                 </div>
                 <div class="col-md">
                     <div class="mb-3">
@@ -82,6 +78,20 @@
                     </div>
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="hostTerms">Terms & Conditions</label>
+                <p class="form-text">These terms are seperate to the Event System terms and are entirely optional.</p>
+                <textarea required class="form-control" name="terms" id="hostTerms" title="These are your host specific terms and conditions" cols="30" rows="5">
+                <%= host.terms %>
+                </textarea>
+            </div>
+            <div class="mb-3">
+                <% if (adminGroups.includes(currentUser.role)) { %>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger">Delete</a>
+                    <% } %>
+                        <button class="btn btn-success">Update</button>
+            </div>
+        </form>
         </div>
     </div>
 
@@ -106,3 +116,5 @@
             </div>
         </div>
     </div>
+
+    <script src="/js/adminEventHost.js"></script>
