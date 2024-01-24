@@ -23,13 +23,22 @@ function verifyEmail() {
     });
 }
 
-function sendEmail(addr, subject, content) {
+async function sendEmail(addr, subject, content, attachment, fileName) {
     var mailOptions = {
         from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`,
         to: addr,
         subject: subject,
-        html: content
+        html: content,
+        attachments: []
     };
+    if (attachment) {
+        await mailOptions.attachments.push(
+            {
+                filename: fileName,
+                content: attachment,
+                contentType: 'application/pdf'
+            })
+    }
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             return console.log(error);

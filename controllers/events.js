@@ -8,6 +8,7 @@ const { systemCheck, attendeeUpdate } = require('../utils/systemCheck');
 const ics = require('ics');
 const moment = require("moment")
 const RSS = require('rss');
+const pdfService = require('../utils/pdf')
 
 module.exports.upcomingEvents = async(req, res, next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
@@ -117,9 +118,12 @@ module.exports.updateEventBooking = async(req, res, next) => {
 }
 
 module.exports.cancelEventBooking = async(req, res, next) => {
-    const booking = await EventBooking.findById(req.params.id).populate('user').populate('event');
+    const booking = await EventBooking.findById(req.params.id).populate('user').populate('event').populate('eventTickets');
     if (booking.user._id.equals(req.user._id) && !booking.paid) {
-        await EventBooking.findByIdAndDelete(req.params.id);
+        res.render('email/eventBookingCancelled', { booking: booking }, async function(err, str) {
+            if (!req.query.rebook) emailService.sendEmail(booking.user.username, `Event booking cancelled for ${booking.event.name}`, str);
+            await EventBooking.findByIdAndDelete(req.params.id);
+        })
     } else
         req.flash('error', 'You do not have permission to cancel this booking')
     if (req.query.rebook)
@@ -252,4 +256,13 @@ module.exports.giftBooking = async(req, res, next) => {
         })
     } else
         res.sendStatus(404);
+}
+
+module.exports.eventBookingTicket = async(req,res,next) => {
+    const eventBooking = await EventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate('user').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost',populate: {path: 'eventSystem'} } });
+    if (req.query.preview)
+        return res.render('print/ticket', {eventBooking,title:`Event Ticket`})
+    await res.render('print/ticket', {eventBooking,title:`Event Ticket`}, async function (err, ticket){
+        pdfService.sendPDF(res,ticket,`${eventBooking._id}.pdf`);
+    })
 }

@@ -22,6 +22,9 @@ router.route('/events/booking/:id')
     .post(isLoggedIn, catchAsync(controller.updateEventBooking))
     .delete(isLoggedIn, catchAsync(controller.cancelEventBooking));
 
+router.route('/events/booking/:id/ticket')
+    .get(isLoggedIn, catchAsync(controller.eventBookingTicket))
+
 router.route('/events/:id')
     .get(catchAsync(controller.showEvent))
 

@@ -5,7 +5,7 @@ async function sendPDF(res, html, filename) {
         browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,headless: true })
         const page = await browser.newPage();
         await page.setContent(html);
-        const pdf = await page.pdf({ format: "A4", margin: { top: "40px", bottom: "40px" } });
+        const pdf = await page.pdf({  format: "A4", margin: { top: "20px", bottom: "20px" } , printBackground: true });
         res.contentType("application/pdf");
         res.setHeader(
             "Content-Disposition",
@@ -15,6 +15,17 @@ async function sendPDF(res, html, filename) {
     })()
     .finally(() => browser?.close());
 }
+
+async function generatePDF(html) {
+    let browser;
+    browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,headless: true })
+    const page = await browser.newPage();
+    await page.setContent(html);
+    const pdf = await page.pdf({ format: "A4", margin: { top: "20px", bottom: "20px" }, printBackground: true });
+    browser?.close()
+    return pdf
+}
+
 
 async function sendConfidentialPDF(res, html, filename) {
     let browser;
@@ -39,4 +50,4 @@ async function sendConfidentialPDF(res, html, filename) {
     .finally(() => browser?.close());
 }
 
-module.exports = { sendPDF, sendConfidentialPDF }
+module.exports = { sendPDF, sendConfidentialPDF, generatePDF }

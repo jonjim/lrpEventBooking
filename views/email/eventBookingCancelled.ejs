@@ -1,0 +1,19 @@
+<% layout('layouts/email') %>
+<h2 align="center" style="margin-bottom:5;"><b><%= booking.event.name %></b> </h2>
+<p align="center" style="margin-top: 0;">
+  <%= new Date(booking.event.eventStart).toLocaleDateString() %>
+  <% if (new Date(booking.event.eventStart).toLocaleDateString() != new Date(booking.event.eventEnd).toLocaleDateString()) { %> to
+  <%= new Date(booking.event.eventEnd).toLocaleDateString() %>
+  <% } %>
+</p>
+<p style="margin-bottom:0;" class="text-danger">Event Booking Cancelled!</p>
+<ul style="margin-top:0;">
+  <% for (ticket of booking.eventTickets) { %>
+  <li>
+    <%= ticket.description %>
+  </li>
+  <% } %>
+</ul>
+<p>
+  We're sorry to see you've cancelled your event booking. We hope to see you at an event soon!
+</p>

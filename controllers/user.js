@@ -45,13 +45,13 @@ module.exports.payEventBooking = async(req, res, next) => {
     const eventBooking = await EventBooking.findById(req.params.id).populate('event').populate({ path: 'event', populate: { path: 'eventHost' } }).populate('eventTickets').populate('user');
     switch (eventBooking.bookingType) {
         case 'player':
-            if (eventBooking.event.playerSpaces === 0 && (!eventBooking.payOnGate || eventBooking.inQueue)) return res.render('events/full', { title: 'No spaces available', eventBooking })
+            if (eventBooking.event.playerSpaces === 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) return res.render('events/full', { title: 'No spaces available', eventBooking })
             break;
         case 'monster':
-            if (eventBooking.event.monsterSpaces === 0 && (!eventBooking.payOnGate || eventBooking.inQueue)) return res.render('events/full', { title: 'No spaces available', eventBooking })
+            if (eventBooking.event.monsterSpaces === 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) return res.render('events/full', { title: 'No spaces available', eventBooking })
             break;
         case 'staff':
-            if (eventBooking.event.staffSpaces === 0 && (!eventBooking.payOnGate || eventBooking.inQueue)) return res.render('events/full', { title: 'No spaces available', eventBooking })
+            if (eventBooking.event.staffSpaces === 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) return res.render('events/full', { title: 'No spaces available', eventBooking })
             break;
     }
 

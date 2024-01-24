@@ -134,8 +134,8 @@
                     		<% } %>
 							<% if (event.eventHost.terms) { %>
 								<div class="mb-3 form-check">
-								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
-								<label for="termsSystemPlayer">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
+								<input type="checkbox" name="terms" id="termsHostPlayer" class="form-check-input" required>
+								<label for="termsHostPlayer">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
 								<div class="invalid-feedback">In order to book <%= hostPrefix %> <%= event.eventHost.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>
@@ -214,15 +214,15 @@
 							</div>
 							<% if (event.eventHost.eventSystem.terms) { %>
 								<div class="<%= !event.eventHost.terms ? 'mb-3' : '' %> form-check">
-								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
-								<label for="termsSystemPlayer">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#systemTermsModal" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<input type="checkbox" name="terms" id="termsSystemMonster" class="form-check-input" required>
+								<label for="termsSystemMonster">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#systemTermsModal" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
 								<div class="invalid-feedback">In order to book <%= systemPrefix %> <%= event.eventHost.eventSystem.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>
 							<% if (event.eventHost.terms) { %>
 								<div class="mb-3 form-check">
-								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
-								<label for="termsSystemPlayer">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
+								<input type="checkbox" name="terms" id="termsHostMonster" class="form-check-input" required>
+								<label for="termsHostMonster">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
 								<div class="invalid-feedback">In order to book <%= hostPrefix %> <%= event.eventHost.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>
@@ -292,15 +292,15 @@
 							</div>
 							<% if (event.eventHost.eventSystem.terms) { %>
 								<div class="<%= !event.eventHost.terms ? 'mb-3' : '' %> form-check">
-								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
-								<label for="termsSystemPlayer">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#systemTermsModal" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
+								<input type="checkbox" name="terms" id="termsSystemStaff" class="form-check-input" required>
+								<label for="termsSystemStaff">I agree to <%= event.eventHost.eventSystem.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#systemTermsModal" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms" target="_blank">Terms & Conditions</a></label>
 								<div class="invalid-feedback">In order to book <%= systemPrefix %> <%= event.eventHost.eventSystem.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>
 							<% if (event.eventHost.terms) { %>
 								<div class="mb-3 form-check">
-								<input type="checkbox" name="terms" id="termsSystemPlayer" class="form-check-input" required>
-								<label for="termsSystemPlayer">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
+								<input type="checkbox" name="terms" id="termsHostStaff" class="form-check-input" required>
+								<label for="termsHostStaff">I agree to <%= event.eventHost.name %> <a class="link-dark" data-bs-toggle="modal" data-bs-target="#hostTermsModal" href="" target="_blank">Terms & Conditions</a></label>
 								<div class="invalid-feedback">In order to book <%= hostPrefix %> <%= event.eventHost.name %> event you must agree to their Terms & Conditions</div>
 							</div>
                     		<% } %>

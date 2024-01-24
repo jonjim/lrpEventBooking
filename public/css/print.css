@@ -2,3 +2,78 @@
 .terms {
     font-size: 8pt !important;
 }
+
+.ticket {
+    background: url(https://res.cloudinary.com/dapc3dsxv/image/upload/v1705958504/lrpEvents/blankTicket_tchqei.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height:300px;
+    /* width:600px; */
+    font-size:0.8em;
+}
+
+.ticket-background {
+    /* width:600px; */
+    position:absolute;
+    z-index: -9999;
+}
+
+.ticket-barcode-left {
+    background-color: #c2272d;
+    width:60px;
+    margin-top:40px;
+    height:180px;
+    margin-left:-55px;
+    z-index:-999;
+}
+
+.ticket-breakdown {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg); 
+    -o-transform: rotate(90deg); 
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+    text-align:center;
+    padding-top:80px;
+    vertical-align:middle;
+    color: #c2272d;
+    font-weight: bold;
+}
+
+.qrcode {
+    margin-top:-10px;
+    padding-top:40px;
+    margin-left:15px;
+}
+
+.qrcode img {
+    /* display:inline !important; */
+}
+
+.ticket-list{
+
+    font-size:0.8em;   
+}
+
+.ticket-list p {
+    margin-bottom: 0;
+}
+
+.ticket-list li {
+    background-color: #c2272d;
+    color: white;    
+}
+
+.ticket-stub {
+    background-color: #f2f2f2;
+    height: 180px;
+    width: 120px;
+    margin-top: 45px;
+    margin-left: 20px;
+}
+
+.receipt-body {
+    font-size: 0.8em;
+}

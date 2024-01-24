@@ -5,6 +5,7 @@ const base = process.env.PAYPAL_SANDBOX == 'true' ? "https://api-m.sandbox.paypa
 const paypalClientId = process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_ID : process.env.PAYPAL_CLIENT_ID;
 const paypalSecret = process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_SECRET : process.env.PAYPAL_CLIENT_SECRET;
 const emailService = require('../utils/email');
+const pdfService = require('../utils/pdf');
 const {attendeeUpdate} = require('../utils/systemCheck')
 
 /**
@@ -174,11 +175,18 @@ module.exports.capturePayment = async(req, res, next) => {
     try {
         const { orderID } = req.params;
         const { jsonResponse, httpStatusCode } = await captureOrder(req, orderID);
-        var eventBooking = await EventBooking.findById(jsonResponse.purchase_units[0].reference_id).populate('eventTickets').populate('user').populate('event').populate({path: 'event', populate: 'eventHost'});
-        res.render('email/paidBooking', { booking: eventBooking }, async function (err, str) {
-            emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str);
-            res.status(httpStatusCode).json(jsonResponse);
+        const eventBooking = await EventBooking.findById(jsonResponse.purchase_units[0].reference_id).populate('event').populate('eventTickets').populate('user').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost',populate: {path: 'eventSystem'} } });
+        
+        await res.render('print/ticket', { eventBooking, title: `Event Ticket` }, async function (err, ticket) {
+            await pdfService.generatePDF(ticket)
+                .then(async (ticketPdf) => {
+                    res.render('email/paidBooking', { booking: eventBooking }, async function (err, str) {
+                        emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str, ticketPdf ,`ticket.pdf`);
+                        return res.status(httpStatusCode).json(jsonResponse);
+                    })
+            })
         })
+
     } catch (error) {
         console.error("Failed to create order:", error);
         res.status(500).json({ error: "Failed to capture order." });
