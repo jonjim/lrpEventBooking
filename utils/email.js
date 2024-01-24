@@ -24,7 +24,7 @@ function verifyEmail() {
     });
 }
 
-async function sendEmail(addr, subject, content, contentText, attachment, fileName) {
+async function sendEmail(addr, subject, content, attachment, fileName) {
     var mailOptions = {
         from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`,
         to: addr,
