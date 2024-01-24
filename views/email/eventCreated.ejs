@@ -9,5 +9,7 @@
 <% if (event.registrationFee.value != event.registrationFee.totalPaid) { %>
 <p align="center">To make your event live, a registration fee of <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.registrationFee.value) %> is due to be paid.</p>
 <% } %>
+<p align="center"><a href="<%= rootUrl %>/events/<%= event._id %>">Use this link to advertise your event, once you're all set up</a></p>
 <p align="center"><a href="<%= rootUrl %>/admin/events/<%= event._id %>/edit">Click here to edit your event</a></p>
 <p align="center"><a href="<%= rootUrl %>/admin/events/<%= event._id %>/manage">Click here to manage your event</a></p>
+<p align="center"><a href="<%= rootUrl %>/<%= event.eventHost.eventSystem.systemRef %>">Use this link to advertise your system on <%= config.siteName %></a></p>
