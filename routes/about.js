@@ -5,6 +5,9 @@ const catchAsync = require('../utils/catchAsync');
 
 const controller = require('../controllers/about');
 
+router.route('/about')
+    .get(catchAsync(controller.about))
+
 router.route('/privacy')
     .get(catchAsync(controller.privacy))
 

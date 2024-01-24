@@ -3,6 +3,11 @@ body {
     font-family: 'Nunito', serif;
 }
 
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
 .navbar-brand img {
     /* position: fixed; */
     margin-top: -1.6em;

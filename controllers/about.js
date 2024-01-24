@@ -26,6 +26,13 @@ module.exports.organisers = async(req,res,next) => {
     res.render('about/organisers',{title:'Event Organisers', meta});
 }
 
+module.exports.about = async(req,res,next) => {
+    const meta = {
+        crawl: true
+    }
+    res.render('about/about',{title:`About ${res.locals.config.siteName}`, meta});
+}
+
 module.exports.eventSystem = async (req,res,next) => {
     const eventSystem = await EventSystems.findOne({systemRef: req.params.id});    
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() }}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
