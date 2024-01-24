@@ -10,7 +10,8 @@ let transporter = nodemailer.createTransport({
     },
     tls: {
         ciphers: 'SSLv3'
-    }
+    },
+    pool:true
 })
 
 function verifyEmail() {

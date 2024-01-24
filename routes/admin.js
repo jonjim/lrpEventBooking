@@ -90,6 +90,9 @@ router.route('/events/:id/edit')
     .delete(isLoggedIn, isEventHost, catchAsync(adminEventsController.deleteEvent))
     .put(isLoggedIn, isEventHost, upload.single('image'), catchAsync(adminEventsController.updateEvent))
 
+router.route('/events/:id/email')
+    .post(isLoggedIn,isEventHost, catchAsync(adminEventsController.customEmail))
+
 router.route('/events/:id/cancel')
     .post(isLoggedIn, isEventHost, catchAsync(adminEventsController.cancelEvent))
 
@@ -120,6 +123,7 @@ router.route('/events/:id/tickets/:ticketId')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.editEventTicket))
     .post(isLoggedIn, isEventHost, catchAsync(adminEventsController.updateEventTicket))
     .delete(isLoggedIn, isEventHost, catchAsync(adminEventsController.deleteEventTicket))
+
 
 router.route('/bookings/:id')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.manageBooking))

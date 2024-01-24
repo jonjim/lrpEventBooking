@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate') %>
+<script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb small">
     <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
@@ -36,6 +37,19 @@
     <div class="col col-md-3 text-end">
       <div class="btn-group-vertical" role="group">
         <div class="btn-group mt-5">
+          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-envelope-at"></i> E-mail
+          </a>
+
+          <ul class="dropdown-menu text-end">
+            <li><a class="dropdown-item" title="Information for your event attendees" href="" data-bs-toggle="modal" data-bs-target="#eventPackModal">Send Event Pack</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#customEmailModal">Custom E-mail</a></li>
+          </ul>
+        </div>
+        <div class="btn-group">
           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-receipt"></i> Event Reports
           </a>
@@ -567,13 +581,123 @@
             <textarea class="form-control <%= !event.returnPack.otherNotes ? 'd-none' : '' %>" name="returnPack[otherNotes]" id="notes" <%= !event.returnPack.otherNotes ? 'disabled' : '' %> cols="30" rows="3"><%= event.returnPack.otherNotes %></textarea>
           </div>
         </form>
+        <div id="spinnerDiv"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="eventPackModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-primary" onclick="eventPackEmail()"><i class="bi bi-envelope-at"></i> Save & Email</button>
+          <button type="button" class="btn btn-primary" onclick="eventPackDownload()"><i class="bi bi-filetype-pdf"></i> Save & Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="customEmailModal" tabindex="-1" aria-labelledby="customEmailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="customEmailModalLabel">E-mail Event Attendees</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="customEmailForm" action="/admin/events/<%= event._id %>/email" method="POST">
+          <div class="mb-3">
+            <label for="subject" class="form-label">E-mail Subject</label>
+            <div class="input-group">
+              <span class="input-group-text" id="subjectName"><%= event.name %> - </span>
+              <input type="text" class="form-control" id="subject" name="subject" aria-describedby="subjectName subjectDescription" required>
+            </div>
+            <div class="form-text" id="subjectDescription">Please enter a subject for your e-mail</div>
+          </div>
+          <div class="mb-3">
+            <label for="message">E-mail Message</label>
+            <textarea class="form-control" name="message" id="message" cols="30" rows="10"></textarea>
+          </div>
+        </form>
+        <div id="spinnerDivEmail"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="document.getElementById('eventPackForm').submit()">Save changes</button>
+        <button type="button" class="btn btn-primary" onclick="customEmail()">Send E-mail</button>
       </div>
     </div>
   </div>
 </div>
 
 <script src="/js/manageEvent.js"></script>
+<script src="/js/tinymce.js"></script>
+
+<script>
+  async function eventPackDownload(){
+    const eventPackForm = document.getElementById('eventPackForm');
+    eventPackForm.action= `/admin/events/<%= event._id %>/print/eventPack`;
+    eventPackForm.submit();
+  }
+  async function eventPackEmail(){
+    const eventPackForm = document.getElementById('eventPackForm');
+    eventPackForm.classList.add('d-none');
+    var spinner = document.createElement("div");
+    spinner.classList.add('spinner-border');
+    spinner.classList.add('text-dark');
+    document.getElementById('spinnerDiv').classList.add('text-center');
+    spinner.role = 'status';
+    document.getElementById('spinnerDiv').appendChild(spinner);
+
+    const data = new URLSearchParams();
+    for (const pair of new FormData(eventPackForm)) {
+        data.append(pair[0], pair[1]);
+    }
+    
+
+    fetch(`/admin/events/<%= event._id %>/print/eventPack?email=true`, {
+        method: 'post',
+        body: data,
+    })
+    .then((response) => {
+        document.getElementById('spinnerDiv').removeChild(spinner);
+        let completeP = document.createElement('p');
+        if (response.ok)
+          completeP.innerText = "All attendee's e-mailed!"
+        else{
+          completeP.classList.add('text-danger');
+          completeP.innerText = "There has been a problem sending the event pack email!"
+        }
+        document.getElementById('spinnerDiv').appendChild(completeP);
+    });
+  }
+  async function customEmail(){
+    const customEmailForm = document.getElementById('customEmailForm');
+    const spinnerDiv = document.getElementById('spinnerDivEmail');
+    customEmailForm.classList.add('d-none');
+    var spinner = document.createElement("div");
+    spinner.classList.add('spinner-border');
+    spinner.classList.add('text-dark');
+    spinnerDiv.classList.add('text-center');
+    spinner.role = 'status';
+    spinnerDiv.appendChild(spinner);
+
+    const data = new URLSearchParams();
+    for (const pair of new FormData(customEmailForm)) {
+        data.append(pair[0], pair[0] == 'message' ? tinyMCE.get('message').getContent() : pair[1]);
+    }
+    
+
+    fetch(`/admin/events/<%= event._id %>/email`, {
+        method: 'post',
+        body: data,
+    })
+    .then((response) => {
+        spinnerDiv.removeChild(spinner);
+        let completeP = document.createElement('p');
+        if (response.ok)
+          completeP.innerText = "All attendee's e-mailed!"
+        else{
+          completeP.classList.add('text-danger');
+          completeP.innerText = "There has been a problem sending the email!"
+        }
+        spinnerDiv.appendChild(completeP);
+    });
+  }
+</script>

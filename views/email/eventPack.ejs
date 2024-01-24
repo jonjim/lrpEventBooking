@@ -1,0 +1,12 @@
+<% layout('layouts/email') %>
+<h2 align="center" style="margin-bottom:5;"><b><%= event.name %></b> </h2>
+<p align="center" style="margin-top: 0;">
+  <%= new Date(event.eventStart).toLocaleDateString() %>
+  <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+  <%= new Date(event.eventEnd).toLocaleDateString() %>
+  <% } %>
+</p>
+<p style="margin-bottom:0;">Please fine attached the event pack for the upcoming event.</p>
+
+<p><a href="<%= rootUrl %>/events/<%= event._id %>">View Info for <%= booking.event.name %></a></p>
+<p>Contact the event organiser at <a href="mailto:<%= event.eventHost.contactAddress %>"><%= event.eventHost.contactAddress %></a></p>

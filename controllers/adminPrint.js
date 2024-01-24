@@ -1,6 +1,7 @@
 const Event = require('../models/lrpEvent');
 const siteConfig = require('../models/siteConfig');
 const pdfService = require('../utils/pdf');
+const emailService = require('../utils/email')
 const ExpressError = require('../utils/ExpressError');
 
 module.exports.pidEvent = async(req, res, next) => {
@@ -67,7 +68,19 @@ module.exports.eventPack = async(req,res,next) => {
             const event = await Event.findByIdAndUpdate(req.params.id, req.body,{new:true}).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
             res.render('print/eventPack', { title: `Manage ${event.name}`, event }, async function (err, str) {
                 if (err) throw new ExpressError(err, 500)
-                await pdfService.sendPDF(res, str, `${event.name} Event Pack.pdf`);
+                if (req.query.email){
+                    let eventPack = await pdfService.generatePDF(str);
+                    res.render('email/eventPack', { event }, async function(err, email) {
+                        for (attendee of event.attendees) {
+                            if (attendee.user)
+                                await emailService.sendEmail(attendee.user.username, `${event.name} Event Pack`, email,eventPack,`${event.name} Event Pack.pdf`);
+                        }
+                        return res.sendStatus(200);
+                    })
+                }
+                else{
+                    await pdfService.sendPDF(res, str, `${event.name} Event Pack.pdf`);
+                }
             })
         }
     } else {

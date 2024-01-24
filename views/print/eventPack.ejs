@@ -103,6 +103,13 @@
     <%- event.eventHost.eventSystem.terms %>
 </div>
 <% } %>
+<% if (event.eventHost.terms) { %>
+  <p class="display-5" style="page-break-before:always;">Terms & Conditions</p>
+  <h3><%= event.eventHost.name %></h3>
+  <div class="small" style="font-size:8pt !important">
+      <%- event.eventHost.terms %>
+  </div>
+<% } %>
 <p class="display-5" style="page-break-before:always;">Terms & Conditions</p>
 <h3><%= config.siteName %></h3>
 <div class="small" style="font-size:8pt !important">

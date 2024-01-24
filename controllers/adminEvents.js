@@ -7,6 +7,7 @@ const pdfService = require('../utils/pdf');
 const emailService = require('../utils/email');
 const ExpressError = require('../utils/ExpressError');
 const {attendeeUpdate} = require('../utils/systemCheck')
+const emailRecord = require('../models/emailRecord')
 
 module.exports.listEvents = async(req, res, next) => {
     const eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
@@ -261,3 +262,27 @@ module.exports.dietaryEvent = async(req, res, next) => {
         return res.redirect('/');
     }
 };
+
+module.exports.customEmail = async(req,res,next) =>{
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } });
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        await new emailRecord({
+            user: res.locals.user,
+            event: event,
+            message: req.body.message,
+            subject: req.body.subject,
+        }).save();
+        res.render('email/customEmail', { title: `${event.name} - ${req.body.subject}`, event, customMessage: req.body.message }, async function(err, str) {
+            if (err) throw new ExpressError(err, 500)
+            for (attendee of event.attendees){
+                if (attendee.user){
+                    await emailService.sendEmail(attendee.user.username,`${event.name} - ${req.body.subject}`,str)
+                }
+            }
+            res.sendStatus(200);
+        })
+    } else {
+        req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+}

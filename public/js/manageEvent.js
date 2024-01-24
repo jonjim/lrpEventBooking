@@ -5,15 +5,16 @@ function filterTable(type) {
     query(`tbody.${type} tr`).forEach(row => row.style.display = 
       filters.every((f, i) => f.test(row.cells[i].textContent)) ? '' : 'none');
 }
-
+if (document.getElementById('playerSearch'))
 document.getElementById('playerSearch').addEventListener('keyup', function() {
     filterTable('players');
 });
-
+if (document.getElementById('monsterSearch'))
 document.getElementById('monsterSearch').addEventListener('keyup', function() {
     filterTable('monsters');
 });
 
+if (document.getElementById('staffSearch'))
 document.getElementById('staffSearch').addEventListener('keyup', function() {
     filterTable('staff');
 });
