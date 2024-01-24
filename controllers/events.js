@@ -120,7 +120,7 @@ module.exports.updateEventBooking = async(req, res, next) => {
 module.exports.cancelEventBooking = async(req, res, next) => {
     const booking = await EventBooking.findById(req.params.id).populate('user').populate('event').populate('eventTickets');
     if (booking.user._id.equals(req.user._id) && !booking.paid) {
-        res.render('email/eventBookingCancelled', { booking: booking }, async function(err, str) {
+        res.render('email/eventBookingCancelled', { booking: booking, title: "Sorry you can't make it this time!" }, async function(err, str) {
             if (!req.query.rebook) emailService.sendEmail(booking.user.username, `Event booking cancelled for ${booking.event.name}`, str);
             await EventBooking.findByIdAndDelete(req.params.id);
         })
@@ -183,15 +183,30 @@ module.exports.createEventBooking = async(req, res, next) => {
         }, {strict: false})
     }
     if (booking.paid) {
-        res.render('email/paidBooking', { booking: eventBooking }, async function(err, str) {
-            if (!manual) emailService.sendEmail(eventBooking.user.username, `Event booking for ${eventBooking.event.name}`, str);
-            if (req.body.username || manual)
+        // res.render('email/paidBooking', { booking: eventBooking, title: '' }, async function(err, str) {
+        //      emailService.sendEmail(eventBooking.user.username, `Event booking for ${eventBooking.event.name}`, str);
+        //     if (req.body.username || manual)
+        //         return res.redirect(`/admin/events/${req.params.id}/manage`)
+        //     else
+        //         return res.redirect('/account/bookings');
+        // })
+        if (!manual){
+            await res.render('print/ticket', { eventBooking, title: `Event Ticket` }, async function (err, ticket) {
+                await pdfService.generatePDF(ticket)
+                    .then(async (ticketPdf) => {
+                        res.render('email/paidBooking', { booking: eventBooking, title: 'Your payment and ticket wait inside' }, async function (err, str) {
+                            emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str, ticketPdf ,`ticket.pdf`);
+                            return res.status(httpStatusCode).json(jsonResponse);
+                        })
+                })
+            })
+        }
+        if (req.body.username || manual)
                 return res.redirect(`/admin/events/${req.params.id}/manage`)
             else
                 return res.redirect('/account/bookings');
-        })
     } else {
-        res.render('email/eventBooking', { booking: eventBooking }, async function(err, str) {
+        res.render('email/eventBooking', { booking: eventBooking, title: 'Yay! We look forward to seeing you at this event!' }, async function(err, str) {
             if (!manual) emailService.sendEmail(eventBooking.user.username, `Event booking for ${eventBooking.event.name}`, str);
             if (req.body.username || manual)
                 return res.redirect(`/admin/bookings/${booking._id}`)
@@ -248,7 +263,7 @@ module.exports.giftBooking = async(req, res, next) => {
             console.log(error)
         }
         const eventBooking = await EventBooking.findById(req.body.eventBooking).populate('user').populate('originalUser').populate('event');
-        res.render('email/giftBooking', { booking: eventBooking }, async function(err, str) {
+        res.render('email/giftBooking', { booking: eventBooking, title: 'Somone has sent you a very special gift!' }, async function(err, str) {
 
             emailService.sendEmail(eventBooking.user.username, `Event booking for ${eventBooking.event.name}`, str);
             req.flash('success', 'Your booking has been gifted')

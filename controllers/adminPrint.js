@@ -70,7 +70,7 @@ module.exports.eventPack = async(req,res,next) => {
                 if (err) throw new ExpressError(err, 500)
                 if (req.query.email){
                     let eventPack = await pdfService.generatePDF(str);
-                    res.render('email/eventPack', { event }, async function(err, email) {
+                    res.render('email/eventPack', { event, title: 'Your event pack is ready, take a look to get ready for your event' }, async function(err, email) {
                         for (attendee of event.attendees) {
                             if (attendee.user)
                                 await emailService.sendEmail(attendee.user.username, `${event.name} Event Pack`, email,eventPack,`${event.name} Event Pack.pdf`);

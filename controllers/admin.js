@@ -82,7 +82,7 @@ module.exports.resetUserPassword = async(req, res, next) => {
     var token = crypto.randomBytes(4).toString('hex');
     user.setPassword(token);
     await user.save();
-    res.render('email/adminResetPassword', { password: token }, async function(err, str) {
+    res.render('email/adminResetPassword', { password: token, title: 'An admin has requested to reset your password.' }, async function(err, str) {
         emailService.sendEmail(user.username, `Password Reset`, str);
         req.flash('success', 'A new password has been sent to the user');
         res.redirect(`/admin/users/`);

@@ -180,7 +180,7 @@ module.exports.capturePayment = async(req, res, next) => {
         await res.render('print/ticket', { eventBooking, title: `Event Ticket` }, async function (err, ticket) {
             await pdfService.generatePDF(ticket)
                 .then(async (ticketPdf) => {
-                    res.render('email/paidBooking', { booking: eventBooking }, async function (err, str) {
+                    res.render('email/paidBooking', { booking: eventBooking, title: 'Your payment and ticket wait inside' }, async function (err, str) {
                         emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str, ticketPdf ,`ticket.pdf`);
                         return res.status(httpStatusCode).json(jsonResponse);
                     })

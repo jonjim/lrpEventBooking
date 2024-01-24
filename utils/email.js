@@ -24,11 +24,12 @@ function verifyEmail() {
     });
 }
 
-async function sendEmail(addr, subject, content, attachment, fileName) {
+async function sendEmail(addr, subject, content, contentText, attachment, fileName) {
     var mailOptions = {
         from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`,
         to: addr,
         subject: subject,
+        text: 'This e-mail require HTML enabled to view.',
         html: content,
         attachments: []
     };

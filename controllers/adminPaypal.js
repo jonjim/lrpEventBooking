@@ -170,7 +170,7 @@ module.exports.capturePayment = async(req, res, next) => {
         const { orderID } = req.params;
         const { jsonResponse, httpStatusCode } = await captureOrder(req, orderID);
         var event = await Event.findById(jsonResponse.purchase_units[0].reference_id);
-        res.render('email/eventRegistrationPaid', { event: event }, async function (err, str) {
+        res.render('email/eventRegistrationPaid', { event: event, title: 'Thanks! This contribution will keep us going a little longer.' }, async function (err, str) {
             emailService.sendEmail(req.user.username, `Payment receipt for registering ${event.name}`, str);
             return res.status(httpStatusCode).json(jsonResponse);
         })

@@ -17,7 +17,7 @@ module.exports.register = async(req, res, next) => {
         const registeredUser = await User.register(newUser, password);
         req.login(registeredUser, err => {
             if (err) return next();
-            res.render('email/registration', async function(err, str) {
+            res.render('email/registration', {title: 'Take the next step and book your first event with us now!'} ,async function(err, str) {
                 emailService.sendEmail(req.user.username, `Welcome to ${res.locals.config.siteName}`, str);
                 req.flash('success', `Welcome to ${res.locals.config.siteName} ${registeredUser.username}!`);
                 const redirectUrl = req.session.returnTo || '/';
@@ -137,7 +137,7 @@ module.exports.resetPasswordLink = async(req, res, next) => {
     user[0].resetPassword = crypto.randomBytes(8).toString('hex');
     user[0].save();
 
-    res.render('email/lostPassword', { user: user[0] }, async function(err, str) {
+    res.render('email/lostPassword', { user: user[0], title: 'Password reset instructions' }, async function(err, str) {
         emailService.sendEmail(user[0].username, `Password Reset`, str);
         req.flash('success', 'Please check your e-mails for instructions to reset your password');
         return res.redirect(`/`);

@@ -79,7 +79,7 @@ module.exports.createEventForm = async(req, res, next) => {
 module.exports.cancelEvent = async(req, res, next) => {
     const event = await Event.findByIdAndUpdate(req.params.id, { cancelled: true }).populate({ path: 'attendees', populate: { path: 'user' } });
     const bookings = await eventBooking.find({ event: event._id }).populate('user');
-    res.render('email/eventCancelled', { event: event }, async function(err, str) {
+    res.render('email/eventCancelled', { event: event, title: 'Bad news! An event has been cancelled!' }, async function(err, str) {
         for (booking of bookings) {
             emailService.sendEmail(booking.user.username, `Event Cancelled: ${event.name}`, str);
         }
@@ -272,7 +272,7 @@ module.exports.customEmail = async(req,res,next) =>{
             message: req.body.message,
             subject: req.body.subject,
         }).save();
-        res.render('email/customEmail', { title: `${event.name} - ${req.body.subject}`, event, customMessage: req.body.message }, async function(err, str) {
+        res.render('email/customEmail', { title: `This is an important message about your event`, event, customMessage: req.body.message }, async function(err, str) {
             if (err) throw new ExpressError(err, 500)
             for (attendee of event.attendees){
                 if (attendee.user){
