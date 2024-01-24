@@ -20,11 +20,16 @@
       <div class="row h-100 pb-0">
         <div class="col">
             <div class="row g-3">
+              <% if (event.img.url || event.eventHost.img.url){ %>
                 <div class="col-4 col-md-4 pt-2" >
-                    <div height="140px" class="img align-middle text-center ms-2"><img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo" <% } %> width="140px" class="rounded event-logo" width="140px" height="140px" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                    <div height="140px" class="img align-middle text-center ms-2">
+                      
+                      <img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo" <% } %> width="140px" class="rounded event-logo" width="140px" height="140px" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
                       <% if (event.img.url) { %><img style="top:-58px !important; left:0px !important;" w id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
+                      
                     </div>
-                  </div>
+                </div>
+                <% } %>
                   <div class="col-8 col-md-8">
                     <div class="card-body pb-0">
                       <p class="card-text ms-2 pt-2">

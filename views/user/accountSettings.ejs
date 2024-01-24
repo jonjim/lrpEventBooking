@@ -82,8 +82,10 @@
                                 Do you have any food allergies, or other dietary requirements? This information will be shared with event caterers should you book a meal ticket for your events.
                             </div>
                         </div>
-                        <div class="text-end"><a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</a><button class="btn btn-success">Save Changes</button></div>
-
+                        <div class="text-end d-none d-md-block">
+                            <a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</a>
+                            <button type="submit" class="btn btn-success">Save Changes</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,6 +178,10 @@
                         <% } %>
                     </div>
                 </div>
+            </div>
+            <div class="text-end d-md-none">
+                <a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</a>
+                <button type="submit" class="btn btn-success">Save Changes</button>
             </div>
         </div>
     </form>

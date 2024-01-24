@@ -107,6 +107,9 @@ div.img {
 }
 
 @media (max-width: 991.98px) {
+    .card{
+        font-size:0.9em;
+    }
     .upcoming-logo {
         max-width: 110px !important;
     }
@@ -118,9 +121,17 @@ div.img {
 
     .event-logo {
         max-width: 110px;
+        height:auto;
     }
     .host-logo-fade {
         display:none;
+    }
+    .navbar-brand img {
+        /* position: fixed; */
+        margin-top: -1.6em;
+        /* margin-left: -5.6em; */
+        width:150px;
+        margin-left:25px;
     }
 }
 

@@ -24,7 +24,7 @@
                         </i>
                             </p>
                             <div class="img align-middle text-center ms-2"><img id="eventImg<%= eventBooking._id %>" <% if (eventBooking.event.img.url) {%> aria-label="event-logo"<% } %> class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img.url : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                                <% if (eventBooking.event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= eventBooking._id %>" aria-label="host-logo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
+                                <% if (eventBooking.event.img.url) { %><img style="top:-60px !important; left:0px !important;" id="hostImg<%= eventBooking._id %>" aria-label="host-logo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
                             </div>
                         </div>
                         <div class="col-md-8">
