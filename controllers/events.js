@@ -25,7 +25,8 @@ module.exports.upcomingEvents = async(req, res, next) => {
 };
 
 module.exports.icsEvents = async(req,res,next) => {
-    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' }).filter(a => a.eventHost.eventSystem.active == true);
+    let eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    eventList = eventList.filter(a => a.eventHost.eventSystem.active == true)
     const icsList = [];
     function stripHtml(html){
         return html.replace('<p>','').replace('</p>')

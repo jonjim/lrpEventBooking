@@ -8,6 +8,13 @@ const eventSystemSchema = new mongoose.Schema({
         filename: String
     },
     website: String,
+    facebook: String,
+    twitter: String,
+    instagram: String,
+    discord: String,
+    tiktok: String,
+    whatsapp: String,
+    snapchat: String,
     terms: String,
     systemRef: String,
     active: {

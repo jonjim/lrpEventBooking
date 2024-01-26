@@ -75,7 +75,11 @@
                 <li class="list-group-item">
                   <a href="/events/booking/<%= eventBooking._id %>" class="link-info"><small><i class="bi bi-ticket-detailed"></i> Update Booking</small></a><br/>
                   <a href="/events/booking/<%=eventBooking._id %>/ticket" class="link-dark"><small><i class="bi bi-filetype-pdf"></i> Download Ticket</small></a><br/>
-                  <a href="" onclick="document.getElementById('giftBookingId').value = '<%= eventBooking._id %>'" data-bs-toggle="modal" data-bs-target="#giftModal" class="link-dark link-muted"><small><i class="bi bi-gift"></i> Gift this booking to another user</small></a>
+                  <% if ((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff')) { %>
+                    <br><small class="text-danger"><em>This event is fully booked and tickets can no longer be transfered.</em></small>
+                  <% } else { %>
+                    <a href="" onclick="document.getElementById('giftBookingId').value = '<%= eventBooking._id %>'" data-bs-toggle="modal" data-bs-target="#giftModal" class="link-dark link-muted"><small><i class="bi bi-gift"></i> Gift this booking to another user</small></a>
+                    <% } %>
                 </li>
                 <% } else { %>
                 <li class="list-group-item"><a href="/events/booking/<%= eventBooking._id %>" class="link-info">
@@ -90,8 +94,8 @@
         </div>
       </div>
       <div class="card-footer eventFooter mt-0">
-        <div class="row h-100">
-          <div class="col text-muted">
+        <div class="row h-100 mt-0">
+          <div class="col text-muted mt-0">
             <% if ((!eventBooking.paid && !eventBooking.payOnGate) && ((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff'))) { %>
             <div class="alert alert-danger py-1 text-center">Event is fully booked. <br> You are on the waiting list.</div>
             <% } %>
@@ -100,7 +104,7 @@
             </small>
           </div>
           <div class="col">
-            <p class="card-text text-end pt-4"><% if (eventBooking.event.eventHost.display) { %><small class="text-muted">Hosted by the <%= eventBooking.event.eventHost.name %></small><% } %></p>
+            <p class="card-text text-end"><% if (eventBooking.event.eventHost.display) { %><small class="text-muted">Hosted by the <%= eventBooking.event.eventHost.name %></small><% } %></p>
           </div>
         </div>
       </div>

@@ -66,11 +66,35 @@
                     <a href="mailto:<%= event.eventHost.contactAddress %>">
                         <%= event.eventHost.contactAddress %>
                     </a>
+					<% if (event.eventHost.eventSystem.website?.length > 0) { %>
+						<br /><a class="" href="<%= event.eventHost.eventSystem.website %>">Event System Website</a>
+					<% } %>
                     <% if (event.eventHost.eventSystem.terms) { %>
                         <br /><a class="" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms">Terms & Conditions</a>
                     <% } %>
                 </li>
             </ul>
+		<% } %>
+		<% if (event.eventHost.eventSystem.facebook?.length > 0) {  %>
+		<a href="<%= event.eventHost.eventSystem.facebook %>" title="Facebook: <%= event.eventHost.eventSystem.facebook %>" class="me-2"><img src="/img/facebook.png" height="24px" alt=""></a>
+		<% } %>
+		<% if (event.eventHost.eventSystem.twitter?.length > 0) {  %>
+			<a href="<%= event.eventHost.eventSystem.twitter %>" title="Twitter: <%= event.eventHost.eventSystem.twitter %>" class="me-2"><img src="/img/twitter.png" height="24px" alt=""></a>
+		<% } %>
+		<% if (event.eventHost.eventSystem.instagram?.length > 0) {  %>
+			<a href="<%= event.eventHost.eventSystem.instagram %>" title="Instagram: <%= event.eventHost.eventSystem.instagram %>" class="me-2"><img src="/img/instagram.png" height="24px" alt=""></a>
+		<% } %>
+		<% if (event.eventHost.eventSystem.snapchat?.length > 0) {  %>
+			<a href="<%= event.eventHost.eventSystem.snapchat %>" title="Snapchat: <%= event.eventHost.eventSystem.snapchat %>" class="me-2"><img src="/img/snapchat.png" height="24px" alt=""></a>
+		<% } %>
+		<% if (event.eventHost.eventSystem.tiktok?.length > 0) {  %>
+			<a href="<%= event.eventHost.eventSystem.tiktok %>" title="TikTok: <%= event.eventHost.eventSystem.tiktok %>" class="me-2"><img src="/img/tiktok.png" height="24px" alt=""></a>
+		<% } %>
+		<% if (event.eventHost.eventSystem.whatsapp?.length > 0) {  %>
+			<a href="<%= event.eventHost.eventSystem.whatsapp %>" title="WhatsApp: <%= event.eventHost.eventSystem.whatsapp %>" class="me-2"><img src="/img/whatsapp.png" height="24px" alt=""></a>
+		<% } %>
+		<% if (event.eventHost.eventSystem.discord?.length > 0) {  %>
+			<a href="<%= event.eventHost.eventSystem.discord %>" title="Discord: <%= event.eventHost.eventSystem.discord %>" class="me-2"><img src="/img/discord.png" height="24px" alt=""></a>
 		<% } %>
 	</div>
 </div>

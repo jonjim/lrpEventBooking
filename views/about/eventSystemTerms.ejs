@@ -23,6 +23,28 @@
                 <a href="<%= eventSystem.website %>" class="link-dark"><%= eventSystem.website %></a>
                 <hr class="mb-3">
                 <small><%- eventSystem.description %></small>
+                <hr class="mb-3">
+                <% if (eventSystem.facebook?.length > 0) {  %>
+                    <a href="<%= eventSystem.facebook %>" title="Facebook: <%= eventSystem.facebook %>" class="me-2"><img src="/img/facebook.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.twitter?.length > 0) {  %>
+                        <a href="<%= eventSystem.twitter %>" title="Twitter: <%= eventSystem.twitter %>" class="me-2"><img src="/img/twitter.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.instagram?.length > 0) {  %>
+                        <a href="<%= eventSystem.instagram %>" title="Instagram: <%= eventSystem.instagram %>" class="me-2"><img src="/img/instagram.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.snapchat?.length > 0) {  %>
+                        <a href="<%= eventSystem.snapchat %>" title="Snapchat: <%= eventSystem.snapchat %>" class="me-2"><img src="/img/snapchat.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.tiktok?.length > 0) {  %>
+                        <a href="<%= eventSystem.tiktok %>" title="TikTok: <%= eventSystem.tiktok %>" class="me-2"><img src="/img/tiktok.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.whatsapp?.length > 0) {  %>
+                        <a href="<%= eventSystem.whatsapp %>" title="WhatsApp: <%= eventSystem.whatsapp %>" class="me-2"><img src="/img/whatsapp.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.discord?.length > 0) {  %>
+                        <a href="<%= eventSystem.discord %>" title="Discord: <%= eventSystem.discord %>" class="me-2"><img src="/img/discord.png" height="24px" alt=""></a>
+                    <% } %>
             </div>
         </div>
     </div>

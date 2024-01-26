@@ -17,7 +17,7 @@
                                 <div class="row h-100 g-5 pb-0">
                                     <div class="col-3 col-md-3">
                                         <div class="img align-middle text-center ms-2"><img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo"<% } %> class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                                            <% if (event.img.url) { %><img style="top:-80px !important; left:0px !important;" id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
+                                            <% if (event.img.url) { %><img style="top:-60px !important; left:0px !important;" id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
                                         </div>
                                     </div>
                                     <div class="col-9 col-md-9">
@@ -67,6 +67,28 @@
                 <a href="<%= eventSystem.website %>" class="link-dark"><%= eventSystem.website %></a>
                 <hr class="mb-3">
                 <small><%- eventSystem.description %></small>
+                <hr class="mb-3">
+                <% if (eventSystem.facebook?.length > 0) {  %>
+                    <a href="<%= eventSystem.facebook %>" title="Facebook: <%= eventSystem.facebook %>" class="me-2"><img src="/img/facebook.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.twitter?.length > 0) {  %>
+                        <a href="<%= eventSystem.twitter %>" title="Twitter: <%= eventSystem.twitter %>" class="me-2"><img src="/img/twitter.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.instagram?.length > 0) {  %>
+                        <a href="<%= eventSystem.instagram %>" title="Instagram: <%= eventSystem.instagram %>" class="me-2"><img src="/img/instagram.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.snapchat?.length > 0) {  %>
+                        <a href="<%= eventSystem.snapchat %>" title="Snapchat: <%= eventSystem.snapchat %>" class="me-2"><img src="/img/snapchat.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.tiktok?.length > 0) {  %>
+                        <a href="<%= eventSystem.tiktok %>" title="TikTok: <%= eventSystem.tiktok %>" class="me-2"><img src="/img/tiktok.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.whatsapp?.length > 0) {  %>
+                        <a href="<%= eventSystem.whatsapp %>" title="WhatsApp: <%= eventSystem.whatsapp %>" class="me-2"><img src="/img/whatsapp.png" height="24px" alt=""></a>
+                    <% } %>
+                    <% if (eventSystem.discord?.length > 0) {  %>
+                        <a href="<%= eventSystem.discord %>" title="Discord: <%= eventSystem.discord %>" class="me-2"><img src="/img/discord.png" height="24px" alt=""></a>
+                    <% } %>
             </div>
         </div>
     </div>
