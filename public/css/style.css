@@ -75,6 +75,7 @@ html {
 .event-logo {
     transition:all ease 500ms;
     max-width: 140px;
+    /* top: (current-width / 2) + (host / 4) */
 }
 
 .host-logo-fade {

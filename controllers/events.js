@@ -17,12 +17,12 @@ module.exports.upcomingEvents = async(req, res, next) => {
         description: 'LARP Event Bookings - Event information and booking for LRP events across the United Kingdom',
         path: '/'
     }
-    res.render('events/list', {
+    res.render(req.query.view == 'calendar' ? 'events/calendar' : 'events/list', {
         title: 'Upcoming Events',
         events: eventList.filter(a => a.eventHost.eventSystem.active == true),
         meta
     })
-};
+}; 
 
 module.exports.icsEvents = async(req,res,next) => {
     let eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });

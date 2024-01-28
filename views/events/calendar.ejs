@@ -1,0 +1,46 @@
+<% layout('layouts/boilerplate') %>
+
+<% if (!events) { %>
+<div class="mt-5 pt-5">
+  <h3 class="text-center mt-5">There are currently no events available for booking</h3>
+</div>
+
+<% } else { %>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.10/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.10/index.global.min.js'></script>
+    <div id='calendar'></div>
+    <div class="text-end my-3">
+        <a class="link-secondary" href="/">Card Layout</a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    initialDate: Date.now(),
+    headerToolbar: {
+      left: '',
+      center: 'title',
+      right: 'today prev,next'
+    },
+    themeSystem: 'bootstrap5',
+    height: 700,
+    events: [
+        <% for (event of events) { %>
+            {
+                allDay: true,
+                title: '<%= event.eventHost.eventSystem.name %>: <%= event.eventHost.display ? `${event.eventHost.name}: ` : '' %><%- event.name %>',
+                url: '<%= rootUrl %>/events/<%= event._id %>',
+                start: '<%= new Date(event.eventStart).toISOString() %>',
+                end: '<%= new Date(event.eventEnd).toISOString() %>',
+            },
+        <% } %>
+    ]
+  });
+
+  calendar.render();
+  document.getElementsByClassName('fc-license-message')[0].classList.add('d-none')
+});
+    </script>
+<% } %>

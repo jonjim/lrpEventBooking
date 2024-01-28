@@ -57,24 +57,25 @@
                 </li>
 			<% } %>
 		</ul>
-		<% if (event.eventHost.contactAddress && event.eventHost.contactAddress.length > 0) { %>
-            <ul class="list-group list-group-flush mb-1">
+		<ul class="list-group list-group-flush mb-1">
+			<li class="list-group-item">
+				<h5>System Details</h5>
+			</li>
                 <li class="list-group-item">
-                    <h5>System Details</h5>
-                </li>
-                <li class="list-group-item">
+					<% if (event.eventHost.contactAddress && event.eventHost.contactAddress.length > 0) { %>
                     <a href="mailto:<%= event.eventHost.contactAddress %>">
                         <%= event.eventHost.contactAddress %>
-                    </a>
-					<% if (event.eventHost.eventSystem.website?.length > 0) { %>
-						<br /><a class="" href="<%= event.eventHost.eventSystem.website %>">Event System Website</a>
-					<% } %>
+                    </a><br/><br/>		<% } %>
+					<a class="" href="/system/<%= event.eventHost.eventSystem.systemRef %>">About <%= event.eventHost.eventSystem.name %></a>
                     <% if (event.eventHost.eventSystem.terms) { %>
                         <br /><a class="" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms">Terms & Conditions</a>
                     <% } %>
+					<% if (event.eventHost.eventSystem.website?.length > 0) { %>
+						<br /><br/><a class="" href="<%= event.eventHost.eventSystem.website %>"><%= event.eventHost.eventSystem.website.split('://')[1] %></a>
+					<% } %>
                 </li>
             </ul>
-		<% } %>
+
 		<% if (event.eventHost.eventSystem.facebook?.length > 0) {  %>
 		<a href="<%= event.eventHost.eventSystem.facebook %>" title="Facebook: <%= event.eventHost.eventSystem.facebook %>" class="me-2"><img src="/img/facebook.png" height="24px" alt=""></a>
 		<% } %>

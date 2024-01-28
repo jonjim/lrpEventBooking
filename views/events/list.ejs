@@ -8,6 +8,7 @@
 <% } else { %>
 <div class="row row-cols-1 row-cols-md-3 g-4">
   <% for (event of events) { %>
+    <% const hostPrefix = ['i','e','a','o','u'].includes(event.eventHost.name.toLowerCase().charAt(0)) ? 'An' : 'A'; %>
   <div class="col">
     <div class="card shadow h-100 py-3 px-3">
         <div class="card-header bg-white">
@@ -17,38 +18,38 @@
                 </a>
               </h4>
         </div>
-      <div class="row h-100 pb-0">
+      <div class="row pb-0 mb-3">
         <div class="col">
-            <div class="row g-3">
+            <div class="row g-4">
               <% if (event.img.url || event.eventHost.img.url){ %>
                 <div class="col-4 col-md-4 pt-2" >
                     <div height="140px" class="img align-middle text-center ms-2">
-                      
                       <img id="eventImg<%= event._id %>" <% if (event.img.url) {%> aria-label="event-logo" <% } %> width="140px" class="rounded event-logo" width="140px" height="140px" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
                       <% if (event.img.url) { %><img style="top:-58px !important; left:0px !important;" w id="hostImg<%= event._id %>" aria-label="host-logo" src="<%= event.eventHost.img.url %>" class="host-logo-fade" alt=""><% } %>
-                      
                     </div>
                 </div>
                 <% } %>
-                  <div class="col-8 col-md-8">
+                  <div class="col">
                     <div class="card-body pb-0">
-                      <p class="card-text ms-2 pt-2">
+                      <p class="card-text ms-md-5 ms-lg-4 pt-2">
                         <i>
-                          <%= new Date(event.eventStart).toLocaleDateString() %> -
-                          <%= new Date(event.eventEnd).toLocaleDateString() %><br /><small>
+                          <%= new Date(event.eventStart).toLocaleDateString() %>
+                          <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+                          <%= new Date(event.eventEnd).toLocaleDateString() %>
+                          <% } %><br /><small>
                             <%= event.location.split(',')[0] %>
                           </small>
                         </i>
-                        <% if (event.eventHost.display) { %><p><small class="text-muted ms-2">Hosted by the <%= event.eventHost.name %></small></p><% } %>
+                        <% if (event.eventHost.display) { %><small class="text-muted"><br/><br><%= `A ${event.eventHost.name} event` %></small><% } %>
                     </p>
                     </div>
                   </div>
             </div>
         </div>
-        <div class="card-text">
-            <%- event.promoDescription %>
-        </div>
       </div>
+      <div class="card-text h-100 mb-3 align-top">
+        <%- event.promoDescription %>
+    </div>
       <div class="card-footer eventFooter">
         <div class="row h-100">
           <div class="col"><a class="link-dark" target="_blank" href="/system/<%= event.eventHost.eventSystem.systemRef %>"><% if (event.eventHost.eventSystem.img?.url) { %><img class="system-logo" style="max-width:250px;" src="<%= event.eventHost.eventSystem.img.url %>" alt="<%= event.eventHost.eventSystem.name %>"><% } else { %><%= event.eventHost.eventSystem.name %><% } %></a></div>
@@ -62,4 +63,7 @@
   <% }  %>
 </div>
 <% } %>
+<div class="text-end my-3">
+  <a class="link-secondary" href="/?view=calendar">Calendar Layout</a>
+</div>
 <script src="/js/eventLogo.js"></script>
