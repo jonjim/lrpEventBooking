@@ -49,7 +49,7 @@
                         <% if (config.hostingCharge == 0) { %>
                             <p><b>Nothing!</b> Whilst we work out the finanical implications for running and hosting this, there is no charge to run your event through us!</p>
                             <% } else { %>
-                        <p>A one-off fee per event of <b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(config.hostingCharge) %></b>.<br>We do not take a slice from each individual booking!</p>
+                        <p>A one-off fee per event of <b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(config.hostingCharge) %></b>.<br>This fee is to cover the hosting and e-mail costs of running the website. We do not take a slice from each individual booking!</p>
                         <% } %>
                         <br>
                         <h5>What are the downsides?</h5>
