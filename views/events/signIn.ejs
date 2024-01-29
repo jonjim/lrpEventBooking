@@ -1,0 +1,88 @@
+<% layout('layouts/boilerplate') %>
+<script src="/js/html5-qrcode.min.js"></script>
+<style>
+    #reader {
+        border: none !important;
+    }
+</style>
+<div class="card shadow py-3 px-3">
+    <div class="card-header bg-white">
+        <h4>Event Sign-In</h4>
+    </div>
+    <div class="card-body">
+        <p>Scan the ticket QR code to pull up ticket information.</p>
+        <div class="text-center">
+            <div class="text-center" style="display: inline-block; position:relative; width: 50%; border: none !important;" id="reader"></div>
+        </div>
+        <div id="spinnerDiv"></div>
+        <div class="d-none" id="signinInfo">
+            <div class="row">
+                <div class="col">
+                    <h4 id="eventName"></h4>
+                    <h5 id="attendeeName"></h5>
+
+                    <ul id="ticketList" class="mt-3">
+                        
+                    </ul>
+                    <p id="paymentStatus"></p>
+                </div>
+                <div class="col">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+async function onScanSuccess(decodedText, decodedResult) {
+    var spinner = document.createElement("div");
+    spinner.classList.add('spinner-border');
+    spinner.classList.add('text-dark');
+    document.getElementById('spinnerDiv').classList.add('text-center');
+    spinner.role = 'status';
+    document.getElementById('spinnerDiv').appendChild(spinner);
+    // Handle on success condition with the decoded text or result.
+    console.log(`Scan result: ${decodedText}`, decodedResult);
+    html5QrcodeScanner.clear();
+    fetch(`/events/signin/${decodedText}`, {
+        method: 'get',
+    })
+    .then((response) => {
+        return response.json();
+    })
+    .then((data) => {
+
+        while (document.getElementById('ticketList').firstChild) {
+            document.getElementById('ticketList').removeChild(document.getElementById('ticketList').firstChild);
+        }
+        console.log(data);
+        document.getElementById('spinnerDiv').removeChild(spinner);
+        let completeP = document.createElement('p');
+        if (data != null){
+            
+            document.getElementById('signinInfo').classList.remove('d-none')
+            document.getElementById('eventName').innerText = data.event.name;
+            document.getElementById('attendeeName').innerText = data.firstname + ' ' + data.surname;
+            for (ticket of data.eventTickets){
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(ticket.description))
+                document.getElementById('ticketList').appendChild(li);
+            }
+            if (data.paid)
+            document.getElementById('paymentStatus').innerHTML = `<span class="text-success"><i class="bi bi-check-circle-fill"></i> Fully Paid</span>`
+            else
+            document.getElementById('paymentStatus').innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-circle-fill"></i> Payment Outstanding!</span>`
+        }
+        else{
+          completeP.classList.add('text-danger');
+          completeP.innerText = "Unable to find the requesting booking!"
+          html5QrcodeScanner.render(onScanSuccess);
+        }
+        document.getElementById('spinnerDiv').appendChild(completeP);
+    });
+}
+
+var html5QrcodeScanner = new Html5QrcodeScanner(
+	"reader", { fps: 10 });
+html5QrcodeScanner.render(onScanSuccess);
+</script>

@@ -282,3 +282,12 @@ module.exports.eventBookingTicket = async(req,res,next) => {
         pdfService.sendPDF(res,ticket,`${eventBooking._id}.pdf`);
     })
 }
+
+module.exports.eventSignIn = async(req,res,next) => {
+    res.render('events/signin',{title:'Event Signin'})
+}
+
+module.exports.eventSignInSearch = async (req, res, next) => {
+    const booking = await EventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate('user').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost', populate: { path: 'eventSystem' } } });
+    return res.json(booking);
+}

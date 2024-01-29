@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
-const { isLoggedIn } = require('../middleware');
+const { isLoggedIn, isEventHost } = require('../middleware');
 
 const controller = require('../controllers/events');
 
@@ -25,11 +25,18 @@ router.route('/events/booking/:id')
 router.route('/events/booking/:id/ticket')
     .get(isLoggedIn, catchAsync(controller.eventBookingTicket))
 
+router.route('/events/signin')
+    .get(isLoggedIn, isEventHost, catchAsync(controller.eventSignIn))
+
+router.route('/events/signin/:id')
+    .get(isLoggedIn, isEventHost, catchAsync(controller.eventSignInSearch))
+
 router.route('/events/:id')
     .get(catchAsync(controller.showEvent))
 
 router.route('/events/:id/book')
     .get(isLoggedIn, catchAsync(controller.showEventBooking))
     .post(isLoggedIn, catchAsync(controller.createEventBooking))
+
 
 module.exports = router;
