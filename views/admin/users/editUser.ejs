@@ -30,7 +30,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="email">E-mail Address</label>
-                            <input type="text" id="email" name="username" value="<%= user.username %>" class="form-control">
+                            <input type="text" id="email" name="username" value="<%= user.username %>" class="form-control" autocomplete="off">
                         </div>
                         <% if (user.googleId || user.facebookId) { %>
                             <div class="mb-3">

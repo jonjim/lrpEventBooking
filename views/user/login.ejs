@@ -8,15 +8,15 @@
                         <h5 class="card-title text-center">Login</h5>
                         <form action="/login" method="POST" novalidate class="validated-form">
                             <div class="form-floating mb-3">
-                                <input focus type="text" class="form-control" id="email" name="username" required placeholder="E-mail Address">
-                                <label for="floatingInput">E-mail Address</label>
+                                <input focus type="text" class="form-control" id="email" name="username" required placeholder="E-mail Address" type="username" autocomplete="off">
+                                <label for="email">E-mail Address</label>
                                 <div class="invalid-feedback">
                                     Please enter a Username.
                                 </div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
-                                <label for="floatingPassword">Password</label>
+                                <input type="password" class="form-control" id="passwordField" name="password" required placeholder="Password" type="password" autocomplete="off">
+                                <label for="passwordField">Password</label>
                                 <div class="invalid-feedback">
                                     Please enter a Password.
                                 </div>

@@ -68,7 +68,7 @@ function toTitleCase(str) {
               <div class="col-8"><label title="When the event is full will add bookings to a waiting list. Players in the waiting list require manual approval to pay." for="eventBookingQueue">Use Waiting List</label></div>
               <div class="col">
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" name="event[overflowQueue]" id="BookingQueue" <%=( event.overflowQueue ? 'checked' : '') %>>
+                  <input class="form-check-input" type="checkbox" role="switch" name="event[overflowQueue]" id="eventBookingQueue" <%=( event.overflowQueue ? 'checked' : '') %>>
                 </div>
               </div>
             </div>
@@ -202,7 +202,7 @@ function toTitleCase(str) {
                   <div class="input-group mb-3">
                     <span class="input-group-text">£</span>
                     <div class="form-floating">
-                      <input title="Does your supporting system have a fee for running an event?" type="number" class="form-control form-control-sm" id="siteFee" name="event[financials][sanctioningFee]" value="<%= event.financials.sanctioningFee %>">
+                      <input title="Does your supporting system have a fee for running an event?" type="number" class="form-control form-control-sm" id="sanctioningFee" name="event[financials][sanctioningFee]" value="<%= event.financials.sanctioningFee %>">
                       <label for="sanctioningFee">Sanctioning Fee</label>
                     </div>
                   </div>
