@@ -9,7 +9,7 @@ async function sendPDF(res, html, filename) {
         res.contentType("application/pdf");
         res.setHeader(
             "Content-Disposition",
-            `attachment; filename=${filename}`
+            `attachment; filename="${filename}"`
         );
         return res.send(pdf);
     })()
@@ -43,7 +43,7 @@ async function sendConfidentialPDF(res, html, filename) {
         res.contentType("application/pdf");
         res.setHeader(
             "Content-Disposition",
-            `attachment; filename=${filename}`
+            `attachment; filename="${filename}"`
         );
         return res.send(pdf);
     })()
