@@ -75,7 +75,7 @@ async function onScanSuccess(decodedText, decodedResult) {
         }
         else{
           completeP.classList.add('text-danger');
-          completeP.innerText = "Unable to find the requesting booking!"
+          completeP.innerText = "Unable to find the requested booking!"
           html5QrcodeScanner.render(onScanSuccess);
         }
         document.getElementById('spinnerDiv').appendChild(completeP);
