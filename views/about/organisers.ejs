@@ -42,9 +42,16 @@
                     </div>
                     <div class="col-md-6 mt-3">
                         <h5>How do I register as an Event Organiser?</h5>
-                        <p>We haven't entirely designed this part yet. The current aim is to run this system as donation only with no required costs to event organisers, but time will tell if that is financially viable. We hope so, as the aim is to keep this as community based to benefit the largets number of small LARP systems that keep this hobby alive.</p>
-                        <p>Whilst we work out the financial implications and setup automatic registration we would still love to have your event system involed!</p>
+                        <p>For now, to sign up as an Event Organiser is a manual process. We do hope to make this an automated process in the future to make event organisation even easier for new organisers.</p>
                         <p>Please <a href="mailto:<%= config.techContactEmail %>?subject=Event System Registration&body=Hi, I would like to add my Event System to the booking website!">E-Mail <%= config.techContactName %></a> to express your interest.</p>
+                        <br>
+                        <h5>How much does it cost?</h5>
+                        <% if (config.hostingCharge == 0) { %>
+                            <p><b>Nothing!</b> Whilst we work out the finanical implications for running and hosting this, there is no charge to run your event through us!</p>
+                            <% } else { %>
+                        <p>A one-off fee per event of <b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(config.hostingCharge) %></b>.<br>We do not take a slice from each individual booking!</p>
+                        <% } %>
+                        <br>
                         <h5>What are the downsides?</h5>
                         <p>This is an obvious concern. If you're going to use this system, what are the potential risks to your system?</p>
                         <p><b>PayPal</b> is a double edged sword. It's convenient and friendly to use, it does however charge for transactions. Some organisers encourage their attendees to pay via <em>"Friends and Family"</em> however this removes any buyer protection for the attendee. As such, we've decided this is the safest solution all round, despite the costs.</p> 
