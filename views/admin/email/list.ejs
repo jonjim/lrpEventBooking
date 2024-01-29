@@ -1,0 +1,138 @@
+<% layout('layouts/boilerplate') %>
+<script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<div class="card shadow py-3 px-3">
+    <div class="card-header bg-white">
+        <h4>E-mail Records</h4>
+    </div>
+    <div class="card-body">
+        <div class="card-text mb-4">
+            These records only display custom e-mails sent using the system. Pre-rendered emails (such as booking confirmations, event tickets, and event packs) are not recorded.
+        </div>
+        <div class="text-end" style="margin-bottom:-40px">
+            <a class="btn btn-secondary" href="" data-bs-toggle="modal" data-bs-target="#customEmailModal">Send E-mail</a>
+        </div>
+        <table id="email" class="table table-hover">
+            <thead>
+                <th>Date & Time</th>
+                <th>Sender</th>
+                <th class="email">
+                    <div class="row">
+                        <div class="d-none d-md-table-cell col-md-auto">
+                            Event
+                        </div>
+                        <div class="col-md"><input id="emailSearch" type="text" class="form-control form-control-sm pe-3" placeholder="Search..."></div>
+                        <div class="d-table-cell d-md-none col-md-auto mt-3">
+                            Event
+                        </div>
+                    </div>
+                </th>
+                <th>Subject</th>
+            </thead>
+            <tbody>
+                <% for (email of emails) { %>
+                    <tr>
+                        <td width="1%" style="white-space: nowrap;"><%= new Date(email.date).toLocaleDateString() %> <%= new Date(email.date).toLocaleTimeString() %></td>
+                        <td><%= email.user?.username %></td>
+                        <td><%= email.event?.name %></td>
+                        <td width="33%"><%= email.subject %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <ul id="emailNavPosition" class="pagination pager-nav justify-content-center"></ul>
+    </div>
+</div>
+
+
+<div class="modal fade" id="customEmailModal" tabindex="-1" aria-labelledby="customEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="customEmailModalLabel">E-mail Event Hosts</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="customEmailForm" action="/admin/email" method="POST">
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col">
+                        <label for="host">Send To</label>
+                        <select class="form-select mt-2" name="host" id="host">
+                            <option value="all">All</option>
+                            <% for (system of eventSystems) { %>
+                            <option value="<%= system.systemRef %>"><%= system.name %> Hosts</option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="subject" class="form-label">E-mail Subject</label>          
+                        <input type="text" class="form-control" id="subject" name="subject" aria-describedby="subjectDescription" required>
+                        <div class="form-text" id="subjectDescription">Please enter a subject for your e-mail</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+              <label for="message">E-mail Message</label>
+              <textarea class="form-control" name="message" id="message" cols="30" rows="10"></textarea>
+            </div>
+          </form>
+          <div id="spinnerDivEmail"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="customEmail()">Send E-mail</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="/js/pagination.js"></script>
+<script src="/js/tinymce.js"></script>
+<script>
+    const emailPager = new Pager('email', 15);
+    emailPager.init();
+    emailPager.showPageNav('emailPager', 'emailNavPosition');
+    emailPager.showPage(1);
+    function filterTable(type) {
+        const query = q => document.querySelectorAll(q);
+        const filters = [...query(`th.${type} input`)].map(e => new RegExp(e.value, 'i'));
+        query(`tbody.${type} tr`).forEach(row => row.style.display = 
+        filters.some((f, i) => f.test(row.cells[0].textContent) || f.test(row.cells[1].textContent) || f.test(row.cells[2].textContent)) ? '' : 'none');
+    }
+    document.getElementById('emailSearch').addEventListener('keyup', function() {
+        filterTable('email');
+    });
+
+    async function customEmail(){
+    const customEmailForm = document.getElementById('customEmailForm');
+    const spinnerDiv = document.getElementById('spinnerDivEmail');
+    customEmailForm.classList.add('d-none');
+    var spinner = document.createElement("div");
+    spinner.classList.add('spinner-border');
+    spinner.classList.add('text-dark');
+    spinnerDiv.classList.add('text-center');
+    spinner.role = 'status';
+    spinnerDiv.appendChild(spinner);
+
+    const data = new URLSearchParams();
+    for (const pair of new FormData(customEmailForm)) {
+        data.append(pair[0], pair[0] == 'message' ? tinyMCE.get('message').getContent() : pair[1]);
+    }
+    
+    fetch(`/admin/email`, {
+        method: 'post',
+        body: data,
+    })
+    .then((response) => {
+        spinnerDiv.removeChild(spinner);
+        let completeP = document.createElement('p');
+        if (response.ok)
+          completeP.innerText = "All Event Hosts e-mailed!"
+        else{
+          completeP.classList.add('text-danger');
+          completeP.innerText = "There has been a problem sending the email!"
+        }
+        spinnerDiv.appendChild(completeP);
+    });
+  }
+</script>

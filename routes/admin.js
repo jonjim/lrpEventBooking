@@ -10,6 +10,7 @@ const adminController = require('../controllers/admin');
 const adminAboutController = require('../controllers/adminAbout');
 const adminEventsController = require('../controllers/adminEvents');
 const adminPrintController = require('../controllers/adminPrint')
+const emailController = require('../controllers/email');
 
 router.route('/users')
     .get(isLoggedIn, isAdmin, catchAsync(adminController.listUsers));
@@ -159,5 +160,9 @@ router.route('/config')
     .get(isLoggedIn, isSuperAdmin, catchAsync(adminAboutController.editConfig))
     .post(isLoggedIn, isSuperAdmin, upload.single('image'), catchAsync(adminAboutController.postConfig))
     .delete(isLoggedIn, isSuperAdmin, catchAsync(adminAboutController.delConfig))
+
+router.route('/email')
+    .get(isLoggedIn,isSuperAdmin,catchAsync(emailController.listEmails))
+    .post(isLoggedIn,isSuperAdmin,catchAsync(emailController.sendEmail))
 
 module.exports = router;

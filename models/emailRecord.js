@@ -7,7 +7,8 @@ const emailRecordSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     },
     event: {
         type: mongoose.Schema.Types.ObjectId,
