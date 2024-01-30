@@ -18,6 +18,11 @@
         <div class="d-none" id="signinInfo">
             <div class="row">
                 <div class="col">
+                    <div class="d-md d-md-none gap-2 mb-3">
+                        <a href="" onclick="resetScanner()" class="btn btn-success">
+                            Scan Another Ticket
+                        </a>
+                    </div>
                     <h4 id="eventName"></h4>
                     <h5 id="attendeeName"></h5>
 
@@ -26,8 +31,12 @@
                     </ul>
                     <p id="paymentStatus"></p>
                 </div>
-                <div class="col">
-
+                <div class="col-md">
+                    <div class="d-none d-md-grid gap-2 mb-3">
+                        <a href="" onclick="resetScanner()" class="btn btn-success">
+                            Scan Another Ticket
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,6 +89,17 @@ async function onScanSuccess(decodedText, decodedResult) {
         }
         document.getElementById('spinnerDiv').appendChild(completeP);
     });
+}
+
+function resetScanner() {
+    document.getElementById('signinInfo').classList.add('d-none')
+    document.getElementById('eventName').innerText = '';
+    document.getElementById('attendeeName').innerText = '';
+    document.getElementById('paymentStatus').innerHTML = '';
+    while (document.getElementById('ticketList').firstChild) {
+            document.getElementById('ticketList').removeChild(document.getElementById('ticketList').firstChild);
+        }
+    html5QrcodeScanner.render(onScanSuccess);
 }
 
 var html5QrcodeScanner = new Html5QrcodeScanner(
