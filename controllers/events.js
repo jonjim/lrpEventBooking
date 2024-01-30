@@ -291,3 +291,15 @@ module.exports.eventSignInSearch = async (req, res, next) => {
     const booking = await EventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate('user').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost', populate: { path: 'eventSystem' } } });
     return res.json(booking);
 }
+
+module.exports.cateringEdit = async(req,res,next) => {
+    const event = await Event.findById(req.params.id);
+    if (event.attendees.filter(a => a.user.equals(res.locals.currentUser._id)).length > 0){
+        res.render('events/catering', {title:'Catering Choices',event})
+    }
+    else
+    {
+        req.flash('error','You do not have a booking for this event!')
+        res.redirect(`/events/${req.params.id}`);
+    }
+}

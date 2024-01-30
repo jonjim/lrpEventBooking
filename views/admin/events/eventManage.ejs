@@ -1,4 +1,11 @@
 <% layout('layouts/boilerplate') %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function toTitleCase(str) {
+if (typeof str == 'undefined') return '';
+return str.replace(/\w\S*/g, function(txt){
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+});
+}; %>
 <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb small">
@@ -10,11 +17,13 @@
 </nav>
 <div class="card shadow py-3 px-3">
   <div class="card-header mb-3 bg-white row">
+    <% if (event.img.url || event.eventHost.img.url) { %>
     <div class="d-none d-md-block col-md-2 mb-2">
-      <div class="img align-middle text-center"><img id="eventImg" <% if (event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= event.eventHost.name %>" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-
+      <div class="img align-middle text-center">
+        <img id="eventImg" <% if (event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= event.eventHost.name %>" class="rounded event-logo" src="<%= typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
       </div>
     </div>
+    <% } %>
     <div class="col">
       <h2>
         <a href="/events/<%= event._id %>" class="link-dark">
@@ -36,7 +45,10 @@
     </div>
     <div class="col col-md-3 text-end">
       <div class="btn-group-vertical" role="group">
-        <div class="btn-group mt-5">
+        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#cateringModal">
+          <i class="fa fa-cutlery me-1" aria-hidden="true"> </i> Catering
+        </button>
+        <div class="btn-group">
           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-envelope-at"></i> E-mail
           </a>
@@ -590,8 +602,8 @@
       <div class="modal-footer">
         <button id="eventPackModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <div class="btn-group" role="group">
+          <button type="button" class="btn btn-outline-primary" onclick="eventPackDownload()"><i class="bi bi-filetype-pdf"></i> Save & Download</button>
           <button type="button" class="btn btn-primary" onclick="eventPackEmail()"><i class="bi bi-envelope-at"></i> Save & Email</button>
-          <button type="button" class="btn btn-primary" onclick="eventPackDownload()"><i class="bi bi-filetype-pdf"></i> Save & Download</button>
         </div>
       </div>
     </div>
@@ -624,7 +636,96 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="customEmail()">Send E-mail</button>
+        <button type="button" class="btn btn-primary" onclick="customEmail()"><i class="bi bi-envelope-at"></i> Send E-mail</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="cateringModal" tabindex="-1" aria-labelledby="cateringModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="cateringModalLabel">Catering Choices</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="cateringForm" action="/admin/events/<%= event._id %>/catering" method="POST">
+          <div class="form-text mb-3">
+            Updating this form will share the catering choices on the event page, and allow attendees to make selections (if required).
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="catererName">Caterer</label>
+              <input type="text" class="form-control" id="catererName" name="catering[caterer]" value="<%= event.catering.caterer %>">
+            </div>
+            <div class="col">
+              <label for="catererContact">Contact</label>
+              <input type="text" class="form-control" id="catererContact" name="catering[catererContact]" value="<%= event.catering.catererContact %>" placeholder="Phone/E-mail Address">
+            </div>
+            <div class="col">
+              <div class="form-check form-switch mt-md-4">
+                <label class="form-check-label" for="cateringDisplay">Display</label>
+                <input class="form-check-input" type="checkbox" role="switch" id="cateringDisplay" name="catering[display]" <%= event.catering.display ? 'checked' : '' %>>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="message">Catering Notes</label>
+            <textarea class="form-control" name="catering[notes]" id="cateringNotes" cols="30" rows="10"><%= event.catering.notes %></textarea>
+          </div>
+          <div class="form-check form-switch">
+            <label class="form-check-label" for="cateringRequired"><h4>Menu Choices Require Selection</h4></label>
+            <input class="form-check-input" type="checkbox" role="switch" id="cateringRequired" name="catering[choiceRequired]" <%= event.catering.choiceRequired ? 'checked' : '' %>>
+          </div>
+          <hr class="mt-0">
+          <div class="row">
+          <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+            <div class="col">
+                <div class="text-center"><%=  dayNames[new Date(d).getDay()] %></div>
+                <div id="meals<%=  dayNames[new Date(d).getDay()] %>">
+                  <% const catering = JSON.parse(JSON.stringify(event.catering)) %>
+                  <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
+                    <div id="meals<%= meal %>" class="my-3">
+                      <div>
+                        <input type="text" class="form-control" name="catering[menu][<%= dayNames[new Date(d).getDay()] %>][meals][<%= meal %>][name]" placeholder="Breakfast, Lunch, Dinner, etc..." value="<%= catering.menu.Saturday.meals[meal].name %>">
+                      </div>
+                      <div id="options<%= meal %>" class="ms-4">
+                        <% for (option of catering.menu[dayNames[new Date(d).getDay()]].meals[meal].options){ %>
+                          <% let optionId = Date.now().toString(36) + Math.random().toString(36).substr(2); %>
+                          <div id="<%= optionId %>" class="input-group">
+                            <a href="#" class="link-danger input-group-text" onclick="delMealOption('options<%=meal %>','<%= optionId %>')"><i class="bi bi-trash3-fill"></i></a>
+                            <input class="form-control form-control-sm" name="catering[menu][<%= dayNames[new Date(d).getDay()] %>][meals][<%= meal %>][options]" placeholder="Food option (V,GF)" value="<%= option %>">
+                          </div>
+                          
+                        <% } %>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <a href="#" class="link-dark mt-0" onclick="addMealOption('options<%= meal %>','<%=  dayNames[new Date(d).getDay()] %>','<%= meal %>')">Add Meal Option</a>
+                        </div>
+                        <div class="col-3 text-end">
+                          <a href="#" class="link-danger mt-0" onclick="delMeal('meals<%=  dayNames[new Date(d).getDay()] %>','meals<%= meal %>')">Delete</a>
+                        </div>
+                      </div>
+                    </div>
+                  <% } %>
+                </div>
+                <div class="d-grid gap-2 mt-3 me-2">
+                  <a href="#" class="btn btn-outline-primary" onclick="addMeal('<%= dayNames[new Date(d).getDay()] %>')">Add A Meal</a>
+                </div>
+            </div>
+            <% } %>
+          </div>
+        </form>
+        <div id="spinnerDivEmailCatering"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-outline-primary" title="This will display the catering choices on the event page" onclick="document.getElementById('cateringForm').submit()">Save</button>
+          <button type="button" class="btn btn-primary" onclick=""><i class="bi bi-envelope-at"></i> Save & Email</button>
+        </div>
       </div>
     </div>
   </div>
@@ -639,6 +740,7 @@
     eventPackForm.action= `/admin/events/<%= event._id %>/print/eventPack`;
     eventPackForm.submit();
   }
+
   async function eventPackEmail(){
     const eventPackForm = document.getElementById('eventPackForm');
     eventPackForm.classList.add('d-none');
@@ -648,13 +750,10 @@
     document.getElementById('spinnerDiv').classList.add('text-center');
     spinner.role = 'status';
     document.getElementById('spinnerDiv').appendChild(spinner);
-
     const data = new URLSearchParams();
     for (const pair of new FormData(eventPackForm)) {
         data.append(pair[0], pair[1]);
     }
-    
-
     fetch(`/admin/events/<%= event._id %>/print/eventPack?email=true`, {
         method: 'post',
         body: data,
@@ -671,6 +770,7 @@
         document.getElementById('spinnerDiv').appendChild(completeP);
     });
   }
+
   async function customEmail(){
     const customEmailForm = document.getElementById('customEmailForm');
     const spinnerDiv = document.getElementById('spinnerDivEmail');
@@ -681,13 +781,10 @@
     spinnerDiv.classList.add('text-center');
     spinner.role = 'status';
     spinnerDiv.appendChild(spinner);
-
     const data = new URLSearchParams();
     for (const pair of new FormData(customEmailForm)) {
         data.append(pair[0], pair[0] == 'message' ? tinyMCE.get('message').getContent() : pair[1]);
     }
-    
-
     fetch(`/admin/events/<%= event._id %>/email`, {
         method: 'post',
         body: data,
@@ -703,5 +800,86 @@
         }
         spinnerDiv.appendChild(completeP);
     });
+  }
+
+  function addMeal(day) {
+    const mealId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+    const mealsDiv = document.getElementById(`meals${day}`);
+    const mealCont = document.createElement('div');
+    mealCont.id = `meals${mealId}`;
+    mealCont.classList.add('my-3',);
+    let titleDiv = document.createElement('div');
+    
+    let titleInput = document.createElement('input');
+    titleInput.classList.add('form-control');
+    titleInput.name = `catering[menu][${day}][meals][${mealId}][name]`;
+    titleInput.placeholder ='Breakfast, Lunch, Dinner, etc...'
+    titleDiv.appendChild(titleInput);
+    mealCont.appendChild(titleDiv);
+    let optionDiv = document.createElement('div');
+    optionDiv.classList.add('ms-4');
+    optionDiv.id = `options${mealId}`
+    mealCont.appendChild(optionDiv);
+    let optionRow = document.createElement('div');
+    optionRow.classList.add('row')
+    optionCol1 = document.createElement('div')
+    optionCol1.classList.add('col')
+    let addOption = document.createElement('a');
+    addOption.href = '#';
+    addOption.innerHTML = 'Add Meal Option'
+    addOption.classList.add('link-dark','mt-0');
+    addOption.addEventListener('click', () => addMealOption(optionDiv,day,mealId))
+    optionCol1.appendChild(addOption);
+    optionCol2 = document.createElement('div')
+    optionCol2.classList.add('col-3','text-end')
+    let delOption = document.createElement('a');
+    delOption.href = '#';
+    delOption.innerHTML = 'Delete'
+    delOption.classList.add('link-danger','mt-0');
+    delOption.addEventListener('click', () => delMeal(mealsDiv,mealCont))
+    optionCol2.appendChild(delOption);
+    optionRow.appendChild(optionCol1)
+    optionRow.appendChild(optionCol2)
+
+    mealCont.appendChild(optionRow);
+    mealsDiv.appendChild(mealCont);
+  }
+
+  function addMealOption(parent,day,mealId) {
+    let optionDiv = document.createElement('div')
+    optionDiv.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+    optionDiv.classList.add('input-group');
+    let mealOption = document.createElement('input');
+      mealOption.classList.add('form-control','form-control-sm');
+      mealOption.name = `catering[menu][${day}][meals][${mealId}][options]`;
+      mealOption.placeholder ='Food option (V,GF)'
+      let delOption = document.createElement('a');
+      delOption.href = '#';
+      delOption.innerHTML = '<i class="bi bi-trash3-fill"></i>'
+      delOption.classList.add('link-danger','input-group-text');
+      delOption.addEventListener('click', () => delMealOption(`options${mealId}`,optionDiv))
+
+      optionDiv.appendChild(delOption);
+      optionDiv.appendChild(mealOption);
+      if (typeof parent == 'string'){
+        document.getElementById(parent).appendChild(optionDiv);
+      }
+      else{
+        parent.appendChild(optionDiv);
+      }
+  }
+
+  function delMeal(parent,mealDiv){
+    if (typeof parent == 'string')
+      document.getElementById(parent).removeChild(document.getElementById(mealDiv))
+    else
+      parent.removeChild(mealDiv);
+  }
+
+  function delMealOption(parent,option){
+    if (typeof option == 'string')
+      document.getElementById(parent).removeChild(document.getElementById(option))
+    else
+      document.getElementById(parent).removeChild(option);
   }
 </script>

@@ -286,3 +286,17 @@ module.exports.customEmail = async(req,res,next) =>{
         return res.redirect('/');
     }
 }
+
+module.exports.catering = async(req,res,next) => {
+    const event = await Event.findById(req.params.id,{strict:false});
+    req.body.catering.choiceRequired = req.body.catering.choiceRequired ? req.body.catering.choiceRequired == 'on' ? true : false : false;
+    req.body.catering.display = req.body.catering.display ? req.body.catering.display == 'on' ? true : false : false;
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        event.catering = req.body.catering;
+        const response = await Event.findByIdAndUpdate(req.params.id,{catering: req.body.catering},{strict:false, new: true, toJson: true})
+        return res.redirect(`/admin/events/${req.params.id}/manage`);
+    } else {
+        req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+}

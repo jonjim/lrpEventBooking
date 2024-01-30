@@ -84,10 +84,12 @@ const lrpEventSchema = new mongoose.Schema({
         ref: 'eventTicket'
     }],
     catering: {
+        display: Boolean,
         caterer: String,
         catererContact: String,
+        notes: String,
+        choiceRequired: Boolean,
         cost: Number,
-        menu: String,
         bookingsClose: Date
     },
     attendees: [{

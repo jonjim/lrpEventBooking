@@ -9,6 +9,13 @@ function toTitleCase(str) {
     catch{return str}
 };
 %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function toTitleCase(str) {
+if (typeof str == 'undefined') return '';
+return str.replace(/\w\S*/g, function(txt){
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+});
+}; %>
     <div class="row">
         <div class="col d-md-none">
             <% if (event.ticketsAvailable && !event.externalBooking && event.allowBookings) { %>
@@ -42,6 +49,11 @@ function toTitleCase(str) {
                         <li class="nav-item" role="presentation">
                             <button class="nav-link link-dark active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true"><h4>Event Information</h4</button>
                         </li>
+                        <% if (event.catering.display) { %>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link link-dark" id="catering-tab" data-bs-toggle="tab" data-bs-target="#catering-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true"><h4>Catering</h4</button>
+                            </li>
+                        <% } %>
                         <% if (event.attendees.length > 0) { %>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link link-dark" id="attendees-tab" data-bs-toggle="tab" data-bs-target="#attendees-tab-pane" type="button" role="tab" aria-controls="attendees-tab-pane" aria-selected="false"><h4>Attendees</h4></button>
@@ -52,6 +64,44 @@ function toTitleCase(str) {
                         <div class="tab-pane fade show active mt-3" id="info-tab-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
                             <%- event.fullDescription %>
                         </div>
+                        <% if (event.catering.display) { %>   
+                            <div class="tab-pane fade mt-3" id="catering-tab-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
+                                <div class="row">
+                                    <div class="col">
+                                        <p>Catering for this event is provided by <span class="lead"><%= event.catering.caterer %></span>.</p>
+                                    </div>
+                                    <% if (event.catering.choiceRequired && event.attendees.filter(a => a.user.equals(currentUser._id)).length > 0) { %>
+                                    <div class="col-4 text-end">
+                                        <a href="#" class="btn btn-secondary">Submit your meal choices</a>
+                                    </div>
+                                    <% } %>
+                                </div>
+                                <% if (event.catering.catererContact) { %>
+                                <p>For any queries please contact the caterer at <%= event.catering.catererContact %></p>
+                                <% } %>
+                                <div class="mb-3">
+                                    <%- event.catering.notes %>
+                                </div>
+                                <hr>
+                                <% const catering = JSON.parse(JSON.stringify(event.catering)) %>
+                                <div class="row">
+                                <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                                    <div class="col text-center">
+                                        <div class="lead"><%=  dayNames[new Date(d).getDay()] %></div>
+                                        <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
+                                            <p class="mb-0 mt-3"><b><%= catering.menu[dayNames[new Date(d).getDay()]].meals[meal].name %></b></p>
+                                            <ul class="list-group list-group-flush">
+                                                <% for (option of catering.menu[dayNames[new Date(d).getDay()]].meals[meal].options){ %>
+                                                    <li class="list-group-item" style="border-bottom:none"><%= option %></li>
+                                                    <% } %>
+                                            </ul>
+                                        <% } %>
+                                    </div>
+                                <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                        
                         <% if (event.attendees.length > 0 && currentUser) { %>
                             <div class="tab-pane fade mt-3" id="attendees-tab-pane" role="tabpanel" aria-labelledby="attendees-tab" tabindex="0">
                                 <div class="row">

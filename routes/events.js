@@ -38,5 +38,7 @@ router.route('/events/:id/book')
     .get(isLoggedIn, catchAsync(controller.showEventBooking))
     .post(isLoggedIn, catchAsync(controller.createEventBooking))
 
+router.route('/events/:id/catering')
+    .get(isLoggedIn, catchAsync(controller.cateringEdit))
 
 module.exports = router;

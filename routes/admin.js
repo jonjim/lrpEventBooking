@@ -83,6 +83,9 @@ router.route('/events/new')
 router.route('/events/:id/manage')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.manageEvent))
 
+router.route('/events/:id/catering')
+    .post(isLoggedIn, isEventHost, catchAsync(adminEventsController.catering))
+
 router.route('/events/:id/waitinglist')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.eventWaitingList))
 
