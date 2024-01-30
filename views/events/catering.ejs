@@ -1,11 +1,5 @@
 <% layout('layouts/boilerplate') %>
-<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-function toTitleCase(str) {
-if (typeof str == 'undefined') return '';
-return str.replace(/\w\S*/g, function(txt){
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-});
-}; %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
 <div class="card shadow py-3 px-3">
     <div class="card-header bg-white">
         <h4><%= event.name %> - Catering Choices</h4>

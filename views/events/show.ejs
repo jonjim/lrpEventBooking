@@ -9,13 +9,7 @@ function toTitleCase(str) {
     catch{return str}
 };
 %>
-<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-function toTitleCase(str) {
-if (typeof str == 'undefined') return '';
-return str.replace(/\w\S*/g, function(txt){
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-});
-}; %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
     <div class="row">
         <div class="col d-md-none">
             <% if (event.ticketsAvailable && !event.externalBooking && event.allowBookings) { %>
