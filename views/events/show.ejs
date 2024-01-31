@@ -66,7 +66,7 @@ function toTitleCase(str) {
                                     </div>
                                     <% if (event.catering.choiceRequired && event.attendees.filter(a => a.user.equals(currentUser._id)).length > 0) { %>
                                     <div class="col-4 text-end">
-                                        <a href="#" class="btn btn-secondary">Submit your meal choices</a>
+                                        <a href="/events/<%= event._id %>/catering" class="btn btn-secondary">Submit your meal choices</a>
                                     </div>
                                     <% } %>
                                 </div>

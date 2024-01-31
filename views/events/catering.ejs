@@ -2,24 +2,39 @@
 <% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
 <div class="card shadow py-3 px-3">
     <div class="card-header bg-white">
-        <h4><%= event.name %> - Catering Choices</h4>
+        <h4><%= booking.event.name %> - Catering Choices</h4>
     </div>
     <div class="card-body">
-        <% const catering = JSON.parse(JSON.stringify(event.catering)) %>
-        <div class="row">
-        <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
-            <div class="col text-center">
-                <div class="lead"><%=  dayNames[new Date(d).getDay()] %></div>
-                <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
-                    <p class="mb-0 mt-3"><b><%= catering.menu.Saturday.meals[meal].name %></b></p>
-                    <ul class="list-group list-group-flush">
-                        <% for (option of catering.menu[dayNames[new Date(d).getDay()]].meals[meal].options){ %>
-                            <li class="list-group-item" style="border-bottom:none"><%= option %></li>
-                            <% } %>
-                    </ul>
-                <% } %>
+        <form action="/events/booking/<%= booking._id %>/catering" method="POST" class="validated-form" novalidate>
+            <% const catering = JSON.parse(JSON.stringify(booking.event.catering)) %>
+            <div class="row">
+            <% for (var d = new Date(booking.event.eventStart); d <= new Date(booking.event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                <div class="col text-center">
+                    <div class="lead"><%=  dayNames[new Date(d).getDay()] %></div>
+                    <% let mealIndex = 0; %>
+                    <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
+                        <p class="mb-0 mt-3"><b><%= catering.menu[dayNames[new Date(d).getDay()]].meals[meal].name %></b></p>
+                        <ul class="list-group list-group-flush">
+                            <% let index = 0; %>
+                            <input type="hidden" name="cateringChoices[<%= new Date(d).getDay() %><%= mealIndex %>][day]" value="<%= dayNames[new Date(d).getDay()] %>">
+                                        <input type="hidden" name="cateringChoices[<%= new Date(d).getDay() %><%= mealIndex %>][meal]" value="<%= catering.menu[dayNames[new Date(d).getDay()]].meals[meal].name %>">
+                            <% for (option of catering.menu[dayNames[new Date(d).getDay()]].meals[meal].options){ %>
+                                <li class="list-group-item" style="border-bottom:none">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input" type="radio" name="cateringChoices[<%= new Date(d).getDay() %><%= mealIndex %>][choice]" id="<%= `${dayNames[new Date(d).getDay()]}${mealIndex}${index}` %>" value="<%= option %>" required>
+                                        <label class="form-check-label" for="<%= `${dayNames[new Date(d).getDay()]}${mealIndex}${index}` %>">
+                                          <%= option %>
+                                        </label>
+                                      </div>                                      
+                                </li>
+                            <% index++;} %>
+                            
+                        </ul>
+                    <% mealIndex++; } %>
+                    <button class="btn btn-success mt-3">Save my meal choices</button>
+                </div>
+            <% } %>
             </div>
-        <% } %>
-        </div>
+        </form>
     </div>
 </div>

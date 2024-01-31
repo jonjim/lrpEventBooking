@@ -29,7 +29,6 @@ async function sendEmail(addr, subject, content, attachment, fileName) {
         from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`,
         to: addr,
         subject: subject,
-        text: 'This e-mail require HTML enabled to view.',
         html: content,
         attachments: []
     };

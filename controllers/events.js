@@ -292,14 +292,43 @@ module.exports.eventSignInSearch = async (req, res, next) => {
     return res.json(booking);
 }
 
-module.exports.cateringEdit = async(req,res,next) => {
+module.exports.cateringSearch = async(req,res,next) => {
     const event = await Event.findById(req.params.id);
-    if (event.attendees.filter(a => a.user.equals(res.locals.currentUser._id)).length > 0){
-        res.render('events/catering', {title:'Catering Choices',event})
+    const bookingId = event.attendees.find(a => a.user.equals(res.locals.currentUser._id));
+    if (bookingId)
+        return res.redirect(`/events/booking/${bookingId.booking}/catering`)
+    else{
+        req.flash('error','You do not have a booking for this event!')
+        return res.redirect('/account/bookings');
+    }
+}
+
+module.exports.cateringEdit = async(req,res,next) => {
+    const booking = await EventBooking.findById(req.params.id).populate('event');
+    if (booking.user.equals(res.locals.currentUser._id)){
+        return res.render('events/catering', {title:'Catering Choices',booking})
     }
     else
     {
         req.flash('error','You do not have a booking for this event!')
-        res.redirect(`/events/${req.params.id}`);
+        return res.redirect(`/events/${req.params.id}`);
+    }
+}
+
+module.exports.cateringSubmit = async(req,res,next) => {
+    const booking = await EventBooking.findById(req.params.id).populate('event').populate('user');
+    if (booking.user.equals(res.locals.currentUser._id)){
+        booking.cateringChoices = req.body.cateringChoices;
+        booking.save();
+        res.render('email/cateringChoices', { booking: booking, title: `Your catering choices for ${booking.event.name}` }, async function(err, str) {
+            emailService.sendEmail(booking.user.username, `Your catering choices for ${booking.event.name}`, str);
+            req.flash('success','Catering requests updated');
+            return res.redirect('/account/bookings');
+        })
+    }
+    else
+    {
+        req.flash('error','You do not have a booking for this event!')
+        return res.redirect(`/events/${req.params.id}`);
     }
 }

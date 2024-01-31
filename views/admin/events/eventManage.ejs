@@ -685,13 +685,14 @@ return str.replace(/\w\S*/g, function(txt){
                 <div class="text-center"><%=  dayNames[new Date(d).getDay()] %></div>
                 <div id="meals<%=  dayNames[new Date(d).getDay()] %>">
                   <% const catering = JSON.parse(JSON.stringify(event.catering)) %>
-                  <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
+                  <% if (catering?.menu) { %>
+                  <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]]?.meals)) { %>
                     <div id="meals<%= meal %>" class="my-3">
                       <div>
-                        <input type="text" class="form-control" name="catering[menu][<%= dayNames[new Date(d).getDay()] %>][meals][<%= meal %>][name]" placeholder="Breakfast, Lunch, Dinner, etc..." value="<%= catering.menu.Saturday.meals[meal].name %>">
+                        <input type="text" class="form-control" name="catering[menu][<%= dayNames[new Date(d).getDay()] %>][meals][<%= meal %>][name]" placeholder="Breakfast, Lunch, Dinner, etc..." value="<%= catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].name %>">
                       </div>
                       <div id="options<%= meal %>" class="ms-4">
-                        <% for (option of catering.menu[dayNames[new Date(d).getDay()]].meals[meal].options){ %>
+                        <% for (option of catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].options){ %>
                           <% let optionId = Date.now().toString(36) + Math.random().toString(36).substr(2); %>
                           <div id="<%= optionId %>" class="input-group">
                             <a href="#" class="link-danger input-group-text" onclick="delMealOption('options<%=meal %>','<%= optionId %>')"><i class="bi bi-trash3-fill"></i></a>
@@ -709,7 +710,7 @@ return str.replace(/\w\S*/g, function(txt){
                         </div>
                       </div>
                     </div>
-                  <% } %>
+                  <% }} %>
                 </div>
                 <div class="d-grid gap-2 mt-3 me-2">
                   <a href="#" class="btn btn-outline-primary" onclick="addMeal('<%= dayNames[new Date(d).getDay()] %>')">Add A Meal</a>

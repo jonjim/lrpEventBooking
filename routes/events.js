@@ -34,11 +34,15 @@ router.route('/events/signin/:id')
 router.route('/events/:id')
     .get(catchAsync(controller.showEvent))
 
+router.route('/events/:id/catering')
+    .get(catchAsync(controller.cateringSearch))
+
 router.route('/events/:id/book')
     .get(isLoggedIn, catchAsync(controller.showEventBooking))
     .post(isLoggedIn, catchAsync(controller.createEventBooking))
 
-router.route('/events/:id/catering')
+router.route('/events/booking/:id/catering')
     .get(isLoggedIn, catchAsync(controller.cateringEdit))
+    .post(isLoggedIn, catchAsync(controller.cateringSubmit))
 
 module.exports = router;

@@ -73,7 +73,10 @@
                   <%= eventBooking.paypalPayer %></small>
                 </li>
                 <li class="list-group-item">
-                  <a href="/events/booking/<%= eventBooking._id %>" class="link-info"><small><i class="bi bi-ticket-detailed"></i> Update Booking</small></a><br/>
+                  <a href="/events/booking/<%= eventBooking._id %>" class="link-dark"><small><i class="bi bi-ticket-detailed"></i> Update Booking</small></a><br/>
+                  <% if (eventBooking.event.catering?.choiceRequired) { %>
+                  <a href="/events/booking/<%=eventBooking._id %>/catering" class="link-dark"><small><i class="fa fa-cutlery me-1" aria-hidden="true"> </i> Submit Catering Choices</small></a><br/>
+                  <% } %>
                   <a href="/events/booking/<%=eventBooking._id %>/ticket" class="link-dark"><small><i class="bi bi-filetype-pdf"></i> Download Ticket</small></a><br/>
                   <% if ((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff')) { %>
                     <br><small class="text-danger"><em>This event is fully booked and tickets can no longer be transfered.</em></small>

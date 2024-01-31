@@ -41,6 +41,13 @@ const eventBookingSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    cateringChoices: [
+        {
+            day: String,
+            meal: String,
+            choice: String
+        }
+    ],
     paypalOrderId: String,
     paypalPaymentId: String,
     paypalReferenceId: String,

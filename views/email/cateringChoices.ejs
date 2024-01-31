@@ -1,0 +1,16 @@
+<% layout('layouts/email') %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
+<h2 align="center" style="margin-bottom:5;"><b><%= booking.event.name %></b> </h2>
+<p align="center" style="margin-top: 0;">
+  <%= new Date(booking.event.eventStart).toLocaleDateString() %>
+  <% if (new Date(booking.event.eventStart).toLocaleDateString() != new Date(booking.event.eventEnd).toLocaleDateString()) { %> to
+  <%= new Date(booking.event.eventEnd).toLocaleDateString() %>
+  <% } %>
+</p>
+<p style="margin-bottom:0;">Thanks for submitting your catering choices! You have selected the following:</p>
+<% for (var d = new Date(booking.event.eventStart); d <= new Date(booking.event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+    <b><%=  dayNames[new Date(d).getDay()] %></b><br/>
+    <% for (day of booking.cateringChoices.filter(a => a.day == dayNames[new Date(d).getDay()])){ %>
+        <b><%= day.meal %></b> - <%= day.choice %><br/>
+    <% } %><br/>
+<% } %>

@@ -1,9 +1,10 @@
 <% layout('layouts/email') %>
-<h2 align="center" style="margin-bottom:5;"><b><%= booking.event.name %></b> </h2>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
+<h2 align="center" style="margin-bottom:5;"><b><%= event.name %></b> </h2>
 <p align="center" style="margin-top: 0;">
-  <%= new Date(booking.event.eventStart).toLocaleDateString() %>
-  <% if (new Date(booking.event.eventStart).toLocaleDateString() != new Date(booking.event.eventEnd).toLocaleDateString()) { %> to
-  <%= new Date(booking.event.eventEnd).toLocaleDateString() %>
+  <%= new Date(event.eventStart).toLocaleDateString() %>
+  <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
+  <%= new Date(event.eventEnd).toLocaleDateString() %>
   <% } %>
 </p>
 <p style="margin-bottom:0;">Please find the catering information for the event below<%= event.catering.choiceRequired ? ', and indicate your choices for the event.' : '.' %></p>
