@@ -9,6 +9,7 @@
 </p>
 <p style="margin-bottom:0;">Please find the catering information for the event below<%= event.catering.choiceRequired ? ', and indicate your choices for the event.' : '.' %></p>
 <% const catering = JSON.parse(JSON.stringify(event.catering)) %>
+<% if (catering.menu) { %>
 <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
     <b><%=  dayNames[new Date(d).getDay()] %></b><br/>
     <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
@@ -19,7 +20,7 @@
         <% } %>
         </ul>
     <% } %>
-<% } %>
+<% }} %>
 <% if (event.catering.choiceRequired) { %>
     <a href="<%= rootUrl %>/events/<%= event._id %>/catering">Please indicate your choices online</a>
 <% } %>

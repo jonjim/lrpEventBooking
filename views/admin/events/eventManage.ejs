@@ -883,4 +883,9 @@ return str.replace(/\w\S*/g, function(txt){
     else
       document.getElementById(parent).removeChild(option);
   }
+
+  function emailCatering(){
+    document.getElementById('cateringForm').action = '/admin/events/<%= event._id %>/catering?email=true'
+    document.getElementById('cateringForm').submit()
+  }
 </script>

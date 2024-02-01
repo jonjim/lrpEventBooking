@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate') %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
 <% if (eventBookings.length === 0) { %>
 <div class="mt-5 pt-5">
   <h3 class="text-center mt-5">You haven't booked for any events yet!</h3>
@@ -67,11 +68,36 @@
                   <%= eventTicket.description %>
                 </li>
                 <% } %>
-                <% if (eventBooking.paid) { %>
+                <% if (eventBooking.paid || eventBooking.payOnGate) { %>
                 <li class="list-group-item"><small class="text-muted">
                   Paid:<%= new Date(eventBooking.bookingPaid).toLocaleDateString() %><br>
                   <%= eventBooking.paypalPayer %></small>
                 </li>
+                <% if (eventBooking.event.catering?.choiceRequired && eventBooking.cateringChoices.length > 0) { %>
+                  <li class="list-group-item px-0">
+                    <div class="accordion accordion-flush" id="accordionCatering<%= eventBooking._id %>">
+                      <div class="accordion-item">
+                        <h6 class="accordion-header " id="cateringHeader">
+                          <button class="accordion-button py-1 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCateringTab<%= eventBooking._id %>" aria-expanded="false" aria-controls="accordingCateringTab<%= eventBooking._id %>">
+                            Catering Choices
+                          </button>
+                        </h6>
+                        <div id="accordionCateringTab<%= eventBooking._id %>" class="accordion-collapse collapse" aria-labelledby="cateringHeader" data-bs-parent="#accordionCatering<%= eventBooking._id %>">
+                          <div class="accordion-body px-0">
+                            <small>
+                            <% for (var d = new Date(eventBooking.event.eventStart); d <= new Date(eventBooking.event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                              <p><b><%=  dayNames[new Date(d).getDay()] %></b><br/>
+                              <% for (day of eventBooking.cateringChoices.filter(a => a.day == dayNames[new Date(d).getDay()])){ %>
+                                  <b><%= day.meal %></b> - <%= day.choice %><br/>
+                              <% } %></p>
+                          <% } %>
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <% } %>
                 <li class="list-group-item">
                   <a href="/events/booking/<%= eventBooking._id %>" class="link-dark"><small><i class="bi bi-ticket-detailed"></i> Update Booking</small></a><br/>
                   <% if (eventBooking.event.catering?.choiceRequired) { %>

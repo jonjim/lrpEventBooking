@@ -9,9 +9,11 @@
             <% const catering = JSON.parse(JSON.stringify(booking.event.catering)) %>
             <div class="row">
             <% for (var d = new Date(booking.event.eventStart); d <= new Date(booking.event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                <% if (catering.menu) { %>
                 <div class="col text-center">
                     <div class="lead"><%=  dayNames[new Date(d).getDay()] %></div>
                     <% let mealIndex = 0; %>
+                    
                     <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
                         <p class="mb-0 mt-3"><b><%= catering.menu[dayNames[new Date(d).getDay()]].meals[meal].name %></b></p>
                         <ul class="list-group list-group-flush">
@@ -27,13 +29,12 @@
                                         </label>
                                       </div>                                      
                                 </li>
-                            <% index++;} %>
-                            
+                            <% index++;} %> 
                         </ul>
                     <% mealIndex++; } %>
                     <button class="btn btn-success mt-3">Save my meal choices</button>
                 </div>
-            <% } %>
+            <% }} %>
             </div>
         </form>
     </div>

@@ -288,12 +288,24 @@ module.exports.customEmail = async(req,res,next) =>{
 }
 
 module.exports.catering = async(req,res,next) => {
-    const event = await Event.findById(req.params.id,{strict:false});
+    const event = await Event.findById(req.params.id,{strict:false}).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } });
     req.body.catering.choiceRequired = req.body.catering.choiceRequired ? req.body.catering.choiceRequired == 'on' ? true : false : false;
     req.body.catering.display = req.body.catering.display ? req.body.catering.display == 'on' ? true : false : false;
     if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
         event.catering = req.body.catering;
-        const response = await Event.findByIdAndUpdate(req.params.id,{catering: req.body.catering},{strict:false, new: true, toJson: true})
+        const response = await Event.findByIdAndUpdate(req.params.id, { catering: req.body.catering }, { strict: false, new: true, toJson: true })
+        if (req.query.email) {
+            res.render('email/catering', { title: `This is an important message about your event`, event }, async function(err, str) {
+                if (err) throw new ExpressError(err, 500)
+                for (attendee of event.attendees){
+                    if (attendee.user){
+                        await emailService.sendEmail(attendee.user.username,`${event.name} - Catering Information`,str)
+                    }
+                }
+                req.flash('success','Catering information e-mailed!')
+                return res.redirect(`/admin/events/${req.params.id}/manage`);
+            })
+        } 
         return res.redirect(`/admin/events/${req.params.id}/manage`);
     } else {
         req.flash('error', `You do not have permission to manage ${event.name}`)
