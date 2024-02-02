@@ -116,7 +116,7 @@ module.exports.updateEvent = async(req, res, next) => {
         if (updatedEvent.eventHost.eventSystem.webhooks?.discord)
             webhooks.discordWebhook(res, updatedEvent.eventHost.eventSystem.webhooks.discord, updatedEvent)
         if (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord)
-            await Event.findByIdAndUpdate(req, params.id, { webhooks: { discord: true } });
+            await Event.findByIdAndUpdate(req.params.id, { webhooks: { discord: true } });
     }
     req.flash('success', `${event.name} updated!`);
     res.redirect(`/events/${req.params.id}`)
