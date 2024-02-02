@@ -8,6 +8,7 @@ const emailService = require('../utils/email');
 const ExpressError = require('../utils/ExpressError');
 const {attendeeUpdate} = require('../utils/systemCheck')
 const emailRecord = require('../models/emailRecord')
+const webhooks = require('../utils/webhooks')
 
 module.exports.listEvents = async(req, res, next) => {
     const eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
@@ -101,10 +102,21 @@ module.exports.updateEvent = async(req, res, next) => {
     req.body.event.eventApproved = req.body.event.eventApproved ? req.body.event.eventApproved == 'on' ? true : false : false;
     req.body.event.visible = req.body.event.visible ? req.body.event.visible == 'on' ? true : false : false;
     req.body.event.overflowQueue = req.body.event.overflowQueue ? req.body.event.overflowQueue == 'on' ? true : false : false;
-    const event = await Event.findByIdAndUpdate(id, { $set: {...req.body.event } }, { new: true });
+    const event = await Event.findById(req.params.id).populate('eventTickets').populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } })
+    const updatedEvent = await Event.findByIdAndUpdate(id, { $set: {...req.body.event } }, { new: true }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
     if (req.file) {
         event.img = req.file;
-        await event.save();
+        await updatedEvent.save();
+    }
+    if (event.visible != req.body.event.visible && req.body.event.visible == true && !updatedEvent.webhooks?.discord) {
+        if (res.locals.config.webhooks?.discord)
+            webhooks.discordWebhook(res, res.locals.config.webhooks.discord, updatedEvent)
+        if (updatedEvent.eventHost.webhooks?.discord)
+            webhooks.discordWebhook(res, updatedEvent.eventHost.webhooks.discord, updatedEvent)
+        if (updatedEvent.eventHost.eventSystem.webhooks?.discord)
+            webhooks.discordWebhook(res, updatedEvent.eventHost.eventSystem.webhooks.discord, updatedEvent)
+        if (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord)
+            await Event.findByIdAndUpdate(req, params.id, { webhooks: { discord: true } });
     }
     req.flash('success', `${event.name} updated!`);
     res.redirect(`/events/${req.params.id}`)

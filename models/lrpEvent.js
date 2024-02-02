@@ -144,6 +144,9 @@ const lrpEventSchema = new mongoose.Schema({
         camping: String,
         bunks: String,
         otherNotes: String
+    },
+    webhooks: {
+        discord: Boolean
     }
 }, {
     virtuals: {

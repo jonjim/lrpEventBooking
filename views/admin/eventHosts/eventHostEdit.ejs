@@ -47,6 +47,11 @@
                                     <label for="hostEmailAddress">Contact E-mail Address</label>
                                     <input type="text" id="hostEmailAddress" name="contactAddress" value="<%= host.contactAddress %>" class="form-control">
                                 </div>
+                                <div class="mb-3 input-group" title="Discord Webhook">
+                                    <span class="input-group-text"><i class="bi bi-discord me-2"></i> Webhook</span>
+                                    <input type="url" name="webhooks[discord]" id="discordWebhook" value="<%= host.webhooks?.discord %>" class="form-control">
+                                    <div class="form-text">Link the website into a Discord Webhook to automatically post event adverts.</div>
+                                </div>
                                 <div class="mb-3">
                                     <label for="hostPaypalAddress">Paypal E-mail Address</label>
                                     <input type="text" id="hostPaypalAddress" name="paypalAddress" value="<%= host.paypalAddress %>" class="form-control">
@@ -76,6 +81,7 @@
                         <span class="align-middle"><img id="eventImg" src="<%= host.img.url %>"
                         class="img-fluid rounded-start py-3 px-3" alt="..."></span>
                     </div>
+                    
                 </div>
             </div>
             <div class="mb-3">

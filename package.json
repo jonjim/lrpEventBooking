@@ -33,6 +33,7 @@
     "passport-local-mongoose": "^7.0.0",
     "playwright": "^1.40.1",
     "rss": "^1.2.2",
+    "turndown": "^7.1.2",
     "unique-names-generator": "^4.7.1"
   }
 }

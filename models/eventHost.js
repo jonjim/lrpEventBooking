@@ -24,7 +24,10 @@ const eventHostSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'eventSystems'
     },
-    terms: String
+    terms: String,
+    webhooks: {
+        discord: String
+    }
 })
 
 eventHostSchema.virtual('img.path')

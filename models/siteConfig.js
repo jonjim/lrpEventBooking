@@ -17,7 +17,10 @@ const siteConfigSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    hostingPaypal: String
+    hostingPaypal: String,
+    webhooks: {
+        discord: String
+    }
 }, {
     virtuals: {
         imgThumbnail: {

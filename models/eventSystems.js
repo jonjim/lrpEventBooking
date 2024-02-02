@@ -53,6 +53,9 @@ const eventSystemSchema = new mongoose.Schema({
     sanctioningFee: {
         type: Number,
         default: 0
+    },
+    webhooks: {
+        discord: String
     }
 })
 

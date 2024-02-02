@@ -31,6 +31,11 @@
                             <label for="techContactEmail">Technical Contact E-mail</label>
                             <input type="email" name="techContactEmail" class="form-control" id="techContactEmail" value="<%= config.techContactEmail %>">
                         </div>
+                        <div class="mb-3 input-group" title="Discord Webhook">
+                            <span class="input-group-text"><i class="bi bi-discord me-2"></i> Webhook</span>
+                            <input type="url" name="webhooks[discord]" id="discordWebhook" value="<%= config.webhooks?.discord %>" class="form-control">
+                            <div class="form-text">Link the website into a Discord Webhook to automatically post event adverts.</div>
+                        </div>
                         <div class="mb-3 row">
                             <div class="col">
                                 <label for="hostingCharge">Hosting Registration Fee</label>

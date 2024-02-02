@@ -8,7 +8,8 @@ const { systemCheck, attendeeUpdate } = require('../utils/systemCheck');
 const ics = require('ics');
 const moment = require("moment")
 const RSS = require('rss');
-const pdfService = require('../utils/pdf')
+const pdfService = require('../utils/pdf');
+
 
 module.exports.upcomingEvents = async(req, res, next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
@@ -51,7 +52,13 @@ module.exports.icsEvents = async(req,res,next) => {
 }
 
 module.exports.rssEvents = async(req,res,next) => {
-    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' }).filter(a => a.eventHost.eventSystem.active == true);
+    let eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    if (req.query.system)
+        eventList = eventList.filter(a => a.eventHost.eventSystem.active == true && a.eventHost.eventSystem.systemRef == req.query.system)
+    else if (req.query.host)
+        eventList = eventList.filter(a => a.eventHost.eventSystem.active == true && a.eventHost._id.equals(req.query.host))
+    else
+        eventList = eventList.filter(a => a.eventHost.eventSystem.active == true)
     var feed = new RSS({
         title: res.locals.config.siteName,
         description: res.locals.config.siteDescription,
@@ -59,15 +66,16 @@ module.exports.rssEvents = async(req,res,next) => {
         image_url: res.locals.config.siteLogo.url,
         feed_url: `${res.locals.rootUrl}/rss`
     })
-    for (e of eventList){
+    for (lrpEvent of eventList){
         feed.item({
-            title: e.name,
-            description: e.promoDescription,
-            url: `${res.locals.rootUrl}/events/${e._id}`,
-            guid: e._id,
-            date: e.eventStart
+            title: lrpEvent.name,
+            description: lrpEvent.promoDescription,
+            url: `${res.locals.rootUrl}/events/${lrpEvent._id}`,
+            guid: lrpEvent._id,
+            date: lrpEvent.eventStart
         })
     }
+
     res.contentType("application/xml");
     res.send(feed.xml({indent: true}));
 }
