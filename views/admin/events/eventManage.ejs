@@ -277,7 +277,7 @@ return str.replace(/\w\S*/g, function(txt){
                 </tr>
                 <tr class="<%= (projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
                   <td><b>Projected Balance:</b></td>
-                  <td class="text-end"><b><%%= currencyOutput(projectedPlayerTickets - projectedFees - event.registrationFee.value - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b>
+                  <td class="text-end"><b><%= currencyOutput(projectedPlayerTickets - projectedFees - event.registrationFee.value - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b>
                   </td>
                 </tr>
               </table>
