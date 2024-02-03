@@ -31,7 +31,7 @@
             <tbody>
                 <% for (email of emails) { %>
                     <tr>
-                        <td width="1%" style="white-space: nowrap;"><%= new Date(email.date).toLocaleDateString() %> <%= new Date(email.date).toLocaleTimeString() %></td>
+                        <td width="1%" style="white-space: nowrap;"><%= dateOutput(email.date) %> <%= timeOutput(email.date) %></td>
                         <td><%= email.user?.username %></td>
                         <td><%= email.event?.name %></td>
                         <td width="33%"><%= email.subject %></td>

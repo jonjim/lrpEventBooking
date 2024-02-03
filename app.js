@@ -54,6 +54,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
 
+
 const Auth = require('./models/user')
 const siteConfig = require('./models/siteConfig');
 
@@ -148,6 +149,7 @@ loadConfig().then((configRecord) => {
 })
 
 const {getSystemData} = require('./utils/systemCheck')
+const {dateOutput,timeOutput,currencyOutput} = require('./utils/generic')
 app.use( async (req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -158,7 +160,11 @@ app.use( async (req, res, next) => {
     res.locals.hostGroups = ['eventHost', 'admin', 'superAdmin'];
     res.locals.rootUrl = process.env.ROOT_URL
     res.locals.systemData = getSystemData
+    res.locals.dateOutput = dateOutput
+    res.locals.timeOutput = timeOutput
+    res.locals.currencyOutput = currencyOutput
     res.locals.config = await loadConfig()
+
     res.locals.paypalScript = `https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_ID : process.env.PAYPAL_CLIENT_ID}&currency=GBP`
     next();
 })

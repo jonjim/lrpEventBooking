@@ -26,9 +26,9 @@
 				<h5>Event Dates</h5>
 			</li>
 			<li class="list-group-item">
-				<%= new Date(event.eventStart).toLocaleDateString() %>
-				<% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-				<%= new Date(event.eventEnd).toLocaleDateString() %>
+				<%= dateOutput(event.eventStart) %>
+				<% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+				<%= dateOutput(event.eventEnd) %>
 				<% } %>
 			</li>
 		</ul>
@@ -47,9 +47,9 @@
 				<h5>Player Ticket Prices</h5>
 			</li>
 			<% var ticketCount = 0; for (var i = 0; i < event.eventTickets.length;i++) { if (['player','playerchild','mealticket','mealticketchild'].includes(event.eventTickets[i].ticketType) && new Date(event.eventTickets[i].availableTo) >= new Date() ) { ticketCount++;%>
-                <li class="list-group-item">£
-                    <%= event.eventTickets[i].cost %> -
-                    <%= event.eventTickets[i].description %><br><small><%= new Date(event.eventTickets[i].availableFrom).toLocaleDateString() %> - <%= new Date(event.eventTickets[i].availableTo).toLocaleDateString() %></small>
+                <li class="list-group-item">
+                    <%= currencyOutput(event.eventTickets[i].cost) %> -
+                    <%= event.eventTickets[i].description %><br><small><%= dateOutput(event.eventTickets[i].availableFrom) %> - <%= dateOutput(event.eventTickets[i].availableTo) %></small>
                 </li>
 			<% }} if (ticketCount === 0) { %>
                 <li class="list-group-item">

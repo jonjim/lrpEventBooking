@@ -1,9 +1,9 @@
 <% layout('layouts/email') %>
 <h2 align="center" style="margin-bottom:5;"><b><%= booking.event.name %></b> </h2>
 <p align="center" style="margin-top: 0;">
-  <%= new Date(booking.event.eventStart).toLocaleDateString() %>
-  <% if (new Date(booking.event.eventStart).toLocaleDateString() != new Date(booking.event.eventEnd).toLocaleDateString()) { %> to
-  <%= new Date(booking.event.eventEnd).toLocaleDateString() %>
+  <%= dateOutput(booking.event.eventStart) %>
+  <% if (dateOutput(booking.event.eventStart) != dateOutput(booking.event.eventEnd)) { %> to
+  <%= dateOutput(booking.event.eventEnd) %>
   <% } %>
 </p>
 <p style="margin-bottom:0;">This is your receipt for
@@ -12,7 +12,7 @@
 <ul style="margin-top:0;">
   <% for (ticket of booking.eventTickets) { %>
   <li>
-    <%= ticket.description %>
+    <%= currencyOutput(ticket.cost) %> - <%= ticket.description %>
   </li>
   <% } %>
 </ul>

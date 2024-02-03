@@ -12,10 +12,10 @@
     </div>
     <div class="col-6 text-white mt-4 pt-4" style="margin-left:-95px;">
         <h4 class="mt-2" style="margin-bottom: 0px;"><%= eventBooking.event.name %></h4>
-        <%= new Date(eventBooking.event.eventStart).toLocaleDateString() %>
-        <% if (new Date(eventBooking.event.eventStart).toLocaleDateString() != new Date(eventBooking.event.eventEnd).toLocaleDateString()) { %> to
-          <%= new Date(eventBooking.event.eventEnd).toLocaleDateString() %>
-        <% } %>
+        <%= dateOutput(eventBooking.event.eventStart) %>
+                <% if (dateOutput(eventBooking.event.eventStart) != dateOutput(eventBooking.event.eventEnd)) { %> to
+                <%= dateOutput(eventBooking.event.eventEnd) %>
+                <% } %>
         <hr class="mt-0">
         <div class=""><small><em><%= eventBooking.event.location %></em></small></div>
         <div class="row mt-2">
@@ -33,7 +33,7 @@
                 <div class="col">
                     <ul class="list-group  list-group-flush list-group-horizontal">
                         <% for (ticket of eventBooking.eventTickets) { %>
-                            <li class="list-group-item"><%= ticket.description %></li>
+                            <li class="list-group-item"><%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></li>
                         <% } %>
                     </ul>
                 </div>
@@ -59,25 +59,25 @@
     <div class="col">
         <h2 class="mb-3">Event Booking</h2>
         <p class="mb-0"><b><%= eventBooking.event.name %></b></p>
-        <p><%= new Date(eventBooking.event.eventStart).toLocaleDateString() %>
-        <% if (new Date(eventBooking.event.eventStart).toLocaleDateString() != new Date(eventBooking.event.eventEnd).toLocaleDateString()) { %> to
-          <%= new Date(eventBooking.event.eventEnd).toLocaleDateString() %>
-        <% } %><br/>
+        <p><%= dateOutput(eventBooking.event.eventStart) %>
+            <% if (dateOutput(eventBooking.event.eventStart) != dateOutput(eventBooking.event.eventEnd)) { %> to
+            <%= dateOutput(eventBooking.event.eventEnd) %>
+            <% } %><br/>
         <a class="link-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(eventBooking.event.location) %>"><%= eventBooking.event.location %></a></p>
         <p>
             <%= systemPrefix %> <%= eventBooking.event.eventHost.eventSystem.name %> event<% if (eventBooking.event.eventHost.display == true) { %>, hosted by the <%= eventBooking.event.eventHost.name %><% } %>.<br/>
             Contact your event organiser at<br/><a class="link-dark" href="mailto:<%= eventBooking.event.eventHost.contactAddress %>"><%= eventBooking.event.eventHost.contactAddress %></a>.
         </p>
-        <p><b>Booked:</b> <%= new Date(eventBooking.bookingMade).toLocaleDateString() %> <%= new Date(eventBooking.bookingMade).toLocaleTimeString() %><br/>
-        <b>Paid:</b> <%= new Date(eventBooking.bookingPaid).toLocaleDateString() %> <%= new Date(eventBooking.bookingPaid).toLocaleTimeString() %><br/></p>
+        <p><b>Booked:</b> <%= dateOutput(eventBooking.bookingMade) %> <%= timeOutput(eventBooking.bookingMade) %><br/>
+        <b>Paid:</b> <%= dateOutput(eventBooking.bookingPaid) %> <%= timeOutput(eventBooking.bookingPaid) %><br/></p>
         <b>Purchased Event Tickets</b>
         <ul class="list-group list-group-flush">
             <% for (ticket of eventBooking.eventTickets) { %>
-                <li class="list-group-item"><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(ticket.cost) %> <%= ticket.description %></li>
+                <li class="list-group-item"><%= currencyOutput(ticket.cost) %> <%= ticket.description %></li>
             <% } %>
         </ul>
-        <p><b>Total Due:</b> <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalDue) %><br/>
-            <b>Total Paid:</b> <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalPaid) %>
+        <p><b>Total Due:</b> <%= currencyOutput(eventBooking.totalDue) %><br/>
+            <b>Total Paid:</b> <%= currencyOutput(eventBooking.totalPaid) %>
         </p>
         <% if (eventBooking.paypalPaymentId) { %>
             <p>
@@ -92,7 +92,7 @@
         <h2 class="mb-3">Your Details</h2>
         <p>
             <b>Name:</b> <%= `${eventBooking.firstname} ${eventBooking.surname}` %><br/>
-            <b>D.O.B:</b> <%= new Date(eventBooking.user?.dob).toLocaleDateString() %><br/>
+            <b>D.O.B:</b> <%= dateOutput(eventBooking.user?.dob) %><br/>
             <b>Email:</b> <%= eventBooking.user.username %>
         </p>
         <p>

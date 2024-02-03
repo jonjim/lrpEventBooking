@@ -1,9 +1,9 @@
 <% layout('layouts/email') %>
 <h2 align="center" style="margin-bottom:5;"><b><%= event.name %> <span style="color:red;">Cancelled</span></b> </h2>
 <p align="center" style="margin-top: 0;">
-  <%= new Date(event.eventStart).toLocaleDateString() %>
-  <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-  <%= new Date(event.eventEnd).toLocaleDateString() %>
+  <%= dateOutput(event.eventStart) %>
+  <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+  <%= dateOutput(event.eventEnd) %>
   <% } %>
 </p>
 <p style="margin-bottom:0;">We are sorry to inform you that

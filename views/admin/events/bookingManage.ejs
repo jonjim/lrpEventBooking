@@ -22,10 +22,6 @@
                     <td class="fw-bold">Name</td>
                     <td><%= eventBooking.firstname %> <%= eventBooking.surname %><% if (typeof eventBooking.user != 'undefined') { %><br><small><i><%= eventBooking.user.username %></i></small> <% } %></td>
                 </tr>
-                <tr>
-                    <td class="fw-bold">Player ID</td>
-                    <td class="<%= eventBooking.playerId == 0 ? 'text-danger' : ''%>"><%= eventBooking.playerId %></td>
-                </tr>
                 <% if (typeof eventBooking.user != 'undefined' && !eventBooking.user.equals(eventBooking.originalUser)) { %>
                 <tr>
                     <td class="fw-bold">Purchased By</td>
@@ -34,18 +30,18 @@
                     <% } %>
                     <tr>
                         <td class="fw-bold">Date Booked</td>
-                        <td><%= new Date(eventBooking.bookingMade).toLocaleDateString() %> <%= new Date(eventBooking.bookingMade).toLocaleTimeString() %></td>
+                        <td><%= dateOutput(eventBooking.bookingMade) %> <%= timeOutput(eventBooking.bookingMade) %></td>
                     </tr>
                     <% if (eventBooking.totalPaid > 0) {%>
                         <tr>
                             <td class="fw-bold">Amount Paid</td>
-                            <td><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalPaid) %></td>
+                            <td><%= currencyOutput(eventBooking.totalPaid) %></td>
                         </tr>
                     <% } %>
                 <% if (eventBooking.paid) { %>
                 <tr>
                     <td class="fw-bold">Date Paid</td>
-                    <td><%= new Date(eventBooking.bookingPaid).toLocaleDateString() %> <%= new Date(eventBooking.bookingPaid).toLocaleTimeString() %></td>
+                    <td><%= dateOutput(eventBooking.bookingPaid) %> <%= timeOutput(eventBooking.bookingPaid) %></td>
                 </tr>
                 <tr>
                     <td class="fw-bold">Payment Method</td>
@@ -54,7 +50,7 @@
                 <% } else { %>
                     <tr>
                         <td class="fw-bold">Amount Due</td>
-                        <td><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalDue) %><%= eventBooking.payOnGate ? ' (Pay On Gate)' : '' %></td>
+                        <td><%= currencyOutput(eventBooking.totalDue) %><%= eventBooking.payOnGate ? ' (Pay On Gate)' : '' %></td>
                     </tr>
                 <% } if (eventBooking.paypalPaymentId) { %>
                     <tr>
@@ -76,7 +72,7 @@
                                     <% if (['monster','monsterchild'].includes(eventTicket.ticketType)) { %> <i class='bi bi-bug-fill nav_icon'></i><% } %>
                                     <% if (['staff'].includes(eventTicket.ticketType)) { %> <i class="bi bi-stopwatch"></i><% } %>
                                     <% if (['mealticket','mealticketchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-cutlery" aria-hidden="true"></i><% } %>
-                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventTicket.cost) %> - <%= eventTicket.description %> <a class="link-dark" href="" data-bs-toggle="modal" data-bs-target="#deleteTicketModal"><i class="bi bi-trash"></i></a>
+                                    <%= ticket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - `: '' %><%= eventTicket.description %> <a class="link-dark" href="" data-bs-toggle="modal" data-bs-target="#deleteTicketModal"><i class="bi bi-trash"></i></a>
                                 </li>
                             <% } %>
                         </ul>

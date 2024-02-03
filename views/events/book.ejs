@@ -87,8 +87,8 @@
                                 for (ticket of playerTickets) { %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerTickets]" <%= playerTickets.length == 1 ? 'checked' : '' %>>
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 								<div class="invalid-feedback">You must select a ticket</div>
 							</div>
 							<%  } %>
@@ -104,8 +104,8 @@
 							<% for (ticket of playerBunkTickets){ %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerBunks]">
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 							</div>
 							<% } } } %>
 
@@ -117,7 +117,7 @@
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerMeal]">
 								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+									<%= currencyOutput(ticket.cost) %> - <%= ticket.description %></label>
 							</div>
 							<% } } %>
 							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
@@ -174,8 +174,8 @@
 							<%  for (ticket of monsterTickets) { %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterTicket]" <%= monsterTickets.length == 1 ? 'checked' : '' %>>
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 								<div class="invalid-feedback">You must select a ticket</div>
 							</div>
 							<% }} %>
@@ -192,8 +192,8 @@
 							<% for (ticket of monsterBunkTickets){ %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterBunk]">
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 							</div>
 							<% } } }%>
 
@@ -203,8 +203,8 @@
 							<% for (ticket of mealTickets){ %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[monsterMeal]">
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 							</div>
 							<% } } %>
 							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
@@ -257,8 +257,8 @@
 							<% for (ticket of staffTickets) { %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" required id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffTicket]" <%= staffTickets.length == 1 ? 'checked' : '' %>>
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 								<div class="invalid-feedback">You must select a ticket</div>
 							</div>
 							<% }} %>
@@ -270,8 +270,8 @@
 							<% for (ticket of staffBunkTickets){ %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="check" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffBunk]">
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 							</div>
 							<% } } %>
 
@@ -281,8 +281,8 @@
 							<% for (ticket of mealTickets){ %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffMeal]">
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
-									<%= ticket.cost %> - <%= ticket.description %></label>
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %>%= ticket.description %></label>
 							</div>
 							<% } } %>
 							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">

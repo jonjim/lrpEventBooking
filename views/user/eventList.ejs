@@ -44,8 +44,10 @@
               </h5>
               <p class="card-text">
                 <i>
-                  <%= new Date(eventBooking.event.eventStart).toLocaleDateString() %> -
-                  <%= new Date(eventBooking.event.eventEnd).toLocaleDateString() %><br /><small>
+                  <%= dateOutput(eventBooking.event.eventStart) %>
+            <% if (dateOutput(eventBooking.event.eventStart) != dateOutput(eventBooking.event.eventEnd)) { %> to
+            <%= dateOutput(eventBooking.event.eventEnd) %>
+            <% } %><br /><small>
                     <a class="link-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(eventBooking.event.location) %>"><%= eventBooking.event.location.split(',')[0] %></a>
                   </small>
                 </i>
@@ -63,14 +65,12 @@
                   <% } %>
                   <% if (['playerbunk','monsterbunk','staffbunk'].includes(eventTicket.ticketType)) { %><i class="fa fa-bed me-1" aria-hidden="true"> </i>
                   <% } %>
-                  £
-                  <%= eventTicket.cost %> -
-                  <%= eventTicket.description %>
+                  <%= ticket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - ` : '' %><%= eventTicket.description %>
                 </li>
                 <% } %>
                 <% if (eventBooking.paid || eventBooking.payOnGate) { %>
                 <li class="list-group-item"><small class="text-muted">
-                  Paid:<%= new Date(eventBooking.bookingPaid).toLocaleDateString() %><br>
+                  Paid:<%= dateOutput(eventBooking.bookingPaid) %><br>
                   <%= eventBooking.paypalPayer %></small>
                 </li>
                 <% if (eventBooking.event.catering?.choiceRequired && eventBooking.cateringChoices.length > 0) { %>

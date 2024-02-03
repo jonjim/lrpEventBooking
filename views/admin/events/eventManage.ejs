@@ -36,10 +36,10 @@ return str.replace(/\w\S*/g, function(txt){
         <%= event.location %>
       </a><br>
       <span class="small">
-        <%= new Date(event.eventStart).toLocaleDateString() %>
-        <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-        <%= new Date(event.eventEnd).toLocaleDateString() %>
-        <% } %></span><br>
+        <%= dateOutput(event.eventStart) %>
+				<% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+				<%= dateOutput(event.eventEnd) %>
+				<% } %></span><br>
 
       <a class="link-dark small" href="/admin/events/<%= event._id %>/edit"><i class="bi bi-pencil-square pe-2"></i>Edit Event</a>
     </div>
@@ -136,24 +136,24 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr>
                   <td>Total Expected:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings) %>
+                    <%= currencyOutput(totalBookings) %>
                   </td>
                 </tr>
                 <tr>
                   <td>Total Paid:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalPaid) %>
+                    <%= currencyOutput(totalPaid) %>
                   </td>
                 </tr>
                 <tr>
                   <td>Total Due:</td>
                   <td class="text-end" title="Bookings that have yet to pay">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalPaid) %>
+                    <%= currencyOutput(totalBookings - totalPaid) %>
                   </td>
                 </tr>
                 <tr>
                   <td><b>Total Income:</b></td>
-                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalPaid - totalFees) %></b></td>
+                  <td class="text-end"><b><%= currencyOutput(totalPaid - totalFees) %></b></td>
                 </tr>
               </table>
             </div>
@@ -164,7 +164,7 @@ return str.replace(/\w\S*/g, function(txt){
                   <tr>
                     <td>Registration Fee:</td>
                     <td class="text-end">
-                      <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.registrationFee.value) %>
+                      <%= currencyOutput(event.registrationFee.value) %>
                     </td>
                   </tr>
                 <% } %>
@@ -172,7 +172,7 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr>
                   <td>Site Fee:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.siteFee) %>
+                    <%= currencyOutput(event.financials.siteFee) %>
                   </td>
                 </tr>
                 <% } %>
@@ -180,7 +180,7 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr>
                   <td>Insurance:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.insurance) %>
+                    <%= currencyOutput(event.financials.insurance) %>
                   </td>
                 </tr>
                 <% } %>
@@ -188,7 +188,7 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr>
                   <td>Sanctioning Fee:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.sanctioningFee) %>
+                    <%= currencyOutput(event.financials.sanctioningFee) %>
                   </td>
                 </tr>
                 <% } %>
@@ -196,7 +196,7 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr>
                   <td>Props & Costume:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.props) %>
+                    <%= currencyOutput(event.financials.props) %>
                   </td>
                 </tr>
                 <% } %>
@@ -204,21 +204,21 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr>
                   <td>Admin Costs:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.admin) %>
+                    <%= currencyOutput(event.financials.admin) %>
                   </td>
                 </tr>
                 <% } %>
                 <tr>
                   <td>Total Paypal Fees:</td>
                   <td class="text-end" title="<%= event.eventHost.paypalPercentage %>% + <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.eventHost.paypalFixedFee) %> for each transaction">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalFees) %>
+                    <%= currencyOutput(totalFees) %>
                   </td>
                 </tr>
                 <% if (totalMeal > 0) { %>
                 <tr>
                   <td>Meal Tickets:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalMeal) %>
+                    <%= currencyOutput(totalMeal) %>
                   </td>
                 </tr>
                 <% } %>
@@ -226,13 +226,13 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr>
                   <td>Other Costs:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.financials.otherCosts) %>
+                    <%= currencyOutput(event.financials.otherCosts) %>
                   </td>
                 </tr>
                 <% } %>
                 <tr>
                   <td><b>Total Expenses:</b></td>
-                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0) + totalFees + totalMeal + event.registrationFee.value) %></b></td>
+                  <td class="text-end"><b><%= currencyOutput(Object.values(event.financials).reduce((a,b) => a + b,0) + totalFees + totalMeal + event.registrationFee.value) %></b></td>
                 </tr>
               </table>
             </div>
@@ -242,23 +242,23 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr title="Not including PayPal Fees or Meal Tickets">
                   <td>Expenses:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Object.values(event.financials).reduce((a,b) => a + b,0) + event.registrationFee.value + totalFees) %>
+                    <%= currencyOutput(Object.values(event.financials).reduce((a,b) => a + b,0) + event.registrationFee.value + totalFees) %>
                   </td>
                 </tr>
                 <tr title="Minus PayPal Fees, including Meal Tickets">
                   <td>Current Income:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees) %>
+                    <%= currencyOutput(totalBookings - totalFees) %>
                   </td>
                 </tr>
                 <tr class="<%= (totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
                   <td><b>Current Balance:</b></td>
-                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0)) - event.registrationFee.value ) %></b></td>
+                  <td class="text-end"><b><%= currencyOutput(totalBookings - totalFees - (Object.values(event.financials).reduce((a,b) => a + b,0)) - event.registrationFee.value ) %></b></td>
                 </tr>
                 <tr title="<%= event.limits.playerLimit %> Player Tickets<%= event.eventTickets.find(t => ['mealticket'].includes(t.ticketType)) ? `${event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit}  + Meal Tickets` : '' %>">
                   <td>Projected Income:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets + projectedMealTickets) %>
+                    <%= currencyOutput(projectedPlayerTickets + projectedMealTickets) %>
                   </td>
                 </tr>
                 <% if (event.eventTickets.find(t => ['mealticket'].includes(t.ticketType))) { %>
@@ -272,12 +272,12 @@ return str.replace(/\w\S*/g, function(txt){
                 <tr title="<%= event.limits.playerLimit %> Player Tickets<%= event.eventTickets.find(t => ['mealticket'].includes(t.ticketType)) ? `${event.limits.playerLimit + event.limits.monsterLimit + event.limits.staffLimit}  + Meal Tickets` : '' %>">
                   <td>Projected PayPal Fees:</td>
                   <td class="text-end">
-                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedFees) %>
+                    <%= currencyOutput(projectedFees) %>
                   </td>
                 </tr>
                 <tr class="<%= (projectedPlayerTickets - projectedFees - (Object.values(event.financials).reduce((a,b) => a + b,0))) > 0 ? 'table-success' : 'table-danger' %>">
                   <td><b>Projected Balance:</b></td>
-                  <td class="text-end"><b><%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(projectedPlayerTickets - projectedFees - event.registrationFee.value - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b>
+                  <td class="text-end"><b><%%= currencyOutput(projectedPlayerTickets - projectedFees - event.registrationFee.value - (Object.values(event.financials).reduce((a,b) => a + b,0))  ) %></b>
                   </td>
                 </tr>
               </table>
@@ -372,9 +372,9 @@ return str.replace(/\w\S*/g, function(txt){
               <td scope="row">
                 <% if (booking.paid){ %>
                 <% if (booking.paypalPaymentId) { %>
-                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= dateOutput(booking.bookingPaid) %>"></i>
                 <% } else {%>
-                <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <i class="bi bi-cash text-success" title="Manual payment <% dateOutput(booking.bookingPaid) %>"></i>
                 <% }} else if (booking.payOnGate) { %>
                 <i class="bi bi-door-open-fill"></i>
                 <% } else if (booking.inQueue){ %>
@@ -416,9 +416,9 @@ return str.replace(/\w\S*/g, function(txt){
               <td scope="row">
                 <% if (booking.paid){ %>
                 <% if (booking.paypalPaymentId) { %>
-                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= dateOutput(booking.bookingPaid) %>"></i>
                 <% } else {%>
-                <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <i class="bi bi-cash text-success" title="Manual payment <% dateOutput(booking.bookingPaid) %>"></i>
                 <% }} else if (booking.payOnGate) { %>
                 <i class="bi bi-door-open-fill"></i>
                 <% } else if (booking.inQueue){ %>
@@ -460,9 +460,9 @@ return str.replace(/\w\S*/g, function(txt){
               <td scope="row">
                 <% if (booking.paid){ %>
                 <% if (booking.paypalPaymentId) { %>
-                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <i class="bi bi-paypal text-primary" title="Payment ID: <%= booking.paypalPaymentId %> <%= dateOutput(booking.bookingPaid) %>"></i>
                 <% } else {%>
-                <i class="bi bi-cash text-success" title="Manual payment <% new Date(booking.bookingPaid).toLocaleDateString() %>"></i>
+                <i class="bi bi-cash text-success" title="Manual payment <% dateOutput(booking.bookingPaid) %>"></i>
                 <% }} else if (booking.payOnGate) { %>
                 <i class="bi bi-door-open-fill"></i>
                 <% } else if (booking.inQueue){ %>
@@ -522,7 +522,7 @@ return str.replace(/\w\S*/g, function(txt){
             </div>
             <div class="form-text">When can your event attendees except Time In to start and end for your event overall?</div>
           </div>
-          <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString())  { %>
+          <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd))  { %>
             <div class="row mb-3">
               <div class="col-6 col-md-4">
                 <label for="dailyTimeIn">Daily Time In</label>

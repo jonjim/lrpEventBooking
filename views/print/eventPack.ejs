@@ -16,10 +16,10 @@
             <%= event.location %>
           </a><br>
           <span class="small">
-            <%= new Date(event.eventStart).toLocaleDateString() %>
-            <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-            <%= new Date(event.eventEnd).toLocaleDateString() %>
-            <% } %>
+            <%= dateOutput(event.eventStart) %>
+                <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+                <%= dateOutput(event.eventEnd) %>
+                <% } %>
           </span>
     </div>
 </div>
@@ -46,7 +46,7 @@
 <div class="mb-3">
   <p class="display-6">Time-In & Time-out</p>
   <p><strong>Arrival Time-In: <%= event.returnPack?.timeInOut?.arrivalTimeIn %></strong></p>
-  <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> 
+  <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> 
     <p><strong>Daily Time-In: <%= event.returnPack?.timeInOut?.dailyTimeIn %> - <%= event.returnPack?.timeInOut?.dailyTimeOut %></strong></p>
   <% } %>
   <p><strong>Final Time-Out: <%= event.returnPack?.timeInOut?.departureTimeOut %></strong></p>

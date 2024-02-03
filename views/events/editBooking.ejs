@@ -17,8 +17,10 @@
                             </h5>
                             <p class="card-text">
                                 <i>
-                    <%= new Date(eventBooking.event.eventStart).toLocaleDateString() %> -
-                        <%= new Date(eventBooking.event.eventEnd).toLocaleDateString() %><br /><small>
+                                    <%= dateOutput(booking.event.eventStart) %>
+                                    <% if (dateOutput(booking.event.eventStart) != dateOutput(booking.event.eventEnd)) { %> to
+                                    <%= dateOutput(booking.event.eventEnd) %>
+                                    <% } %><br /><small>
                             <a class="link-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(eventBooking.event.location) %>"><%= eventBooking.event.location.split(',')[0] %></a>
                             </small>
                         </i>
@@ -44,8 +46,7 @@
                                                                         <% } %>
                                                                             <% if (['playerbunk','monsterbunk','staffbunk'].includes(eventTicket.ticketType)) { %><i class="fa fa-bed me-1" aria-hidden="true"> </i>
                                                                                 <% } %>
-                                                                                    <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventTicket.cost) %> -
-                                                                                        <%= eventTicket.description %>
+                                                                                    <%= eventTicket.cost ? > 0 `${currencyOutput(eventTicket.cost)} - ` : '' %><%= eventTicket.description %>
                                                                                             <% } %>
                                         </li>
                                 </ul>
@@ -74,10 +75,10 @@
                                 <hr>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item <%= eventBooking.totalDue > eventBooking.totalPaid ? 'text-danger' : ''  %>">Total Due:
-                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalDue) %>
+                                        <%= currencyOutput(eventBooking.totalDue) %>
                                     </li>
                                     <li class="list-group-item <%= eventBooking.totalDue === eventBooking.totalPaid ? 'text-success' : ''  %>">Total Paid:
-                                        <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(eventBooking.totalPaid)%>
+                                        <%= currencyOutput(eventBooking.totalPaid)%>
                                     </li>
                                     <% if (eventBooking.paid) { %>
                                         <li class="list-group-item">
@@ -86,8 +87,7 @@
                                                 <%= eventBooking.paypalPayer %>
                                                     </small>
                                         </li>
-                                        <% } else { let locale = Intl.DateTimeFormat().resolvedOptions().locale;
-                                            console.log(locale);%>
+                                        <% } else { let locale = Intl.DateTimeFormat().resolvedOptions().locale; %>
                                             <li class="list-group-item">
                                                 <% if (eventBooking.eventTickets.filter(a => new Date(a.availableTo) < new Date()).length > 0 ) {%>
                                                     <div class="alert alert-danger">

@@ -33,10 +33,10 @@
                                         <% } catch {} %>
                         </td>
                         <td scope="row">
-                            <%= new Date(event.eventStart).toLocaleDateString() %>
+                            <%= dateOutput(event.eventStart) %>
                         </td>
                         <td class="d-none d-md-table-cell" scope="row">
-                            <%= new Date(event.eventEnd).toLocaleDateString() %>
+                            <%= dateOutput(event.eventEnd) %>
                         </td>
                         <td class="d-none d-md-table-cell text-center <%= event.visible ? 'text-success' : 'text-danger' %>" scope="row" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
                             <%- event.visible ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>

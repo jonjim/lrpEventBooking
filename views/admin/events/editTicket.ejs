@@ -59,11 +59,11 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="availableFrom">Available From</label>
-                                <input type="date" name="availableFrom" id="availableFrom" value="<%= new Date(ticket.availableFrom).toISOString().split('T')[0] %>" required class="form-control">
+                                <input type="date" name="availableFrom" id="availableFrom" value="<%= dateOutput(ticket.availableFrom) %>" required class="form-control">
                             </div>
                             <div class="col">
                                 <label for="availableTo">Available To</label>
-                                <input type="date" value="<%= new Date(ticket.availableTo).toISOString().split('T')[0] %>" name="availableTo" id="availableTo" required class="form-control">
+                                <input type="date" value="<%= dateOutput(ticket.availableTo) %>" name="availableTo" id="availableTo" required class="form-control">
                             </div>
                         </div>
                         <div class="mb-3 text-end">

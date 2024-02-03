@@ -33,10 +33,10 @@
                     <div class="card-body pb-0">
                       <p class="card-text ms-md-5 ms-lg-4 pt-2">
                         <i>
-                          <%= new Date(event.eventStart).toLocaleDateString() %>
-                          <% if (new Date(event.eventStart).toLocaleDateString() != new Date(event.eventEnd).toLocaleDateString()) { %> to
-                          <%= new Date(event.eventEnd).toLocaleDateString() %>
-                          <% } %><br /><small>
+                          <%= dateOutput(event.eventStart) %>
+                                    <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+                                    <%= dateOutput(event.eventEnd) %>
+                                    <% } %><br /><small>
                             <%= event.location.split(',')[0] %>
                           </small>
                         </i>
