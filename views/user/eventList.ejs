@@ -65,12 +65,12 @@
                   <% } %>
                   <% if (['playerbunk','monsterbunk','staffbunk'].includes(eventTicket.ticketType)) { %><i class="fa fa-bed me-1" aria-hidden="true"> </i>
                   <% } %>
-                  <%= ticket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - ` : '' %><%= eventTicket.description %>
+                  <%= eventTicket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - ` : '' %><%= eventTicket.description %>
                 </li>
                 <% } %>
                 <% if (eventBooking.paid || eventBooking.payOnGate) { %>
                 <li class="list-group-item"><small class="text-muted">
-                  Paid:<%= dateOutput(eventBooking.bookingPaid) %><br>
+                  Paid: <%= dateOutput(eventBooking.bookingPaid) %><br>
                   <%= eventBooking.paypalPayer %></small>
                 </li>
                 <% if (eventBooking.event.catering?.choiceRequired && eventBooking.cateringChoices.length > 0) { %>
