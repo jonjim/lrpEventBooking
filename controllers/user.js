@@ -150,7 +150,7 @@ module.exports.resetPasswordForm = async(req, res, next) => {
         req.flash('error', 'This password reset link is not valid');
         return res.redirect('/');
     }
-    return res.render('user/resetPassword.ejs', { title: "Password Reset", user });
+    return res.render('user/resetPassword', { title: "Password Reset", user });
 }
 
 module.exports.resetPassword = async(req, res, next) => {
@@ -167,11 +167,11 @@ module.exports.resetPassword = async(req, res, next) => {
 }
 
 module.exports.changePasswordForm = async(req, res, next) => {
-    return res.render('user/changePassword.ejs', { title: "Password Reset" });
+    return res.render('user/changePassword', { title: "Password Reset" });
 };
 
 module.exports.changePassword = async(req, res, next) => {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(res.currentUser._id);
     req.flash('success', 'Your password has been changed')
     user.setPassword(req.body.password);
     user.resetPassword = undefined;

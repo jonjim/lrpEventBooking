@@ -100,7 +100,7 @@
 	</div>
 </div>
 <% if (currentUser) { %>
-    <% if (adminGroups.includes(currentUser.role) || (currentUser.eventHosts.includes(event.eventHost))) { %>
+    <% if (adminGroups.includes(currentUser.role) || (currentUser.eventHosts.includes(event.eventHost._id)) || currentUser.eventSystems.includes(event.eventHost.eventSystem._id)) { %>
         <div class="card shadow py-3 px-3 mb-3">
             <h5>Event Admin</h5>
             <ul class="list-group list-group-flush">

@@ -82,12 +82,21 @@ module.exports.rssEvents = async(req,res,next) => {
 
 module.exports.showEvent = async(req, res) => {
     const event = await Event.findById(req.params.id).populate('eventTickets').populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
-    const meta = {
-        title: `LARP Event Bookings: ${event.name}`,
-        description: `${event.promoDescription}`,
-        path: `/events/${event._id}`
+    if (event.eventHost.eventSystem.active || res.locals.adminGroups.includes(res.locals.currentUser.role) ||
+        (res.locals.hostGroups.includes(res.locals.currentUser.role) && (res.locals.currentUser.eventHosts.includes(event.eventHost._id) || res.locals.currentUser.eventSystems.includes(event.eventHost.eventSystem._id)))) {
+        const meta = {
+            title: `LARP Event Bookings: ${event.name}`,
+            description: `${event.promoDescription}`,
+            path: `/events/${event._id}`
+        }
+        if (!event.eventHost.eventSystem.active)
+            req.flash('error','Please note this event is not visible to the public!')
+        return res.render('events/show', { title: event.name, event, meta });
     }
-    res.render('events/show', { title: event.name, event, meta });
+    else {
+        req.flash('error', 'Could not find the selected event!')
+        return res.redirect('/');
+    }
 }
 
 module.exports.showEventBooking = async(req, res, next) => {

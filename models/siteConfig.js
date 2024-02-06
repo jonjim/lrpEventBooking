@@ -27,6 +27,11 @@ const siteConfigSchema = new mongoose.Schema({
             get() {
                 return this.siteLogo.url.replace('/upload', '/upload/c_fill,w_250,h_113');
             }
+        },
+        siteAvatar:{
+            get() {
+                return this.siteLogo.url.replace('/upload', '/upload/c_fill,w_128/a_-45');
+            }
         }
     }
 }, {

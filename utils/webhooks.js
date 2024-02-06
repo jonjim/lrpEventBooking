@@ -8,7 +8,9 @@ module.exports.discordWebhook = async (res, webhook, lrpEvent) => {
             "Content-Type": 'application/json'
         },
         body: JSON.stringify({
-            content: `A new event from ${res.locals.config.siteName}!`,
+            username: res.locals.config.siteName,
+            avatar_url: res.locals.config.siteAvatar,
+            content: '',
             embeds: [{
                 author: {
                     name: `${lrpEvent.eventHost.eventSystem.name}${lrpEvent.eventHost.display ? ` - ${lrpEvent.eventHost.name}` : ''}`,
@@ -32,8 +34,9 @@ module.exports.discordWebhook = async (res, webhook, lrpEvent) => {
                 image: {
                     url: typeof lrpEvent.img.url === 'undefined' ? lrpEvent.eventHost.img.url : lrpEvent.imgThumbnail
                 },
-                thumbnail: {
-                    url: res.locals.config.siteLogo.url
+                footer: {
+                    text: `Event booking from ${res.locals.config.siteName}`,
+                    icon_url: res.locals.config.imgThumbnail
                 }
             }]
         })

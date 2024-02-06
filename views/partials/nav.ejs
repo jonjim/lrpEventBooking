@@ -31,9 +31,9 @@
                                 </li>
                                 <li><a class="dropdown-item text-muted" href="/admin/hosts">Manage Event Hosts</a></li>
                                 <% if (['systemAdmin','admin','superAdmin'].includes(currentUser.role)) { %>
-                                    <li><a class="dropdown-item text-muted" href="/admin/events/all">Manage Events</a></li>
                                     <li><a href="/admin/systems" class="dropdown-item text-muted">Manage Event Systems</a></li>
-                                    <% if (['superAdmin'].includes(currentUser.role)) { %>
+                                    <% if (['admin','superAdmin'].includes(currentUser.role)) { %>
+                                        <li><a class="dropdown-item text-muted" href="/admin/events/all">Manage All Events</a></li>
                                         <li><a class="dropdown-item text-muted" href="/admin/users">Manage Users</a></li>
                                         <li><a href="/admin/email" class="dropdown-item text-muted">Manage E-mails</a></li>
                                         <li>

@@ -19,7 +19,8 @@ module.exports.listEvents = async(req, res, next) => {
 };
 
 module.exports.listHostedEvents = async(req, res, next) => {
-    const eventList = await Event.find({ eventHost: { $in: req.user.eventHosts } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
+    let eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
+    eventList = eventList.filter(a => req.user.eventHosts.includes(a.eventHost._id) || req.user.eventSystems.includes(a.eventHost.eventSystem._id))
     res.render('admin/events/eventsHostedList', {
         title: 'Event Management',
         events: eventList
@@ -30,7 +31,7 @@ module.exports.manageEvent = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).populate('eventTickets');
     const eventBookings = await eventBooking.find({ event: req.params.id }).populate('user').populate('eventTickets');
     const config = await siteConfig.find();
-    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || req.user.eventSystems.filter(a => a._id.equals(event.eventHost.eventSystem._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
         return res.render('admin/events/eventManage', { title: `Manage ${event.name}`, event, eventBookings, config: config[0] });
     } else {
         req.flash('error', `You do not have permission to manage ${event.name}`)
@@ -42,7 +43,7 @@ module.exports.eventWaitingList = async(req, res, next) => {
     const event = await Event.findById(req.params.id);
     const eventBookings = await eventBooking.find({ event: req.params.id, paid: false, payOnGate: false }).populate('user').populate('eventTickets');
     const config = await siteConfig.find();
-    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || req.user.eventSystems.filter(a => a._id.equals(event.eventHost.eventSystem._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
         return res.render('admin/events/eventWaitingList', { title: `Waiting List for ${event.name}`, event, eventBookings, config: config[0] });
     } else {
         req.flash('error', `You do not have permission to manage ${event.name}`)
