@@ -132,7 +132,7 @@ module.exports.resetPasswordLink = async(req, res, next) => {
     const user = await User.find({ username: req.body.username });
     if (user.length === 0) {
         req.flash('error', 'E-mail Address was not found');
-        return res.redirect('/');
+        return res.redirect('/resetpassword');
     }
     user[0].resetPassword = crypto.randomBytes(8).toString('hex');
     user[0].save();
@@ -140,7 +140,7 @@ module.exports.resetPasswordLink = async(req, res, next) => {
     res.render('email/lostPassword', { user: user[0], title: 'Password reset instructions' }, async function(err, str) {
         emailService.sendEmail(user[0].username, `Password Reset`, str);
         req.flash('success', 'Please check your e-mails for instructions to reset your password');
-        return res.redirect(`/`);
+        return res.redirect(`/login`);
     })
 }
 
@@ -157,13 +157,19 @@ module.exports.resetPassword = async(req, res, next) => {
     const user = await User.findOne({ resetPassword: req.params.id });
     if (!user) {
         req.flash('error', 'This password reset link is not valid');
-        return res.redirect('/');
+        return res.redirect('/resetpassword');
     }
-    req.flash('success', 'Your password has been reset')
-    user.setPassword(req.body.password);
-    user.resetPassword = undefined;
-    user.save();
-    return res.redirect('/');
+    
+    await user.setPassword(req.body.password, (err,res) => {
+        if (err) {
+            req.flash('error','There was a problem resetting your password')
+            console.log(err)
+        }
+        req.flash('success', 'Your password has been reset.')
+        res.resetPassword = undefined;
+        res.save();
+    });
+    return res.redirect('/login');
 }
 
 module.exports.changePasswordForm = async(req, res, next) => {
@@ -171,10 +177,15 @@ module.exports.changePasswordForm = async(req, res, next) => {
 };
 
 module.exports.changePassword = async(req, res, next) => {
-    const user = await User.findById(res.currentUser._id);
+    const user = await User.findById(req.user._id);
     req.flash('success', 'Your password has been changed')
-    user.setPassword(req.body.password);
-    user.resetPassword = undefined;
-    user.save();
+    await user.setPassword(req.body.password, (err,res) => {
+        if (err) {
+            req.flash('error','There was a problem changing your password')
+            console.log(err)
+        }
+        res.resetPassword = undefined;
+        res.save();
+    });
     return res.redirect('/');
 }

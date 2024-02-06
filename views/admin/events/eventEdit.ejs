@@ -72,6 +72,14 @@ function toTitleCase(str) {
                 </div>
               </div>
             </div>
+            <div class="mb-3 row">
+              <div class="col-8"><label for="eventVisible">Advertise Event</label></div>
+              <div class="col">
+                  <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" name="event[visible]" id="eventVisible" <%=( event.visible ? 'checked' : '') %>>
+                  </div>
+              </div>
+              </div>
             <% if (['superAdmin'].includes(currentUser.role) && config.hostingCharge > 0){ %>
                 <div class="mb-3 row">
                   <div class="col-6 pt-2"><label for="registrationFee">Registration Fee</label></div>
@@ -86,18 +94,8 @@ function toTitleCase(str) {
                   </div>
                 </div>
             <% } %>
+
             <% if (event.registrationFee.value == event.registrationFee.totalPaid) { %>
-              <% if (event.registrationFee.value > 0) { %><div class="mb-3 form-text">
-                Registration Fee of <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.registrationFee.value)  %> paid by<br/> <%= event.registrationFee.paypalPayer %>
-              </div><% } %>
-                <div class="mb-3 row">
-                <div class="col-8"><label for="eventVisible">Advertise Event</label></div>
-                <div class="col">
-                    <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" name="event[visible]" id="eventVisible" <%=( event.visible ? 'checked' : '') %>>
-                    </div>
-                </div>
-                </div>
                 <div class="mb-3 row">
                 <div class="col-8"><label for="eventAllowBookings">Open For Bookings</label></div>
                 <div class="col">
@@ -112,6 +110,9 @@ function toTitleCase(str) {
                     <input type="text" class="form-control" id="eventSanctioningOfficer" name="event[sanctioningOfficer]" value="<%= event.sanctioningOfficer %>">
                     </div>
                 <% } %>
+                <% if (event.registrationFee.value > 0) { %><div class="mb-3 form-text">
+                  Registration Fee of <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.registrationFee.value)  %> paid by<br/> <%= event.registrationFee.paypalPayer %>
+                </div><% } %>
             <% } else { %>
                 <h4>Registration Fee - <%= new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(event.registrationFee.value)  %></h4>
                 <p id="result-message"></p>
