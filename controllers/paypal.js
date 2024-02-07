@@ -62,7 +62,7 @@ const createOrder = async(cart) => {
             description: `Event Booking for: ${eventBooking.event.name}`,
             amount: {
                 currency_code: "GBP",
-                value: eventBooking.eventTickets.reduce((acc, a) => acc + a.cost, 0)
+                value: (eventBooking.eventTickets.reduce((acc, a) => acc + a.cost, 0) - eventBooking.totalPaid)
             },
             payee: {
                 email_address: eventBooking.event.eventHost.paypalAddress
