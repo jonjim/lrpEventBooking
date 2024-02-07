@@ -20,6 +20,10 @@ router.route('/faq')
 router.route('/organisers')
     .get(catchAsync(controller.organisers))
 
+router.route('/organisers/register')
+    .get(catchAsync(controller.registerSystemForm))
+    .post(catchAsync(controller.registerSystem))
+
 router.route('/system/:id')
     .get(catchAsync(controller.eventSystem))
 
