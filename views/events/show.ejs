@@ -48,7 +48,7 @@ function toTitleCase(str) {
                                 <button class="nav-link link-dark" id="catering-tab" data-bs-toggle="tab" data-bs-target="#catering-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true"><h4>Catering</h4</button>
                             </li>
                         <% } %>
-                        <% if (event.attendees.length > 0) { %>
+                        <% if (event.attendees.length > 0 && currentUser) { %>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link link-dark" id="attendees-tab" data-bs-toggle="tab" data-bs-target="#attendees-tab-pane" type="button" role="tab" aria-controls="attendees-tab-pane" aria-selected="false"><h4>Attendees</h4></button>
                             </li>
@@ -64,10 +64,12 @@ function toTitleCase(str) {
                                     <div class="col">
                                         <p>Catering for this event is provided by <span class="lead"><%= event.catering.caterer %></span>.</p>
                                     </div>
+                                    <% if (currentUser){ %>
                                     <% if (event.catering.choiceRequired && event.attendees.filter(a => a.user.equals(currentUser._id)).length > 0) { %>
                                     <div class="col-4 text-end">
                                         <a href="/events/<%= event._id %>/catering" class="btn btn-secondary">Submit your meal choices</a>
                                     </div>
+                                    <% } %>
                                     <% } %>
                                 </div>
                                 <% if (event.catering.catererContact) { %>

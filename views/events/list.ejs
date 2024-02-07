@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
 
 <% if (!events || events.length == 0) { %>
-<div class="my-md-5 pt-5">
+<div id="noEvents" class="my-md-5 pt-5">
   <h3 class="display-5 text-center mt-5 mb-3">There are currently no events available for booking</h3>
   <div class="display-6 text-center">Please check back soon!</div>
 </div>
@@ -10,11 +10,17 @@
   <p>Why not see how we can help make booking and running your events easy!</p>
   <a href="/organisers" class="btn btn-secondary mt-3">Learn More About Our Event Organisers</a>
 </div>
-<div class="d-md-none position-absolute bottom-0 mb-3 py-3 mx-3 me-4 border-top border-bottom border-3 text-center">
+<div id="adSmall" class="d-md-none position-absolute bottom-0 mb-3 py-3 mx-3 me-4 border-top border-bottom border-3 text-center">
   <h4 class="mb-3">Are you an event organiser?</h4>
   <p>Why not see how we can help make booking and running your events easy!</p>
   <a href="/organisers" class="btn btn-secondary mt-3">Learn More About Our Event Organisers</a>
 </div>
+<script>
+  document.getElementsByClassName('navbar-toggler')[0].addEventListener('click', () => {
+    document.getElementById('noEvents').classList.toggle('d-none')
+    document.getElementById('adSmall').classList.toggle('d-none')
+})
+</script>
 <% } else { %>
 <div class="row row-cols-1 row-cols-md-3 g-4">
   <% for (event of events) { %>
