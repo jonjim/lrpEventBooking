@@ -7,14 +7,22 @@
     // Loop over them and prevent submission
     Array.from(forms)
         .forEach(function(form) {
-            form.addEventListener('submit', function(event) {
+            form.addEventListener('submit', function (event) {
+                let recaptcha = document.getElementById('recaptcha');
+                if (recaptcha) {
+                     grecaptcha.ready( function() {
+                         grecaptcha.execute('6LcDm2kpAAAAAH4rSLWeH8nX3qB0EgVtY3t_lN4B', {action: 'submit'}).then(function(token) {
+                            document.getElementById('recaptcha').value = token
+                        });
+                      });
+                }
                 if (!form.checkValidity()) {
                     event.preventDefault()
                     event.stopPropagation()
                 }
 
                 form.classList.add('was-validated')
-            }, false)
+            }, true)
         })
 })()
 

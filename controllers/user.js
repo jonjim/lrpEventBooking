@@ -5,30 +5,47 @@ const eventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
 const emailService = require('../utils/email');
 
-
 module.exports.renderRegister = (req, res) => {
     res.render('user/register', { title: 'Create New Account' });
 };
 
-module.exports.register = async(req, res, next) => {
-    const { username, password } = req.body;
-    const newUser = new User({ username });
-    try {
-        const registeredUser = await User.register(newUser, password);
-        req.login(registeredUser, err => {
-            if (err) return next();
-            res.render('email/registration', {title: 'Take the next step and book your first event with us now!'} ,async function(err, str) {
-                emailService.sendEmail(req.user.username, `Welcome to ${res.locals.config.siteName}`, str);
-                req.flash('success', `Welcome to ${res.locals.config.siteName} ${registeredUser.username}!`);
-                const redirectUrl = req.session.returnTo || '/';
-                delete req.session.returnTo;
-                return res.redirect(redirectUrl);
-            })
-        });
-    } catch (e) {
-        req.flash('error', e.message);
-        return res.redirect('register');
+module.exports.register = async (req, res, next) => {
+    const { username, password, token } = req.body;
+    const userLookup = await User.find({ username: username });
+    if (userLookup) {
+        req.flash('error', 'That e-mail address is already registered!')
+        return res.redirect('/register')
     }
+    const response = await axios.post(`https://recaptchaenterprise.googleapis.com/v1/projects/lrp-event-booking/assessments?key=${process.env.GOOGLE_API_KEY}`, {
+            event: {
+                token: token,
+                siteKey: process.env.RECAPTCHA_KEY
+            }
+    }).then(async (response) => {
+        if (response.data.tokenProperties.valid && response.data.riskAnalysis.score < 1) {
+            const newUser = new User({ username });
+            try {
+                const registeredUser = await User.register(newUser, password);
+                req.login(registeredUser, err => {
+                    if (err) return next();
+                    res.render('email/registration', {title: 'Take the next step and book your first event with us now!'} ,async function(err, str) {
+                        emailService.sendEmail(req.user.username, `Welcome to ${res.locals.config.siteName}`, str);
+                        req.flash('success', `Welcome to ${res.locals.config.siteName} ${registeredUser.username}!`);
+                        const redirectUrl = req.session.returnTo || '/';
+                        delete req.session.returnTo;
+                        return res.redirect(redirectUrl);
+                    })
+                });
+            } catch (e) {
+                req.flash('error', e.message);
+                return res.redirect('/register');
+            }
+        }
+        else {
+            req.flash('error', 'There was an error validating your details.')
+            return res.redirect('/register')
+        }
+    })
 };
 
 module.exports.listEventBookingsUser = async(req, res, next) => {
@@ -86,16 +103,28 @@ module.exports.logout = async(req, res, next) => {
     return res.redirect('/')
 };
 
-module.exports.login = async(req, res) => {
-    const redirectUrl = req.session.returnTo || '/';
-    delete req.session.returnTo;
-    if (req.user) {
-        req.flash('success', 'Welcome back!');
-        res.redirect(redirectUrl);
-    } else {
-        req.flash('success', `Welcome to ${res.locals.config.siteName}!`);
-        res.redirect('/account');
+module.exports.accountDelete = async (req, res, next) => {
+    if (req.isAuthenticated()) {
+        const userId = req.user._id;
+        req.logout(async function(err) {
+            if (err) { return next(err); }
+            await User.findByIdAndDelete(userId);
+            req.flash('success', `We're sorry to see you go! Your account has now been closed.`);
+            return res.redirect('/');
+        });
     }
+}
+
+module.exports.login = async(req, res) => {
+        const redirectUrl = req.session.returnTo || '/';
+        delete req.session.returnTo;
+        if (req.user) {
+            req.flash('success', 'Welcome back!');
+            res.redirect(redirectUrl);
+        } else {
+            req.flash('success', `Welcome to ${res.locals.config.siteName}!`);
+            res.redirect('/account');
+        }
 };
 
 module.exports.renderEditForm = async(req, res, next) => {

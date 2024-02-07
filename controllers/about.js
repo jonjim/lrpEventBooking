@@ -3,6 +3,8 @@ const Event = require('../models/lrpEvent');
 const EventSystems = require('../models/eventSystems')
 const FAQ = require('../models/faq')
 const User = require('../models/user')
+const axios = require('axios');
+const emailService = require('../utils/email');
 
 module.exports.privacy = async(req, res, next) => {
     const config = await siteConfig.find();
@@ -111,4 +113,26 @@ module.exports.initialConfig = async(req,res,next) => {
         req.flash('error','You do not have permission to access this resource!')
         return res.redirect('/');
     }
+}
+
+module.exports.registerSystemForm = async (req, res, next) => {
+    return res.render('about/registerEventSystem',{title:'Register Your Event System'});
+}
+
+module.exports.registerSystem = async (req, res, next) => {
+    const response = await axios.post(`https://recaptchaenterprise.googleapis.com/v1/projects/lrp-event-booking/assessments?key=${process.env.GOOGLE_API_KEY}`, {
+        event: {
+            token: req.body.token,
+            siteKey: process.env.RECAPTCHA_KEY
+        }
+    }).then(async (response) => {
+        if (response.data.tokenProperties.valid && response.data.riskAnalysis.score < 1) {
+            res.render('email/newRegistrant', { title: `A new Event System wants to register!`, registrant: req.body }, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await emailService.sendEmail(res.locals.config.techContactEmail, `${req.body.systemName} wants to register!`, str)
+                req.flash('success', 'Thank you for your request! We will get back to you as soon as possible')
+                return res.redirect('/organisers')
+            })
+        }
+    })
 }

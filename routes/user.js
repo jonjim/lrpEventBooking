@@ -33,6 +33,7 @@ router.route('/resetpassword/:id')
 router.route('/account')
     .get(isLoggedIn, catchAsync(auth.renderAccountSettings))
     .post(isLoggedIn, catchAsync(auth.accountUpdate))
+    .delete(isLoggedIn, catchAsync(auth.accountDelete))
 
 router.route('/account/bookings')
     .get(isLoggedIn, catchAsync(auth.listEventBookingsUser))
