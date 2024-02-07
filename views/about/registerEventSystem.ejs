@@ -1,0 +1,67 @@
+<% layout('layouts/boilerplate')%>
+<script src="https://www.google.com/recaptcha/api.js?render=6LcDm2kpAAAAAH4rSLWeH8nX3qB0EgVtY3t_lN4B"></script>
+<script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<div class="container justify-content-center align-items-center mt-5">
+	<div class="row">
+		<div class="col col-xl-8 offset-xl-2">
+			<div class="card shadow py-3 px-3">
+				<div class="card-header bg-white">
+					<h4 class="card-title">Register Your Event System</h4>
+				</div>
+				<div class="card-body">
+					<form id="registerForm" action="/organisers/register" method="POST" novalidate class="validated-form">
+						<div class="row mb-3">
+                            <div class="col-md">
+                                <div class="mb-3">
+                                    <label class="form-label" for="name">Your Name</label>
+                                    <input class="form-control" type="text" id="name" name="name" autofocus required autocomplete="off">
+                                    <div class="invalid-feedback">
+                                        Please enter your name
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="email">E-mail Address</label>
+                                    <input class="form-control" type="email" id="email" name="email" required autocomplete="off">
+                                    <div class="invalid-feedback">
+                                        Please enter a valid e-mail address.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="systemName">Your event system name</label>
+    
+                                    <input class="form-control" type="text" id="systemName" name="systemName" required>
+                                    <div class="invalid-feedback">Please enter your event system name</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="systemCount">How many events do you run each year?</label>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <input class="form-control" value="1" type="number" id="systemCount" name="eventCount" required>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">This is just to give us a rough idea of demand</div>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="mb-3">
+                                    <label for="about">About Your System</label>
+                                    <div class="form-text mb-3">Your answer here won't determine your eligibility, all types of game are welcome. We're just excited about any new game!</div>
+                                    <textarea name="about" id="about" cols="30" rows="10" class="form-control"></textarea>
+                                </div>
+                            </div>
+						</div>
+                        <p>Registering as an Event System is currently a manual process. Our admin team will review your request and get back to you as soon as possible.</p>
+                        <p>We look forward to you joining us!</p>
+						<input type="hidden" name="token" id="recaptcha">
+					
+					<div class="d-grid gap-2">
+						<button class="btn btn-success" >Register Your Interest</button>
+					</div>
+                </form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/js/organiserRegister.js"></script>

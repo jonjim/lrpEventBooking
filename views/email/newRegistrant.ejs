@@ -1,0 +1,8 @@
+<% layout('layouts/email') %>
+<h2 align="center" style="margin-bottom:5;"><b>A New Event System</b> </h2>
+<p><b>Their Name:</b> <%= registrant.name %></p>
+<p><b>Their E-mail Address:</b> <%= registrant.email %></p>
+<p><b>The Event System:</b> <%= registrant.systemName %></p>
+<p><b>Events Per Year:</b> <%= registrant.eventCount %></p>
+<p><b>About their system:</b></p>
+<%- registrant.about %>
