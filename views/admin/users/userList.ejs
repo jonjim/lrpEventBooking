@@ -24,17 +24,17 @@
                 </thead>
                 <tbody class="users">
                     <% for (user of users) { %>
-                        <tr>
-                            <td class="d-none d-md-table-cell" scope="row">
+                        <tr title="<%= user.role == 'superAdmin' ? `Editing Super Administrator's is restricted`: '' %>">
+                            <td class="d-none d-md-table-cell <%= user.role == 'superAdmin' ? 'text-muted': '' %>" scope="row">
                                 <%= user.surname %>
                             </td>
-                            <td class="d-none d-md-table-cell" scope="row">
+                            <td class="d-none d-md-table-cell <%= user.role == 'superAdmin' ? 'text-muted': '' %>" scope="row">
                                 <%= user.firstname %>
                             </td>
-                            <td scope="row">
+                            <td scope="row" class="<%= user.role == 'superAdmin' ? 'text-muted': '' %>">
                                 <%= user.username %>
                             </td>
-                            <td class="d-none d-md-table-cell" scope="row">
+                            <td class="d-none d-md-table-cell <%= user.role == 'superAdmin' ? 'text-muted': '' %>" scope="row">
                                 <%
                         switch (user.role){
                             case 'user':
@@ -54,7 +54,11 @@
                             break;
                         } %>
                             </td>
-                            <td scope="row"><a href="/admin/users/<%= user._id %>" class="link-dark"><i class="bi bi-pencil-square"></i></a></td>
+                            <td scope="row">
+                                <% if (user.role != 'superAdmin' || currentUser.role == 'superAdmin') {%>
+                                <a href="/admin/users/<%= user._id %>" class="link-dark <%= user.role == 'superAdmin' ? 'text-muted': '' %>"><i class="bi bi-pencil-square"></i></a>
+                                <% } %>
+                            </td>
                         </tr>
                         <% } %>
                 </tbody>
