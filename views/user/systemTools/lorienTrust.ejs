@@ -13,6 +13,7 @@
 </div>
 <div id="lorienTrustspinnerDiv"></div>
 <div id="lorienTrustcharacter">
+    <% let ltPlayerDetails = JSON.parse(JSON.stringify( user.lorienTrust));%>
     <h6 id="lorienTrustcharacterRace" class="text-center">
         <%= user.lorienTrust?.character ? user.lorienTrust?.character?.race : '' %>
     </h6>
