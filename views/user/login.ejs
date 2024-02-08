@@ -3,7 +3,6 @@
         <div class="row">
             <div class="col-md-6 offset-md- col-xl-4 offset-xl-4">
                 <div class="card shadow">
-                    <!-- <img src="<%= config.siteLogo?.url %>" alt="" class="img-fluid card-img-top" /> -->
                     <div class="card-body">
                         <h5 class="card-title text-center">Login</h5>
                         <form action="/login" method="POST" novalidate class="validated-form">
@@ -27,7 +26,9 @@
                                 <a href="/auth/facebook" class="btn btn-primary"><i class="bi bi-facebook me-2"></i>Sign in with Facebook</a>
                                 <hr>
                             </div>
-                            <a href="/register" class="link-dark">Create An Account</a> | <a href="/resetpassword" class="link-dark">Forgot My Password</a>                                
+                            <div class="text-center">
+                                <a href="/register" class="link-dark">Create An Account</a> | <a href="/resetpassword" class="link-dark">Forgot My Password</a>                                
+                            </div>
                         </form>
                     </div>
                 </div>
