@@ -20,7 +20,7 @@
                 <% } %>
                 </small></p>
         <p class="display-5 text-danger mt-5 pt-5" >Event Attendees: Confidential</p>
-        <p class="mt-5">Visit <a class="link-dark" href="<%= rootUrl %>/events/signin" style="page-break-after:always;"><%= rootUrl %>/events/signin</a> to check attendees tickets</p>
+        <div class="mt-5" style="page-break-after:always;">Visit <a class="link-dark" href="<%= rootUrl %>/events/signin" ><%= rootUrl %>/events/signin</a> to check attendees tickets</div>
         <table class="table table-striped">
             <thead>
                 <th scope="col">Player Name</th>
@@ -29,24 +29,55 @@
             <tbody>
                 <% for (attendee of event.attendees.sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))){ %>
                         <tr scope="row">
-                            <td width="250px">
+                            <td width="200px">
                                 <%= toTitleCase(attendee.surname) %>,
                                     <%= toTitleCase(attendee.firstname) %>
                             </td>
                             <td class="ms-0">
-                                <div class="row mb-3">
-                                    <div class="col">Player ID: <i><%= attendee.user?.playerId %></i></div>
-                                    <div class="col"><b><%= toTitleCase(attendee.ticketType) %></b></div>
-                                </div>
-                                <% if (attendee.user?.emergencyContactName) { %>
-                                <div class="row">
-                                    <div class="col">
-                                        <b>Emergency Contact</b><br/>
-                                        <%= toTitleCase(attendee.user?.emergencyContactName) %> <i>(<%= toTitleCase(attendee.user?.emergencyContactRelation) %>)</i><br/>
-                                        <%= attendee.user?.emergencyContactNumber %>
+                                <div class="row" style="font-size:8pt !important">
+                                    <div class="col-4">
+                                        <p><b><%= toTitleCase(attendee.ticketType) %></b></p>
+                                        <% if (attendee.user?.emergencyContactName) { %>
+                                            <div>
+                                                <b>Emergency Contact</b><br/>
+                                                <%= toTitleCase(attendee.user?.emergencyContactName) %> <i>(<%= toTitleCase(attendee.user?.emergencyContactRelation) %>)</i><br/>
+                                                <em><%= attendee.user?.emergencyContactNumber %></em>
+                                            </div>
+                                        <% } %>
                                     </div>
-                                </div>
-                                <% } %>
+                                    <div class="col">
+                                        <% if (attendee.user) { %>
+                                            <% let playerData = attendee.user[event.eventHost.eventSystem.systemRef]; %>
+                                            <% let characterData = attendee.user[event.eventHost.eventSystem.systemRef]?.character; %>
+                                                <table class="table table-borderless" style="background-color: transparent !important; font-size:8pt !important">
+                                                    <tbody>
+                                                        <% for (field of event.eventHost.eventSystem.customFields.filter(a => a.section == 'player')) { %>
+                                                            <% if (playerData?.[field.name]?.length > 0) { %>
+                                                            <tr style="background-color: transparent !important;">
+                                                                <td class="py-0" style="background-color: transparent !important;" width="40%"><b><%= field.label %></b></td>
+                                                                <td class="py-0" style="background-color: transparent !important;"><%= playerData?.[field.name] %></td>
+                                                            </tr>
+                                                        <% }} %>
+                                                    </tbody>
+                                                </table>
+                                                <table class="table table-borderless" style="background-color: transparent !important; font-size:8pt !important">
+                                                    <tbody>
+                                                        <tr style="background-color: transparent !important;"></tr>
+                                                            <td class="py-0" style="background-color: transparent !important;" width="40%"><b>Character Name</b></td>
+                                                            <td class="py-0 text-capitalize" style="background-color: transparent !important;"><%= characterData.characterName.toLowerCase() %></td>
+                                                        </tr>
+                                                        <% for (field of event.eventHost.eventSystem.customFields.filter(a => a.section == 'character')) { %>
+                                                            <% if (characterData[field.name]?.length > 0) { %>
+                                                            <tr class="py-0" style="background-color: transparent !important;">
+                                                                <td class="py-0" style="background-color: transparent !important;" width="40%"><b><%= field.label %></b></td>
+                                                                <td class="py-0" style="background-color: transparent !important;"><%= characterData[field.name] %></td>
+                                                            </tr>
+                                                        <% }} %>
+                                                    </tbody>
+                                                </table>
+                                        <% } %>
+                                    </div>
+                                </div>                               
                             </td>
                         </tr>
                     <% }  %>

@@ -45,12 +45,18 @@ module.exports.medicalEvent = async(req, res, next) => {
 };
 
 module.exports.attendeesEvent = async(req, res, next) => {
-    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } });
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
+
     if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
-        res.render('print/eventAttendees', { title: `Manage ${event.name}`, event }, async function(err, str) {
-            if (err) throw new ExpressError(err, 500)
-            await pdfService.sendConfidentialPDF(res, str, `${event.name} Attendees.pdf`);
+        if (req.query.preview) {
+            res.render('print/eventAttendees', { title: `Manage ${event.name}`, event });
+        }
+        else {
+            res.render('print/eventAttendees', { title: `Manage ${event.name}`, event }, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await pdfService.sendConfidentialPDF(res, str, `${event.name} Attendees.pdf`);
         })
+    }
     } else {
         req.flash('error', `You do not have permission to manage ${event.name}`)
         return res.redirect('/');

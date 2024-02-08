@@ -1,189 +1,213 @@
 <% layout('layouts/boilerplate') %>
 
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
-        <li class="breadcrumb-item"><a href="/admin/events/<%= eventBooking.event._id %>/<%= waitingList ? 'waitinglist' :'manage' %>" class="link-dark"><%= eventBooking.event.name %></a></li>
-        <li class="breadcrumb-item active" aria-current="page">Manage Event Booking for <%= eventBooking.firstname %> <%= eventBooking.surname %></li>
-    </ol>
+	<ol class="breadcrumb small">
+		<li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
+		<li class="breadcrumb-item"><a href="/admin/events/<%= eventBooking.event._id %>/<%= waitingList ? 'waitinglist' :'manage' %>" class="link-dark"><%= eventBooking.event.name %></a></li>
+		<li class="breadcrumb-item active" aria-current="page">Manage Event Booking for <%= eventBooking.firstname %> <%= eventBooking.surname %></li>
+	</ol>
 </nav>
 <div class="row">
-    <div class="col-md-8 offset-md-2 col">
-        <div class="card shadow py-3 px-3">
-            <div class="card-header bg-white">
-                <h4>Manage Booking for <%= eventBooking.event.name %></h4>
-            </div>
-            <div class="card-body">
-<div class="row">
-    <div class="col-8">
-        <table class="table table-sm table-hover table-borderless">
-            <tbody>
-                <tr>
-                    <td class="fw-bold">Name</td>
-                    <td><%= eventBooking.firstname %> <%= eventBooking.surname %><% if (typeof eventBooking.user != 'undefined') { %><br><small><i><%= eventBooking.user.username %></i></small> <% } %></td>
-                </tr>
-                <% if (typeof eventBooking.user != 'undefined' && !eventBooking.user.equals(eventBooking.originalUser)) { %>
-                <tr>
-                    <td class="fw-bold">Purchased By</td>
-                    <td><%= eventBooking.originalUser.firstname %> <%= eventBooking.originalUser.surname %><br><small><i><%= eventBooking.originalUser.username %></i></small></td>
-                </tr>
-                    <% } %>
-                    <tr>
-                        <td class="fw-bold">Date Booked</td>
-                        <td><%= dateOutput(eventBooking.bookingMade) %> <%= timeOutput(eventBooking.bookingMade) %></td>
-                    </tr>
-                    <% if (eventBooking.totalPaid > 0) {%>
-                        <tr>
-                            <td class="fw-bold">Amount Paid</td>
-                            <td><%= currencyOutput(eventBooking.totalPaid) %></td>
-                        </tr>
-                    <% } %>
-                <% if (eventBooking.paid) { %>
-                <tr>
-                    <td class="fw-bold">Date Paid</td>
-                    <td><%= dateOutput(eventBooking.bookingPaid) %> <%= timeOutput(eventBooking.bookingPaid) %></td>
-                </tr>
-                <tr>
-                    <td class="fw-bold">Payment Method</td>
-                    <td><%= eventBooking.paypalPaymentId ? 'PayPal' : eventBooking.payOnGate ? 'Pay On Gate' : 'Cash' %></td>
-                </tr>
-                <% } else { %>
-                    <tr>
-                        <td class="fw-bold">Amount Due</td>
-                        <td><%= currencyOutput(eventBooking.totalDue) %><%= eventBooking.payOnGate ? ' (Pay On Gate)' : '' %></td>
-                    </tr>
-                <% } if (eventBooking.paypalPaymentId) { %>
-                    <tr>
-                        <td class="fw-bold">PayPal ID:</td>
-                        <td><%= eventBooking.paypalPaymentId %></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">PayPal Address</td>
-                        <td><%= eventBooking.paypalPayer %></td>
-                    </tr>
-                <% } %>
-                <tr>
-                    <td class="fw-bold">Tickets</td>
-                    <td>
-                        <ul class="list-unstyled">
-                            <% for (eventTicket of eventBooking.eventTickets) { %>
-                                <li>
-                                    <% if (['player','playerchild'].includes(eventTicket.ticketType)) { %> <i class="bi bi-ticket-detailed"></i><% } %>
-                                    <% if (['monster','monsterchild'].includes(eventTicket.ticketType)) { %> <i class='bi bi-bug-fill nav_icon'></i><% } %>
-                                    <% if (['staff'].includes(eventTicket.ticketType)) { %> <i class="bi bi-stopwatch"></i><% } %>
-                                    <% if (['mealticket','mealticketchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-cutlery" aria-hidden="true"></i><% } %>
-                                    <%= ticket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - `: '' %><%= eventTicket.description %> <a class="link-dark" href="" data-bs-toggle="modal" data-bs-target="#deleteTicketModal"><i class="bi bi-trash"></i></a>
-                                </li>
-                            <% } %>
-                        </ul>
-                        <% if (eventTickets.length > 0) { %>
-                            <form action="/admin/bookings/<%= eventBooking._id %>?_method=PUT" method="POST" novalidate class="validated-form">
-                                <div class="row gx-1">
+	<div class="col-md-8 offset-md-2 col">
+		<div class="card shadow py-3 px-3">
+			<div class="card-header bg-white">
+				<h4>Manage Booking for <%= eventBooking.event.name %></h4>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-8">
+						<table class="table table-sm table-hover table-borderless">
+							<tbody>
+								<tr>
+									<td class="fw-bold">Name</td>
+									<td><%= eventBooking.firstname %> <%= eventBooking.surname %><% if (typeof eventBooking.user != 'undefined') { %><br><small><i><%= eventBooking.user.username %></i></small> <% } %></td>
+								</tr>
+								<% if (typeof eventBooking.user != 'undefined' && !eventBooking.user.equals(eventBooking.originalUser)) { %>
+								<tr>
+									<td class="fw-bold">Purchased By</td>
+									<td><%= eventBooking.originalUser.firstname %> <%= eventBooking.originalUser.surname %><br><small><i><%= eventBooking.originalUser.username %></i></small></td>
+								</tr>
+								<% } %>
+                                <% if (eventBooking.user) { %>
+                                    <% for (field of eventBooking.event.eventHost.eventSystem.customFields.filter(a => a.section == 'player')) { 
+                                        let systemPlayer = eventBooking.user[eventBooking.event.eventHost.eventSystem.systemRef]; %>
+                                        <% if (systemPlayer?.[field.name]?.length > 0) { %>
+                                        <tr>
+                                            <td class="fw-bold"><%= field.label %></td>
+                                            <td><%= systemPlayer?.[field.name] %></td>
+                                        </tr>
+                                        <%} }%>
+                                <tr>
+                                    <td class="fw-bold">Character Name</td>
+                                    <td class="text-capitalize"><%= eventBooking.user[eventBooking.event.eventHost.eventSystem.systemRef].character.characterName.toLowerCase() %></td>
+                                </tr>
+                                <% for (field of eventBooking.event.eventHost.eventSystem.customFields.filter(a => a.section == 'character')) { 
+                                    let systemCharacter = eventBooking.user[eventBooking.event.eventHost.eventSystem.systemRef]?.character; %>
+                                    <% if (systemCharacter?.[field.name]?.length > 0) { %>
+                                    <tr>
+                                        <td class="fw-bold"><%= field.label %></td>
+                                        <td><%= systemCharacter?.[field.name] %></td>
+                                    </tr>
+                                    <% }} %>
+                                <% } %>
+								<tr class="border-top">
+									<td class="fw-bold"><br/>Date Booked</td>
+									<td><br/><%= dateOutput(eventBooking.bookingMade) %> <%= timeOutput(eventBooking.bookingMade) %></td>
+								</tr>
+								<% if (eventBooking.totalPaid > 0) {%>
+								<tr>
+									<td class="fw-bold">Amount Paid</td>
+									<td><%= currencyOutput(eventBooking.totalPaid) %></td>
+								</tr>
+								<% } %>
+								<% if (eventBooking.paid) { %>
+								<tr>
+									<td class="fw-bold">Date Paid</td>
+									<td><%= dateOutput(eventBooking.bookingPaid) %> <%= timeOutput(eventBooking.bookingPaid) %></td>
+								</tr>
+								<tr>
+									<td class="fw-bold">Payment Method</td>
+									<td><%= eventBooking.paypalPaymentId ? 'PayPal' : eventBooking.payOnGate ? 'Pay On Gate' : 'Cash' %></td>
+								</tr>
+								<% } else { %>
+								<tr>
+									<td class="fw-bold">Amount Due</td>
+									<td><%= currencyOutput(eventBooking.totalDue) %><%= eventBooking.payOnGate ? ' (Pay On Gate)' : '' %></td>
+								</tr>
+								<% } if (eventBooking.paypalPaymentId) { %>
+								<tr>
+									<td class="fw-bold">PayPal ID:</td>
+									<td><%= eventBooking.paypalPaymentId %></td>
+								</tr>
+								<tr>
+									<td class="fw-bold">PayPal Address</td>
+									<td><%= eventBooking.paypalPayer %></td>
+								</tr>
+								<% } %>
+								<tr>
+									<td class="fw-bold">Tickets</td>
+									<td>
+										<ul class="list-unstyled">
+											<% for (eventTicket of eventBooking.eventTickets) { %>
+											<li>
+												<% if (['player','playerchild'].includes(eventTicket.ticketType)) { %> <i class="bi bi-ticket-detailed"></i><% } %>
+												<% if (['monster','monsterchild'].includes(eventTicket.ticketType)) { %> <i class='bi bi-bug-fill nav_icon'></i><% } %>
+												<% if (['staff'].includes(eventTicket.ticketType)) { %> <i class="bi bi-stopwatch"></i><% } %>
+												<% if (['mealticket','mealticketchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-cutlery" aria-hidden="true"></i><% } %>
+												<%= eventTicket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - `: '' %><%= eventTicket.description %> <a class="link-dark" href="" data-bs-toggle="modal" data-bs-target="#deleteTicketModal"><i class="bi bi-trash"></i></a>
+											</li>
+											<% } %>
+										</ul>
+										<% if (eventTickets.length > 0) { %>
+										<form action="/admin/bookings/<%= eventBooking._id %>?_method=PUT" method="POST" novalidate class="validated-form">
+											<div class="row gx-1">
 
-                                    <div class="col-2"></div>
-                                    <div class="col-8">
-                                        <label for="eventTicket"><small>Add an optional event ticket</small></label>
-                                        <select required name="eventTicket" id="eventTicket" class="form-select form-select">
-                            <% for (ticket of eventTickets) { %>
-                                <option value="<%= ticket._id %>"><%= ticket.description %></option>
-                            <% } %>
-                        </select>
-                                    </div>
-                                    <div class="col-1 pt-4">
-                                        <button class="btn btn-success"><i class="bi bi-plus-circle-fill"></i></button>
-                                    </div>
+												<div class="col-2"></div>
+												<div class="col-8">
+													<label for="eventTicket"><small>Add an optional event ticket</small></label>
+													<select required name="eventTicket" id="eventTicket" class="form-select form-select">
+														<% for (ticket of eventTickets) { %>
+														<option value="<%= ticket._id %>"><%= ticket.description %></option>
+														<% } %>
+													</select>
+												</div>
+												<div class="col-1 pt-4">
+													<button class="btn btn-success"><i class="bi bi-plus-circle-fill"></i></button>
+												</div>
 
-                                </div>
-                            </form>
-                            <% } %>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="col text-end">
-        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-            <form id="formUpdate" action="/admin/bookings/<%= eventBooking._id %>" method="POST">
-                <input id="frmPaid" type="hidden" name="paid" value="true">
-                <input id="frmDate" type="hidden" name="bookingPaid" value="<%= new Date() %>">
-                <input id="frmTotalDue" type="hidden" value="<%= eventBooking.totalDue %>">
-                <input id="frmTotal" type="hidden" name="totalPaid" value="<%= eventBooking.totalDue %>">
-                <input id="frmGate" type="hidden" name="payOnGate" value="false">
-            </form>
-            <form id="formDelete" action="/admin/bookings/<%= eventBooking._id %>?_method=DELETE" method="POST"></form>
-            <form id="formCancel" action="/admin/bookings/<%= eventBooking._id %>/cancel" method="POST"></form>
-            <form id="formQueueAdd" action="/admin/bookings/<%= eventBooking._id %>/queue" method="POST"></form>
-            <form id="formQueueDel" action="/admin/bookings/<%= eventBooking._id %>/queue?_method=DELETE" method="POST"></form>
-            <% if (eventBooking.inQueue || (!eventBooking.paid && !((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff')))) { %>
-            <button id="btnPayCash" title="For marking a payment as recieved by any other means" class="btn btn-outline-success"><i class="bi bi-cash"></i> Pay by Cash</button>
-            <button id="btnPayGate" title="This method still allows a player to pay via PayPal" class="btn btn-outline-success"><i class="bi bi-door-open-fill"></i> Pay On Gate</button> 
-            <% } else if(!eventBooking.paid && !eventBooking.payOnGate && eventBooking.event.overflowQueue) { %>
-                <button id="btnAddQueue" class="btn btn-outline-dark" title="This removes the player from the waiting list and allows them to pay"><i class="bi bi-person-lines-fill"></i> Open Booking</button>
-                <% } %>
-                <% if (eventBooking.inQueue) { %><button id="btnDelQueue" class="btn btn-outline-dark" title="This returns the player to the waiting list"><i class="bi bi-person-lines-fill"></i> Return to Waiting List</button> <% } %>
-            <% if (eventBooking.totalPaid != 0 || eventBooking.payOnGate) { %><a class="btn btn-outline-danger mt-3" data-bs-toggle="modal" data-bs-target="#cancelModal"><i class="bi bi-x-circle"></i> Cancel Payment</a><% } %>
-            <a id="btnDeleteLink" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-danger mt-3"><i class="bi bi-trash"></i> Delete</a>
-        </div>
-    </div>
+											</div>
+										</form>
+										<% } %>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col text-end">
+						<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+							<form id="formUpdate" action="/admin/bookings/<%= eventBooking._id %>" method="POST">
+								<input id="frmPaid" type="hidden" name="paid" value="true">
+								<input id="frmDate" type="hidden" name="bookingPaid" value="<%= new Date() %>">
+								<input id="frmTotalDue" type="hidden" value="<%= eventBooking.totalDue %>">
+								<input id="frmTotal" type="hidden" name="totalPaid" value="<%= eventBooking.totalDue %>">
+								<input id="frmGate" type="hidden" name="payOnGate" value="false">
+							</form>
+							<form id="formDelete" action="/admin/bookings/<%= eventBooking._id %>?_method=DELETE" method="POST"></form>
+							<form id="formCancel" action="/admin/bookings/<%= eventBooking._id %>/cancel" method="POST"></form>
+							<form id="formQueueAdd" action="/admin/bookings/<%= eventBooking._id %>/queue" method="POST"></form>
+							<form id="formQueueDel" action="/admin/bookings/<%= eventBooking._id %>/queue?_method=DELETE" method="POST"></form>
+							<% if (eventBooking.inQueue || (!eventBooking.paid && !((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff')))) { %>
+							<button id="btnPayCash" title="For marking a payment as recieved by any other means" class="btn btn-outline-success"><i class="bi bi-cash"></i> Pay by Cash</button>
+							<button id="btnPayGate" title="This method still allows a player to pay via PayPal" class="btn btn-outline-success"><i class="bi bi-door-open-fill"></i> Pay On Gate</button>
+							<% } else if(!eventBooking.paid && !eventBooking.payOnGate && eventBooking.event.overflowQueue) { %>
+							<button id="btnAddQueue" class="btn btn-outline-dark" title="This removes the player from the waiting list and allows them to pay"><i class="bi bi-person-lines-fill"></i> Open Booking</button>
+							<% } %>
+							<% if (eventBooking.inQueue) { %><button id="btnDelQueue" class="btn btn-outline-dark" title="This returns the player to the waiting list"><i class="bi bi-person-lines-fill"></i> Return to Waiting List</button> <% } %>
+							<% if (eventBooking.totalPaid != 0 || eventBooking.payOnGate) { %><a class="btn btn-outline-danger mt-3" data-bs-toggle="modal" data-bs-target="#cancelModal"><i class="bi bi-x-circle"></i> Cancel Payment</a><% } %>
+							<% if (adminGroups.includes(currentUser.role)) { %>
+							<a id="btnDeleteLink" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-danger mt-3"><i class="bi bi-trash"></i> Delete</a>
+							<% } %>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="cancelModalLabel">Cancel Payment?</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to cancel this payment?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="btnCancel" type="submit" class="btn btn-danger">Cancel Payment</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="cancelModalLabel">Cancel Payment?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to cancel this payment?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button id="btnCancel" type="submit" class="btn btn-danger">Cancel Payment</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="deleteModalLabel">Delete Booking?</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this booking?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="btnDelete" type="submit" class="btn btn-danger">Delete Booking</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteModalLabel">Delete Booking?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to delete this booking?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button id="btnDelete" type="submit" class="btn btn-danger">Delete Booking</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="deleteTicketModal" tabindex="-1" aria-labelledby="deleteTicketModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="deleteTicketModalLabel">Delete Ticket?</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this ticket?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="btnDeleteTicket" type="submit" class="btn btn-danger">Delete Ticket</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteTicketModalLabel">Delete Ticket?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to delete this ticket?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button id="btnDeleteTicket" type="submit" class="btn btn-danger">Delete Ticket</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script src="/js/manageBooking.js"></script>

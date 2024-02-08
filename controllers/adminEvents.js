@@ -232,7 +232,7 @@ module.exports.cancelBookingPayment = async(req, res, next) => {
 };
 
 module.exports.manageBooking = async(req, res, next) => {
-    const booking = await eventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate('user').populate('originalUser').populate({ path: 'event', populate: { path: 'eventHost' } }).populate({ path: 'event', populate: { path: 'eventTickets' } });
+    const booking = await eventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate('user').populate('originalUser').populate({ path: 'event', populate: { path: 'eventHost' } }).populate({ path: 'event', populate: { path: 'eventHost', populate: { path: 'eventSystem'} } }).populate({ path: 'event', populate: { path: 'eventTickets' } });
     const eventTickets = await booking.event.eventTickets.filter(a => new Date(a.availableFrom).toLocaleDateString() <= new Date().toLocaleDateString() && new Date(a.availableTo).toLocaleDateString() >= new Date().toLocaleDateString() && a.available && ['mealticket', 'mealticketchild', 'playerbunk', 'monsterbunk', 'staffbunk'].includes(a.ticketType) && !booking.eventTickets.find(t => t._id.equals(a._id)));
     const waitingList = req.query.waitinglist ? req.query.waitinglist : false;
     if (!booking) {
