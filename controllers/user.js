@@ -149,7 +149,7 @@ module.exports.ltAPI = async(req, res, next) => {
             lorienTrust: {
                 authCode: req.params.id,
                 character: response.data,
-                playerId: response.data.pid,
+                playerId: response.data.pid.toString(),
             }
         }, {strict: false});
     } catch (error) {

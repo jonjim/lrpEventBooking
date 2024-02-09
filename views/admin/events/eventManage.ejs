@@ -370,7 +370,7 @@ return str.replace(/\w\S*/g, function(txt){
             <th scope="col-1"></th>
           </thead>
           <tbody class="players">
-            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['player','playerchild'].includes(t.ticketType) && (booking.event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) { %>
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['player','playerchild'].includes(t.ticketType) && (event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) { %>
             <tr class="players">
               <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
                 <% if (booking._doc.eventTickets.find(t => t.ticketType == 'playerbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
@@ -414,7 +414,7 @@ return str.replace(/\w\S*/g, function(txt){
             <th scope="col-1"></th>
           </thead>
           <tbody class="monsters">
-            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['monster','monsterchild'].includes(t.ticketType)  && (booking.event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['monster','monsterchild'].includes(t.ticketType)  && (event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
             <tr class="monsters">
               <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
                 <% if (booking._doc.eventTickets.find(t => t.ticketType == 'monsterbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
@@ -458,7 +458,7 @@ return str.replace(/\w\S*/g, function(txt){
             <th scope="col-1"></th>
           </thead>
           <tbody class="staff">
-            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['staff'].includes(t.ticketType)  && (booking.event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['staff'].includes(t.ticketType)  && (event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
             <tr class="staff">
               <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
                 <% if (booking._doc.eventTickets.find(t => t.ticketType == 'staffbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>

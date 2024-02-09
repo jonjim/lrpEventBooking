@@ -21,10 +21,15 @@ module.exports.signinEvent = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventHost').populate('eventTickets');
     const config = await siteConfig.find();
     if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
-        res.render('print/eventSignin', { title: `Manage ${event.name}`, event, config: config[0] }, async function(err, str) {
-            if (err) throw new ExpressError(err, 500)
-            await pdfService.sendPDF(res, str, `${event.name} Signin.pdf`);
-        })
+        if (req.query.preview) {
+            res.render('print/eventSignin', { title: `Manage ${event.name}`, event, config: config[0] });
+        }
+        else {
+            res.render('print/eventSignin', { title: `Manage ${event.name}`, event, config: config[0] }, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await pdfService.sendPDF(res, str, `${event.name} Signin.pdf`);
+            })
+        }
     } else {
         req.flash('error', `You do not have permission to manage ${event.name}`)
         return res.redirect('/');
@@ -34,10 +39,33 @@ module.exports.signinEvent = async(req, res, next) => {
 module.exports.medicalEvent = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } });
     if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
-        res.render('print/eventMedical', { title: `Manage ${event.name}`, event }, async function(err, str) {
-            if (err) throw new ExpressError(err, 500)
-            await pdfService.sendConfidentialPDF(res, str, `${event.name} Medical.pdf`);
-        })
+        if (req.query.preview) {
+            res.render('print/eventMedical', { title: `Manage ${event.name}`, event });
+        }
+        else {
+            res.render('print/eventMedical', { title: `Manage ${event.name}`, event }, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await pdfService.sendConfidentialPDF(res, str, `${event.name} Medical.pdf`);
+            })
+        }
+    } else {
+        req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+};
+
+module.exports.dietaryEvent = async(req, res, next) => {
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'attendees', populate: { path: 'booking' } });
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        if (req.query.preview) {
+            res.render('print/eventDietary', { title: `Manage ${event.name}`, event });
+        }
+        else {
+            res.render('print/eventDietary', { title: `Manage ${event.name}`, event }, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await pdfService.sendConfidentialPDF(res, str, `${event.name} Dietary.pdf`);
+            })
+        }
     } else {
         req.flash('error', `You do not have permission to manage ${event.name}`)
         return res.redirect('/');

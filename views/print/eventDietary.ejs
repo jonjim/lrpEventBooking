@@ -1,42 +1,62 @@
 <% layout('layouts/print') %>
-    <% const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]; 
-    function toTitleCase(str) {
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
+<% function toTitleCase(str) {
         if (typeof str == 'undefined') return '';
         return str.replace(/\w\S*/g, function(txt){
             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
     };%>
-        <h1 class="display-3 mt-5">
-            <%= event.name %>
-        </h1>
-        <p class="lead mb-0">
-            Hosted By the
-            <%= event.eventHost.name %>
-        </p>
-        <p class="lead mt-0 mb-5">
-            <small><%= dateOutput(event.eventStart) %>
-                <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
-                <%= dateOutput(event.eventEnd) %>
-                <% } %>
-                </small></p>
-        <p class="display-5 text-danger mt-5 pt-5" style="page-break-after:always;">Dietary Details: Confidential</p>
-        <table class="table table-striped">
-            <thead>
-                <th scope="col">Player Name</th>
-                <th scope="col">Dietary Details</th>
-            </thead>
-            <tbody>
-                <% for (attendee of event.attendees.sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))){ %>
-                    <% if (attendee.user.allergyDietary && attendee.user.allergyDietary != '') { %>
-                        <tr scope="row">
-                            <td width="250px">
-                                <%= toTitleCase(attendee.surname) %>,
-                                    <%= toTitleCase(attendee.firstname) %>
-                            </td>
-                            <td class="ms-0">
-                                <%= attendee.user.allergyDietary %>
-                            </td>
-                        </tr>
-                        <% }}  %>
-            </tbody>
-        </table>
+<h1 class="display-3 mt-5">
+	<%= event.name %>
+</h1>
+<p class="lead mb-0">
+	Hosted By the
+	<%= event.eventHost.name %>
+</p>
+<p class="lead mt-0 mb-5">
+	<small><%= dateOutput(event.eventStart) %>
+		<% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+		<%= dateOutput(event.eventEnd) %>
+		<% } %>
+	</small>
+</p>
+<p class="display-5 text-danger mt-5 pt-5" style="page-break-after:always;">Dietary Details: Confidential</p>
+<% const catering = JSON.parse(JSON.stringify(event.catering)) %>
+<% if (catering.menu) { %>
+<% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+<% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]]?.meals)) { %>
+<% for (option of catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].options){ %>
+    <% let optionFilter = event.attendees.filter((a) => {
+        return a.booking.cateringChoices?.some((choice) => {
+            return choice.day == dayNames[new Date(d).getDay()] && choice.meal == catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].name && choice.choice == option
+        })
+    }); %>
+<div style="page-break-after:always;">
+	<h2 class="mb-0 pb-0"><%=  dayNames[new Date(d).getDay()] %></h2>
+	<h3 class="mt-0"><%= catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].name %></h3>
+	<h5><%= option %> - Total: <%= optionFilter.length %></h5>
+	<table class="table table-striped" style="font-size:8pt;">
+		<thead>
+			<th scope="col">Player Name</th>
+			<th scope="col">Dietary Details</th>
+		</thead>
+		<tbody>
+			<% for (attendee of event.attendees.sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))){ %>
+			<% let choices = attendee.booking?.cateringChoices.filter(a => a.day == dayNames[new Date(d).getDay()] && a.meal == catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].name && a.choice == option); %>
+			<% if (choices.length > 0) {   %>
+			<tr scope="row">
+				<td width="200px">
+					<%= toTitleCase(attendee.surname) %>, <%= toTitleCase(attendee.firstname) %>
+				</td>
+				<td class="ms-0">
+					<%= attendee.user.allergyDietary %>
+				</td>
+			</tr>
+			<% } %>
+			<% } %>
+		</tbody>
+	</table>
+
+</div>
+<% }} %>
+<% }} %>
