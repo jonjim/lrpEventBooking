@@ -5,6 +5,7 @@ const FAQ = require('../models/faq')
 const User = require('../models/user')
 const axios = require('axios');
 const emailService = require('../utils/email');
+const express = require('express');
 
 module.exports.privacy = async(req, res, next) => {
     const config = await siteConfig.find();
@@ -32,7 +33,8 @@ module.exports.about = async(req,res,next) => {
     const meta = {
         crawl: true
     }
-    res.render('about/about',{title:`About ${res.locals.config.siteName}`, meta});
+
+    res.render('about/about',{title:`About ${res.locals.config.siteName}`, express: require('express/package').version, meta});
 }
 
 module.exports.eventSystem = async (req,res,next) => {
