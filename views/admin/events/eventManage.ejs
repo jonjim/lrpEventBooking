@@ -45,22 +45,29 @@ return str.replace(/\w\S*/g, function(txt){
     </div>
     <div class="col col-md-3 text-end">
       <div class="btn-group-vertical" role="group">
+        <% if (event.eventEnd > archiveDate) { %>
         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#cateringModal">
           <i class="fa fa-cutlery me-1" aria-hidden="true"> </i> Catering
         </button>
+        <% } else { %>
+          <button class="btn btn-secondary" disabled>Event Archived</button>
+        <% } %>
         <div class="btn-group">
           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-envelope-at"></i> E-mail
           </a>
 
           <ul class="dropdown-menu text-end">
+            <% if (event.eventEnd > archiveDate) { %>
             <li><a class="dropdown-item" title="Information for your event attendees" href="" data-bs-toggle="modal" data-bs-target="#eventPackModal">Send Event Pack</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
+            <% } %>
             <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#customEmailModal">Custom E-mail</a></li>
           </ul>
         </div>
+        <% if (event.eventEnd > archiveDate) { %>
         <div class="btn-group">
           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-receipt"></i> Event Reports
@@ -80,6 +87,7 @@ return str.replace(/\w\S*/g, function(txt){
             <% } %>
           </ul>
         </div>
+        
         <div class="btn-group">
           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-ticket-detailed"></i> Bookings
@@ -94,6 +102,7 @@ return str.replace(/\w\S*/g, function(txt){
             <li><a href="/admin/events/<%= event._id %>/waitinglist" class="dropdown-item">View Unpaid & Waiting List</a></li>
           </ul>
         </div>
+        <% } %>
       </div>
 
     </div>
@@ -361,7 +370,7 @@ return str.replace(/\w\S*/g, function(txt){
             <th scope="col-1"></th>
           </thead>
           <tbody class="players">
-            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['player','playerchild'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) { %>
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['player','playerchild'].includes(t.ticketType) && (booking.event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) { %>
             <tr class="players">
               <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
                 <% if (booking._doc.eventTickets.find(t => t.ticketType == 'playerbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
@@ -405,7 +414,7 @@ return str.replace(/\w\S*/g, function(txt){
             <th scope="col-1"></th>
           </thead>
           <tbody class="monsters">
-            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['monster','monsterchild'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['monster','monsterchild'].includes(t.ticketType)  && (booking.event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
             <tr class="monsters">
               <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
                 <% if (booking._doc.eventTickets.find(t => t.ticketType == 'monsterbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>
@@ -449,7 +458,7 @@ return str.replace(/\w\S*/g, function(txt){
             <th scope="col-1"></th>
           </thead>
           <tbody class="staff">
-            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['staff'].includes(t.ticketType))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
+            <% for (booking of eventBookings.filter( b => b.eventTickets.find(t => ['staff'].includes(t.ticketType)  && (booking.event.eventEnd > archiveDate || b.bookingPaid))).sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))) {%>
             <tr class="staff">
               <td scope="row"><span class="me-3"><%= booking.surname %>, <%= booking.firstname %></span>
                 <% if (booking._doc.eventTickets.find(t => t.ticketType == 'staffbunk')) { %> <i class="fa fa-bed me-1" title="Bunk Requested" aria-hidden="true"> </i>

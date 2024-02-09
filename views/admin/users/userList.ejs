@@ -24,7 +24,7 @@
                 </thead>
                 <tbody class="users">
                     <% for (user of users) { %>
-                        <tr title="<%= user.role == 'superAdmin' ? `Editing Super Administrator's is restricted`: '' %>">
+                        <tr style="cursor: pointer;" onclick="<%= (user.role != 'superAdmin' || currentUser.role == 'superAdmin') ? `window.location = '/admin/users/${user._id}'` : '' %>" title="<%= user.role == 'superAdmin' ? `Editing Super Administrator's is restricted`: '' %>">
                             <td class="d-none d-md-table-cell <%= user.role == 'superAdmin' ? 'text-muted': '' %>" scope="row">
                                 <%= user.surname %>
                             </td>

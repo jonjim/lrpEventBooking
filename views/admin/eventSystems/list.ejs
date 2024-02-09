@@ -17,7 +17,7 @@
                         <tbody>
                             <% for (eventSystem of eventSystems) { %>
                                 <% if (currentUser.eventSystems.filter(a => a._id.equals(eventSystem._id)).length > 0 || adminGroups.includes(currentUser.role)){ %>
-                                <tr>
+                                <tr onclick="window.location='/admin/systems/<%= eventSystem._id %>'" style="cursor: pointer;">
                                     <td scope="row">
                                         <%= eventSystem.name %>
                                     </td>

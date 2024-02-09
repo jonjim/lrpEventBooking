@@ -281,16 +281,18 @@ function toTitleCase(str) {
           <%} %>
         </tbody>
       </table>
-
+      <% if (event.eventEnd > archiveDate) { %>
       <div class="row mb-1">
         <div class="col-2"><a href="/admin/events/<%= event._id %>/tickets/new" class="btn btn-warning">Add Event Ticket</a></div>
       </div>
+      <% } %>
     </div>
     <hr>
+    <% if (event.eventEnd > archiveDate) { %>
     <div class="d-grid gap-2 mb-3">
       <button class="btn btn-success">Update Event</button>
     </div>
-
+    <% } %>
   </form>
   <% if (['admin','superAdmin'].includes(currentUser.role) && event.attendees.length == 0) { %>
   <div class="d-grid gap-2 mb-3">

@@ -50,6 +50,18 @@
                             </div>
                         </div>
                         <div class="mb-3">
+                            <label for="archiveDate">Period of time before archiving event date</label>
+                            <select class="form-select" name="archivePeriod" id="archiveData">
+                                <option value="30" <%= config.archivePeriod == '30' ? 'selected' : '' %>>1 Month</option>
+                                <option value="90" <%= config.archivePeriod == '90' ? 'selected' : '' %>>3 Months</option>
+                                <option value="180" <%= config.archivePeriod == '180' ? 'selected' : '' %>>6 Months</option>
+                                <option value="365" <%= config.archivePeriod == '365' ? 'selected' : '' %>>1 Year</option>
+                            </select>
+                            <div class="form-text">
+                                From this point available event data is limited to non confidential data
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <label for="siteDescription">System Description</label>
                             <textarea name="siteDescription" class="form-control" id="siteDescription" cols="30" rows="10"><%= config.siteDescription %></textarea>
                         </div>

@@ -164,6 +164,7 @@ app.use( async (req, res, next) => {
     res.locals.timeOutput = timeOutput
     res.locals.currencyOutput = currencyOutput
     res.locals.config = await loadConfig()
+    res.locals.archiveDate = new Date(new Date().getTime()-(res.locals.config.archivePeriod*24*60*60*1000))
 
     res.locals.paypalScript = `https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_ID : process.env.PAYPAL_CLIENT_ID}&currency=GBP`
     next();

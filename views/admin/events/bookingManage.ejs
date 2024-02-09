@@ -98,7 +98,7 @@
 											</li>
 											<% } %>
 										</ul>
-										<% if (eventTickets.length > 0) { %>
+										<% if (eventTickets.length > 0 && eventBooking.event.eventEnd > archiveDate) { %>
 										<form action="/admin/bookings/<%= eventBooking._id %>?_method=PUT" method="POST" novalidate class="validated-form">
 											<div class="row gx-1">
 
@@ -124,6 +124,7 @@
 						</table>
 					</div>
 					<div class="col text-end">
+						<% if (eventBooking.event.eventEnd > archiveDate) { %>
 						<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
 							<form id="formUpdate" action="/admin/bookings/<%= eventBooking._id %>" method="POST">
 								<input id="frmPaid" type="hidden" name="paid" value="true">
@@ -148,6 +149,7 @@
 							<a id="btnDeleteLink" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-danger mt-3"><i class="bi bi-trash"></i> Delete</a>
 							<% } %>
 						</div>
+						<% } %>
 					</div>
 				</div>
 			</div>

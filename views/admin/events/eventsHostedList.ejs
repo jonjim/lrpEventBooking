@@ -17,8 +17,8 @@
             </thead>
             <tbody>
                 <% if (events) for (event of events) { %>
-                    <tr>
-                        <td scope="row">
+                    <tr style="cursor: pointer;" onclick="window.location= '/admin/events/<%= event._id %>/manage'" >
+                        <td scope="row" class="<%= event.eventEnd < archiveDate ? 'text-muted text-decoration-line-through' : '' %>">
                             <a href="/admin/events/<%= event._id %>/manage" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Event"><i class="bi bi-pencil-square link-dark"></i></a>
 
                             <a href="/admin/events/<%= event._id %>/manage" class="link-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="View Event Details">
@@ -26,22 +26,22 @@
                             </a>
                             <%- event.cancelled ? '<span class="text-danger"><small>Cancelled</small></span>' : '' %>
                         </td>
-                        <td class="d-none d-md-table-cell" scope="row">
+                        <td class="d-none d-md-table-cell <%= event.eventEnd < archiveDate ? 'text-muted text-decoration-line-through' : '' %>" scope="row">
                             <% try { %>
                                 <%= event.eventHost.eventSystem.name %>
                                     <%= event.eventHost.display? ` - ${event.eventHost.name}` : '' %>
                                         <% } catch {} %>
                         </td>
-                        <td scope="row">
+                        <td scope="row" class="<%= event.eventEnd < archiveDate ? 'text-muted text-decoration-line-through' : '' %>">
                             <%= dateOutput(event.eventStart) %>
                         </td>
-                        <td class="d-none d-md-table-cell" scope="row">
+                        <td class="d-none d-md-table-cell <%= event.eventEnd < archiveDate ? 'text-muted text-decoration-line-through' : '' %>" scope="row">
                             <%= dateOutput(event.eventEnd) %>
                         </td>
-                        <td class="d-none d-md-table-cell text-center <%= event.visible ? 'text-success' : 'text-danger' %>" scope="row" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
+                        <td class="d-none d-md-table-cell text-center <%= event.eventEnd < archiveDate ? 'text-muted text-decoration-line-through' : '' %> <%= event.visible ? 'text-success' : 'text-danger' %>" scope="row" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
                             <%- event.visible ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
                         </td>
-                        <td class="d-none d-md-table-cell text-center <%= event.allowBookings ? 'text-success' : 'text-danger' %>" scope="row" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
+                        <td class="d-none d-md-table-cell text-center <%= event.eventEnd < archiveDate ? 'text-muted text-decoration-line-through' : '' %> <%= event.allowBookings ? 'text-success' : 'text-danger' %>" scope="row" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= event.eventApproved ? '' : 'This event has not been approved!' %>">
                             <%- event.allowBookings ? '<i class="bi bi-check-square-fill"></i>' : '<i class="bi bi-x-square-fill"></i>' %>
                         </td>
                     </tr>
