@@ -27,9 +27,9 @@
             </h4>
             <p class="card-text">
               <i>
-                <%= dateOutput(booking.event.eventStart) %>
-                                    <% if (dateOutput(booking.event.eventStart) != dateOutput(booking.event.eventEnd)) { %> to
-                                    <%= dateOutput(booking.event.eventEnd) %>
+                <%= dateOutput(eventBooking.event.eventStart) %>
+                                    <% if (dateOutput(eventBooking.event.eventStart) != dateOutput(eventBooking.event.eventEnd)) { %> to
+                                    <%= dateOutput(eventBooking.event.eventEnd) %>
                                     <% } %><br /><small>
                   <a class="link-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%= encodeURI(eventBooking.event.location) %>"><%= eventBooking.event.location.split(',')[0] %></a>
                 </small>

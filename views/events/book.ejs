@@ -116,7 +116,7 @@
 							<% for (ticket of mealTickets){ %>
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[playerMeal]">
-								<label class="form-check-label" for="ticket_<%= ticket._id %>">£
+								<label class="form-check-label" for="ticket_<%= ticket._id %>">
 									<%= currencyOutput(ticket.cost) %> - <%= ticket.description %></label>
 							</div>
 							<% } } %>
@@ -282,7 +282,7 @@
 							<div class="mb-3 form-check">
 								<input class="form-check-input" type="radio" id="ticket_<%= ticket._id %>" value="<%= ticket._id %>" name="ticketSelected[staffMeal]">
 								<label class="form-check-label" for="ticket_<%= ticket._id %>">
-									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %>%= ticket.description %></label>
+									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 							</div>
 							<% } } %>
 							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
