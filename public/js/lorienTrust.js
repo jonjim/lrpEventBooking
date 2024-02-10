@@ -1,4 +1,16 @@
 async function getCharacter() {
+    let authcode = document.getElementById('lorienTrustauthCode');
+    let authFeedback = document.getElementById('authInvalidFeedback');
+    if (authcode.value == '') {
+        authcode.classList.add('is-invalid')
+        authFeedback.innerText = "Access Token can not be empty!"
+        return;
+    }
+    if (!new RegExp("(\\w{3})-(\\w{5})").test(authcode.value)) {
+        authcode.classList.add('is-invalid')
+        authFeedback.innerText = "Access Token is not in the correct format!"
+        return;
+    }
     var spinner = document.createElement("div");
     spinner.classList.add('spinner-border');
     spinner.classList.add('text-dark');
@@ -54,5 +66,11 @@ async function getCharacter() {
                 }
             }
         })
+        .catch(error => {
+            document.getElementById('lorienTrustspinnerDiv').removeChild(spinner);
+            authcode.classList.add('is-invalid')
+            authFeedback.innerText = "Unexpected error loading character details!"
+            console.log(error);
+    })
 
 }

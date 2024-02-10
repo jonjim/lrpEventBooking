@@ -1,229 +1,233 @@
 <% layout('layouts/boilerplate') %>
-    <form id="accountForm" action="/account" method="POST" novalidate class="validated-form">
-        <div class="row mb-5">
-            <div class="col mb-3">
-                <div class="card shadow py-3 px-3 mb-3 mb-3">
-                    <div class="card-header bg-white">
-                        <h4>Personal Information</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mt-3">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="firstname">First Name</label>
-                                    <input class="form-control form-control-sm" id="firstname" required name="firstname" value="<%= user.firstname %>">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="surname">Surname</label>
-                                    <input class="form-control form-control-sm" id="surname" required name="surname" value="<%= user.surname %>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="row">
-                                <div class="col">
-                                    <label for="email">
-                                    E-mail Address
-                                </label>
-                                    <input type="text" id="email" name="username" required value="<%= user.username %>" type="email" class="form-control">
-                                </div>
-                                <% if (user.googleId) { %>
-                                    <div class="col-6"><small><a href="#" class="btn btn-outline-dark mt-4"><img height="25px" class="my-0 me-2" src="/img/web_light_sq_ctn@4x.png">Connected with Google</a></small></div>
-                                    <% } %>
-                                        <% if (user.facebookId) { %>
-                                            <div class="col-6"><small><a href="#" class="btn btn-outline-primary mt-4"><i class="bi bi-facebook me-2"></i>Connected with Facebook</a></small></div>
-                                            <% } %>
-                            </div>
-                        </div>
-                        <div class="row mb-0">
-                            <div class="col-6">
-                                <label for="dob">Date of Birth</label>
-                                <input type="date" id="dob" name="dob" required class="form-control form-control-sm" <% if (user.dob) { %> value="<%= new Date(user.dob).toISOString().split('T')[0] %>"
-                                    <% } %>>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check mt-3">
-                                    <label for="displayBookings" class="form-check-label">Display Bookings</label>
-                                    <input type="checkbox" class="form-check-input" name="displayBookings" id="displayBookings" <%= user.displayBookings ? 'checked' : '' %>>
-                                    <p class="form-text">Display name on event bookings</p>
-                                </div>
-                            </div>
-                        </div>
+<form id="accountForm" action="/account" method="POST" novalidate class="validated-form">
+	<div class="row mb-5">
+		<div class="col mb-3">
+			<div class="card shadow py-3 px-3 mb-3 mb-3">
+				<div class="card-header bg-white">
+					<h4>Personal Information</h4>
+				</div>
+				<div class="card-body">
+					<div class="row mt-3">
+						<div class="col">
+							<div class="mb-3">
+								<label for="firstname">First Name</label>
+								<input class="form-control form-control-sm" id="firstname" required name="firstname" value="<%= user.firstname %>">
+							</div>
+						</div>
+						<div class="col">
+							<div class="mb-3">
+								<label for="surname">Surname</label>
+								<input class="form-control form-control-sm" id="surname" required name="surname" value="<%= user.surname %>">
+							</div>
+						</div>
+					</div>
+					<div class="mb-3">
+						<div class="row">
+							<div class="col">
+								<label for="email">
+									E-mail Address
+								</label>
+								<input type="text" id="email" name="username" required value="<%= user.username %>" type="email" class="form-control">
+							</div>
+							<% if (user.googleId) { %>
+							<div class="col-6"><small><a href="#" class="btn btn-outline-dark mt-4"><img height="25px" class="my-0 me-2" src="/img/web_light_sq_ctn@4x.png">Connected with Google</a></small></div>
+							<% } %>
+							<% if (user.facebookId) { %>
+							<div class="col-6"><small><a href="#" class="btn btn-outline-primary mt-4"><i class="bi bi-facebook me-2"></i>Connected with Facebook</a></small></div>
+							<% } %>
+						</div>
+					</div>
+					<div class="row mb-0">
+						<div class="col-6">
+							<label for="dob">Date of Birth</label>
+							<input type="date" id="dob" name="dob" required class="form-control form-control-sm" <% if (user.dob) { %> value="<%= new Date(user.dob).toISOString().split('T')[0] %>" <% } %>>
+						</div>
+						<div class="col-6">
+							<div class="form-check mt-3">
+								<label for="displayBookings" class="form-check-label">Display Bookings</label>
+								<input type="checkbox" class="form-check-input" name="displayBookings" id="displayBookings" <%= user.displayBookings ? 'checked' : '' %>>
+								<p class="form-text">Display name on event bookings</p>
+							</div>
+						</div>
+					</div>
 
-                        <hr>
-                        <p class="form-text">The following information is not required to book an event, however in the event of an accident or emergency this information may aid us in getting you the appropriate assistance as quickly as possible.</p>
-                        <div class="mb-3">
-                            <label for="emergencyContactName">Emergency Contact Name</label>
-                            <input type="text" id="emergencyContactName" name="emergencyContactName" class="form-control form-control-sm" value="<%= user.emergencyContactName %>">
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label for="emergencyContactNumber">Emergency Contact Number</label>
-                                <input type="tel" id="emergencyContactNumber" name="emergencyContactNumber" class="form-control form-control-sm" value="<%= user.emergencyContactNumber %>">
-                            </div>
-                            <div class="col-6">
-                                <label for="emergencyContactRelation">Emergency Contact Relation</label>
-                                <input type="text" id="emergencyContactRelation" name="emergencyContactRelation" class="form-control form-control-sm" placeholder="e.g. Partner, Parent, etc." value="<%= user.emergencyContactRelation %>">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="medicalInfo">Medical Notes</label>
-                            <textarea rows="2" id="medicalInfo" name="medicalInfo" class="form-control form-control-sm"><%= user.medicalInfo %></textarea>
-                            <div id="medicalInfo" class="form-text">
-                                Do you have any medical conditions that may be relevant to, or the cause of, any emergency situations? This information will only be shared with First Aid teams should an issue arise.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="medicalInfo">Food Allergy/Dietary Notes</label>
-                            <textarea rows="2" id="allergyDietary" name="allergyDietary" class="form-control form-control-sm"><%= user.allergyDietary %></textarea>
-                            <div id="allergyDietary" class="form-text">
-                                Do you have any food allergies, or other dietary requirements? This information will be shared with event caterers should you book a meal ticket for your events.
-                            </div>
-                        </div>
-                        <div class="text-end d-none d-md-block">
-                            <a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</a>
-                            <button type="submit" class="btn btn-success">Save Changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col col-md-6">
-                <div class="card shadow py-3 px-3 mb-3 mb-3">
-                    <div class="card-header bg-white">
-                        <h4>System Information</h4>
-                    </div>
-                    <div class="accordion accordion-flush py-3 px-3" id="systemSettings">
-                        <% for (eventSystem of eventSystems.filter(a => a.active).sort((a,b) => ('' + a.name).localeCompare(b.name))  ){ %> 
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" ">
-                                    <button style="font-size:1.2rem !important; font-weight:500 !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion<%= eventSystem.systemRef %>" aria-expanded="false" aria-controls="accordion<%= eventSystem.systemRef %>">
-                                  <img style="max-width:250px;" src="<%= eventSystem.img.url %>" alt="<%= eventSystem.name %>">
-                                </button>
-                                </h2>
-                                <div id="accordion<%= eventSystem.systemRef %>" class="accordion-collapse collapse" data-bs-parent="#systemSettings">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="card-header bg-white mt-3">
-                                                <h6>Character Information</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <label for="<%= eventSystem.systemRef %>CharacterName">Character Name</label>
-                                                    <input type="text" id="<%= eventSystem.systemRef %>CharacterName" name="<%= eventSystem.systemRef %>[character][characterName]" value="<%= user[eventSystem.systemRef]?.character.characterName %>" class="form-control form-control-sm">
-                                                    <div class="invalid-feedback">
-                                                        <p>Please provide a character name</p>
-                                                    </div>
-                                                </div>
-                                                <% for (field of eventSystem.customFields.filter(a => a.section == 'character')) { let systemCharacter = user[eventSystem.systemRef]?.character;%>
-                                                    <div class="mb-3">
-                                                        
-                                                        <% if (field.type == 'select') { %>
-                                                            <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                            <select name="<%= eventSystem.systemRef %>[character][<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-select form-select-sm" <%= field.required ? 'required' : '' %>>
-                                                                <% for (option of field.options) {%>
-                                                                    <option value="<%= option %>" <%= systemCharacter?.[field.name] == option ? 'selected' : '' %>> <%= option %></option>
-                                                                <% } %>
-                                                            </select>
-                                                        <% } else if (field.type == 'checkbox') { %>
-                                                            <input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= systemCharacter?.[field.name] %>" id="<%= eventSystem.systemRef %><%= field.name %>" <%= systemCharacter?.[field.name] ? 'checked' : '' %>>
-                                                            <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                        <% } else { %>
-                                                            <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                            <input type="text" class="form-control-sm" name="<%= eventSystem.systemRef %>[character][<%= field.name %>]" value="<%= systemCharacter?.[field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
-                                                        <% } %>
-                                                        
-                                                        <div class="invalid-feedback"><%- field.error %></div>
-                                                    </div>
-                                                <% } %>
-                                            </div>
-                                        </div>
-                                        <% if (eventSystem.customFields.filter(a => a.section == 'player').length > 0) { %>
-                                        <div class="col-md-6">
-                                            <div class="card-header bg-white mt-3">
-                                                <h6>Player Information</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <% for (field of eventSystem.customFields.filter(a => a.section == 'player')) {%>
-                                                    <div class="mb-3">
-                                                        
-                                                        <% if (field.type == 'select') { %>
-                                                            <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                            <select name="<%= eventSystem.systemRef %>[<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-select form-select-sm" <%= field.required ? 'required' : '' %>>
-                                                                <% for (option of field.options) { %>
-                                                                    <option value="<%= option %>" <%= user[eventSystem.systemRef]?.[field.name] == option ? 'selected' : '' %> <%= option %></option>
-                                                                <% } %>
-                                                            </select>                                                        
-                                                        <% } else if (field.type == 'checkbox') { %>
-                                                            <input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef]?.[field.name] %>" id="<%= eventSystem.systemRef %><%= field.name %>" <%= user[eventSystem.systemRef]?.[field.name] ? 'checked' : '' %>>
-                                                            <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                        <% } else { %>
-                                                            <label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
-                                                            <input type="<%= field.type %>" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-control form-control-sm" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef]?.[field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
-                                                        <% } %>
-                                                        <div class="form-text"><%= field.description %></div>
-                                                        <div class="invalid-feedback"><%- field.error %></div>
-                                                    </div>
-                                                <% } %>
-                                            </div>
-                                        </div>
-                                        <% } %>
-                                    </div>
-                                    <% for (tool of eventSystem.customTools.filter(a => a != '')) {%>
-                                        <%- include(`systemTools/${tool}`) %>
-                                    <% } %>
-                                </div>
-                            </div>
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-            <div class="text-end d-md-none">
-                <a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</a>
-                <button type="submit" class="btn btn-success">Save Changes</button>
-            </div>
-        </div>
-    </form>
+					<hr>
+					<p class="form-text">The following information is not required to book an event, however in the event of an accident or emergency this information may aid us in getting you the appropriate assistance as quickly as possible.</p>
+					<div class="mb-3">
+						<label for="emergencyContactName">Emergency Contact Name</label>
+						<input type="text" id="emergencyContactName" name="emergencyContactName" class="form-control form-control-sm" value="<%= user.emergencyContactName %>">
+					</div>
+					<div class="row mb-3">
+						<div class="col-6">
+							<label for="emergencyContactNumber">Emergency Contact Number</label>
+							<input type="tel" id="emergencyContactNumber" name="emergencyContactNumber" class="form-control form-control-sm" value="<%= user.emergencyContactNumber %>">
+						</div>
+						<div class="col-6">
+							<label for="emergencyContactRelation">Emergency Contact Relation</label>
+							<input type="text" id="emergencyContactRelation" name="emergencyContactRelation" class="form-control form-control-sm" placeholder="e.g. Partner, Parent, etc." value="<%= user.emergencyContactRelation %>">
+						</div>
+					</div>
+					<div class="mb-3">
+						<label for="medicalInfo">Medical Notes</label>
+						<textarea rows="2" id="medicalInfo" name="medicalInfo" class="form-control form-control-sm"><%= user.medicalInfo %></textarea>
+						<div id="medicalInfo" class="form-text">
+							Do you have any medical conditions that may be relevant to, or the cause of, any emergency situations? This information will only be shared with First Aid teams should an issue arise.
+						</div>
+					</div>
+					<div class="mb-3">
+						<label for="medicalInfo">Food Allergy/Dietary Notes</label>
+						<textarea rows="2" id="allergyDietary" name="allergyDietary" class="form-control form-control-sm"><%= user.allergyDietary %></textarea>
+						<div id="allergyDietary" class="form-text">
+							Do you have any food allergies, or other dietary requirements? This information will be shared with event caterers should you book a meal ticket for your events.
+						</div>
+					</div>
+					<div class="text-end d-none d-md-block">
+						<a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</a>
+						<button type="submit" class="btn btn-success">Save Changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col col-md-6">
+			<div class="card shadow py-3 px-3 mb-3 mb-3">
+				<div class="card-header bg-white">
+					<h4>System Information</h4>
+				</div>
+				<div class="accordion accordion-flush py-3 px-3" id="systemSettings">
+					<% for (eventSystem of eventSystems.filter(a => a.active).sort((a,b) => ('' + a.name).localeCompare(b.name))  ){ %>
+					<div class="accordion-item">
+						<h2 class="accordion-header" ">
+                                    <button style=" font-size:1.2rem !important; font-weight:500 !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion<%= eventSystem.systemRef %>" aria-expanded="false" aria-controls="accordion<%= eventSystem.systemRef %>">
+							<img style="max-width:250px;" src="<%= eventSystem.img.url %>" alt="<%= eventSystem.name %>">
+							</button>
+						</h2>
+						<div id="accordion<%= eventSystem.systemRef %>" class="accordion-collapse collapse" data-bs-parent="#systemSettings">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="card-header bg-white mt-3">
+										<h6>Character Information</h6>
+									</div>
+									<div class="card-body">
+										<div class="mb-3">
+											<label for="<%= eventSystem.systemRef %>CharacterName">Character Name</label>
+											<input type="text" id="<%= eventSystem.systemRef %>CharacterName" name="<%= eventSystem.systemRef %>[character][characterName]" value="<%= user[eventSystem.systemRef]?.character.characterName %>" class="form-control form-control-sm">
+											<div class="invalid-feedback">
+												<p>Please provide a character name</p>
+											</div>
+										</div>
+										<% for (field of eventSystem.customFields.filter(a => a.section == 'character')) { let systemCharacter = user[eventSystem.systemRef]?.character;%>
+										<div class="mb-3">
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Delete Account?</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete your account?</p>
-                    <p>This will hide your details from any events you have previously booked for, and delete all your personal data.</p>
-                    <p><i>This can not be undone. You would need to register a new account to book any events</i></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <form action="/account?_method=DELETE" method="POST">
-                        <button type="submit" class="btn btn-danger">Delete Account</button>
-                    </form>
+											<% if (field.type == 'select') { %>
+											<label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
+											<select name="<%= eventSystem.systemRef %>[character][<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-select form-select-sm" <%= field.required ? 'required' : '' %>>
+												<% for (option of field.options) {%>
+												<option value="<%= option %>" <%= systemCharacter?.[field.name] == option ? 'selected' : '' %>> <%= option %></option>
+												<% } %>
+											</select>
+											<% } else if (field.type == 'checkbox') { %>
+											<input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" <%= systemCharacter?.[field.name] ? 'checked' : '' %>>
+											<label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
+											<% } else { %>
+											<label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
+											<input type="text" class="form-control-sm" name="<%= eventSystem.systemRef %>[character][<%= field.name %>]" value="<%= systemCharacter?.[field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
+											<% } %>
 
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="js/account.js"></script>
-    <script>
-        var sys = new URL(window.location.href).searchParams.get("system");
-        if (sys) {
-            switch (sys) {
-                <% for (eventSystem of eventSystems.filter(a => a.active)){ %> 
-                    case "<%= eventSystem.systemRef %>":
-                    document.getElementById('accordion<%= eventSystem.systemRef %>').classList.toggle('show');
-                    document.getElementById('<%= `${eventSystem.systemRef}CharacterName` %>').required = true;
-                    document.getElementById('<%= `${eventSystem.systemRef}CharacterName` %>').classList.add('is-invalid');
-                    <% for (customField of eventSystem.customFields.filter(b => b.required)) { %>
-                        document.getElementById('<%= `${eventSystem.systemRef}${field.label}` %>').required = true;
-                        document.getElementById('<%= `${eventSystem.systemRef}${field.label}` %>').classList.add('is-invalid');
-                    <% } %>
-                    break;
-                <% } %>
-            }
-        }
-    </script>
+											<div class="invalid-feedback"><%- field.error %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+								<% if (eventSystem.customFields.filter(a => a.section == 'player').length > 0) { %>
+								<div class="col-md-6">
+									<div class="card-header bg-white mt-3">
+										<h6>Player Information</h6>
+									</div>
+									<div class="card-body">
+										<% for (field of eventSystem.customFields.filter(a => a.section == 'player')) {%>
+										<div class="mb-3">
+											<% if (field.type == 'select') { %>
+											<label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
+											<select name="<%= eventSystem.systemRef %>[<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-select form-select-sm" <%= field.required ? 'required' : '' %>>
+												<% for (option of field.options) { %>
+												<option value="<%= option %>" <%= user[eventSystem.systemRef]?.[field.name] == option ? 'selected' : '' %> <%= option %></option>
+													<% } %>
+											</select>
+											<% } else if (field.type == 'checkbox') { %>
+											<input type="checkbox" class="form-check-input" name="<%= eventSystem.systemRef %>[<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" <%= user[eventSystem.systemRef]?.[field.name] ? 'checked' : '' %>>
+											<label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
+											<% } else { %>
+											<label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
+											<input type="<%= field.type %>" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-control form-control-sm" name="<%= eventSystem.systemRef %>[<%= field.name %>]" value="<%= user[eventSystem.systemRef]?.[field.name] %>" placeholder="<%= field.placeholder %>" <%= field.required ? 'required' : '' %>>
+											<% } %>
+											<div class="form-text"><%= field.description %></div>
+											<div class="invalid-feedback"><%- field.error %></div>
+										</div>
+										<% } %>
+									</div>
+								</div>
+								<% } %>
+							</div>
+							<% for (tool of eventSystem.customTools.filter(a => a != '')) {%>
+							<%- include(`systemTools/${tool}`) %>
+							<% } %>
+						</div>
+					</div>
+					<% } %>
+				</div>
+			</div>
+		</div>
+		<div class="text-end d-md-none">
+			<a href="#" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</a>
+			<button type="submit" class="btn btn-success">Save Changes</button>
+		</div>
+	</div>
+</form>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteModalLabel">Delete Account?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to delete your account?</p>
+				<p>This will hide your details from any events you have previously booked for, and delete all your personal data.</p>
+				<p><i>This can not be undone. You would need to register a new account to book any events</i></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<form action="/account?_method=DELETE" method="POST">
+					<button type="submit" class="btn btn-danger">Delete Account</button>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script src="js/account.js"></script>
+<script>
+	var sys = new URL(window.location.href)
+		.searchParams.get("system");
+	if (sys) {
+		switch (sys) {
+			<% for (eventSystem of eventSystems.filter(a => a.active)){ %>
+			case "<%= eventSystem.systemRef %>":
+				document.getElementById('accordion<%= eventSystem.systemRef %>')
+					.classList.toggle('show');
+				document.getElementById('<%= `${eventSystem.systemRef}CharacterName` %>')
+					.required = true;
+				document.getElementById('<%= `${eventSystem.systemRef}CharacterName` %>')
+					.classList.add('is-invalid');
+				<% for (customField of eventSystem.customFields.filter(b => b.required)) { %>
+				document.getElementById('<%= `${eventSystem.systemRef}${field.label}` %>')
+					.required = true;
+				document.getElementById('<%= `${eventSystem.systemRef}${field.label}` %>')
+					.classList.add('is-invalid');
+				<% } %>
+				break;
+				<% } %>
+		}
+	}
+</script>

@@ -1,7 +1,8 @@
 <div class="row mt-3">
     <div class="col">
         <label for="lorienTrustauthCode" class="form-label">Lorien Trust Character Access Token</label>
-        <input id="lorienTrustauthCode" name="lorienTrust[authCode]" class="form-control form-control-sm" aria-describedby="ltAuthCodeHelpBlock" value="<%= user.lorienTrust?.authCode %>">
+        <input id="lorienTrustauthCode" pattern="(\w{3})-(\w{5})" name="lorienTrust[authCode]" class="form-control form-control-sm" aria-describedby="ltAuthCodeHelpBlock" value="<%= user.lorienTrust?.authCode %>">
+        <div id="authInvalidFeedback" class="invalid-feedback"></div>
     </div>
     <div class="col-3 pt-1">
         <a href="#character" onclick="getCharacter()" class="btn btn-success mt-4" role="button">Update</a>

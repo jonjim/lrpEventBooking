@@ -79,10 +79,34 @@ module.exports.payEventBooking = async(req, res, next) => {
         return res.render('events/pay', { title: `Pay for ${eventBooking.event.name}`, eventBooking });
 }
 
+function Object_assign (target, ...sources) {
+    sources.forEach(source => {
+      Object.keys(source).forEach(key => {
+        const s_val = source[key]
+        const t_val = target[key]
+        target[key] = t_val && s_val && typeof t_val === 'object' && typeof s_val === 'object'
+                    ? Object_assign(t_val, s_val)
+                    : s_val
+      })
+    })
+    return target
+  }
+
 module.exports.accountUpdate = async (req, res, next) => {
     req.body.displayBookings = typeof req.body.displayBookings != 'undefined' ? req.body.displayBookings == 'on' ? true : false : false;
-    const userCurrent = await User.findById(req.user._id);
-    const user = await User.findByIdAndUpdate(req.user._id, { ...Object.assign(userCurrent,req.body) }, { new: true, strict:false })
+    const systems = await eventSystems.find({ active: true });
+    for (system of systems) {
+        for (field of system.customFields) {
+            if (field.type == 'checkbox') {
+                if (field.section == 'character')
+                    req.body[system.systemRef].character[field.name] = typeof req.body[system.systemRef].character[field.name] != 'undefined' ? req.body[system.systemRef].character[field.name] == 'on' ? true : false : false;
+                if (field.section == 'player')
+                req.body[system.systemRef][field.name] = typeof req.body[system.systemRef][field.name] != 'undefined' ? req.body[system.systemRef][field.name] == 'on' ? true : false : false;
+            }
+        }
+    }
+    const userCurrent = await User.findById(req.user._id);    
+    const user = await User.findByIdAndUpdate(req.user._id, { ...Object_assign(JSON.parse(JSON.stringify(userCurrent)),req.body) }, { new: true, strict:false })
     req.user = user;
     const redirectUrl = req.session.returnTo || '/account';
     req.session.returnTo = undefined;
