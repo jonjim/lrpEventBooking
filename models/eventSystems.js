@@ -64,4 +64,9 @@ eventSystemSchema.virtual('img.path')
     this.img.url = value;
 })
 
+eventSystemSchema.virtual('img.thumbnail')
+    .get(function () {
+        return this.img.url.replace('/upload', '/upload/c_fill,h_60');
+})
+
 module.exports = mongoose.model('eventSystems', eventSystemSchema);

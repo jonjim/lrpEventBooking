@@ -5,8 +5,9 @@ const eventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
 const emailService = require('../utils/email');
 
-module.exports.renderRegister = (req, res) => {
-    res.render('user/register', { title: 'Create New Account' });
+module.exports.renderRegister =async (req, res, next) => {
+    const systems = await eventSystems.find({active:true})
+    res.render('user/register', { title: 'Create New Account', systems });
 };
 
 module.exports.register = async (req, res, next) => {

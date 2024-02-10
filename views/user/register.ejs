@@ -1,62 +1,78 @@
 <% layout('layouts/boilerplate')%>
 <script src="https://www.google.com/recaptcha/api.js?render=6LcDm2kpAAAAAH4rSLWeH8nX3qB0EgVtY3t_lN4B"></script>
-    <div class="container justify-content-center align-items-center mt-md-5">
-        <div class="row">
-            <div class="col-md-6 offset-md- col-xl-4 offset-xl-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title">Create An Account</h5>
-                        <form id="registerForm" action="/register" method="POST" novalidate class="validated-form">
-                            <div class="mb-3">
-                                <label class="form-label" for="username">E-mail Address</label>
-                                <input class="form-control" type="email" id="username" name="username" autofocus required autocomplete="off">
-                                <div class="invalid-feedback">
-                                    Please enter a valid e-mail address.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="password">Password</label>
-                                <input class="form-control" type="password" id="password" name="password"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
-                                <div class="invalid-feedback">
-                                    Please enter a Password.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="confirmPassword">Confirm Password</label>
-                                <input class="form-control" type="password" id="confirmPassword" name="confirmPassword"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
-                                <div class="invalid-feedback">
-                                    Passwords must match, and must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters
-                                </div>
-                            </div>
-                            <input type="hidden" name="token" id="recaptcha" required>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-success">Register</button>
-                        </div>
-                    </form>
-                    </div>
+<div class="container justify-content-center align-items-center mt-md-5">
+	<div class="row">
+		<div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+			<div class="card shadow">
+				<div class="card-body">
+					<h5 class="card-title">Create An Account</h5>
+					<form id="registerForm" action="/register" method="POST" novalidate class="validated-form">
+						<div class="mb-3">
+							<label class="form-label" for="username">E-mail Address</label>
+							<input class="form-control" type="email" id="username" name="username" autofocus required autocomplete="off">
+							<div class="invalid-feedback">
+								Please enter a valid e-mail address.
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label" for="password">Password</label>
+							<input class="form-control" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
+							<div class="invalid-feedback">
+								Please enter a Password.
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label" for="confirmPassword">Confirm Password</label>
+							<input class="form-control" type="password" id="confirmPassword" name="confirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
+							<div class="invalid-feedback">
+								Passwords must match, and must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters
+							</div>
+						</div>
+						<input type="hidden" name="token" id="recaptcha" required>
+						<div class="d-grid gap-2">
+							<button class="btn btn-success">Register</button>
+						</div>
+					</form>
+				</div>
 
+			</div>
+		</div>
+	</div>
+    <% if (systems.length > 1) { %>
+    <div class="text-muted text-center mt-5">
+        <div class="lead">Look out for events from some of our supported systems</div>
+        <div class="row mt-5 py-3">
+            
+            <% for (system of systems) { %>
+                <div class="col-xl mb-3">
+                    <img class="img-fluid" src="<%= system.img?.thumbnail %>" alt="">
                 </div>
-            </div>
+            <% } %>
         </div>
     </div>
+    <% } %>
 </div>
-    <script>
-var password = document.getElementById("password")
-var confirm_password = document.getElementById("confirmPassword")
+</div>
+<script>
+	var password = document.getElementById("password")
+	var confirm_password = document.getElementById("confirmPassword")
 
-function validatePassword(){
-    if(password.value != confirm_password.value) {
-    confirm_password.setCustomValidity("Passwords Don't Match");
-  } else {
-    confirm_password.setCustomValidity('');
-  }
-}
+	function validatePassword() {
+		if (password.value != confirm_password.value) {
+			confirm_password.setCustomValidity("Passwords Don't Match");
+		} else {
+			confirm_password.setCustomValidity('');
+		}
+	}
 
-password.onchange = validatePassword;
-confirm_password.onkeyup = validatePassword;
+	password.onchange = validatePassword;
+	confirm_password.onkeyup = validatePassword;
 
-        document.getElementById('username').focus();
-    function onSubmit(token) {
-            document.getElementById('recaptcha').value= token;
-   }
-    </script>
+	document.getElementById('username')
+		.focus();
+
+	function onSubmit(token) {
+		document.getElementById('recaptcha')
+			.value = token;
+	}
+</script>
