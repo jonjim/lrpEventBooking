@@ -12,7 +12,7 @@ module.exports.renderRegister = (req, res) => {
 module.exports.register = async (req, res, next) => {
     const { username, password, token } = req.body;
     const userLookup = await User.find({ username: username });
-    if (userLookup) {
+    if (userLookup.length > 0) {
         req.flash('error', 'That e-mail address is already registered!')
         return res.redirect('/register')
     }

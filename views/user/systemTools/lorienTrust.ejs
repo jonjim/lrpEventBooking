@@ -13,6 +13,7 @@
 </div>
 <div id="lorienTrustspinnerDiv"></div>
 <div id="lorienTrustcharacter">
+    <% if (user.lorienTrust) { %>
     <% let ltPlayerDetails = JSON.parse(JSON.stringify( user.lorienTrust));%>
     <h6 id="lorienTrustcharacterRace" class="text-center">
         <%= user.lorienTrust?.character ? user.lorienTrust?.character?.race : '' %>
@@ -47,5 +48,6 @@
             </ul>
         </div>
     </div>
+    <% } %>
 </div>
 <script src="/js/lorienTrust.js"></script>
