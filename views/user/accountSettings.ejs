@@ -97,11 +97,22 @@
 					<% for (eventSystem of eventSystems.filter(a => a.active).sort((a,b) => ('' + a.name).localeCompare(b.name))  ){ %>
 					<div class="accordion-item">
 						<h2 class="accordion-header" ">
-                                    <button style=" font-size:1.2rem !important; font-weight:500 !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion<%= eventSystem.systemRef %>" aria-expanded="false" aria-controls="accordion<%= eventSystem.systemRef %>">
+                                    <button style=" font-size:1.2rem !important; font-weight:500 !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion<%= eventSystem.systemRef %>" aria-expanded="false" aria-controls="accordion<%= eventSystem.systemRef %>" onclick="document.getElementById('<%= eventSystem.systemRef %>CharacterName').focus()">
 							<img style="max-width:250px;" src="<%= eventSystem.img.url %>" alt="<%= eventSystem.name %>">
 							</button>
 						</h2>
 						<div id="accordion<%= eventSystem.systemRef %>" class="accordion-collapse collapse" data-bs-parent="#systemSettings">
+							<div class="my-3">
+								<h6>Marketting preferences</h6>
+								<div class="form-check">
+									<input class="form-check-input" name="<%= eventSystem.systemRef %>[marketting]" type="checkbox" <%= user[eventSystem.systemRef]?.marketting ? 'checked' : '' %> id="<%=eventSystem.systemRef %>Marketting">
+									<label class="form-check-label" for="<%=eventSystem.systemRef %>Marketting" >
+									  Please notify me by e-mail when <%= eventSystem.name %> has new events available. 
+									</label>
+									<div class="form-text"><%= eventSystem.name %> will not gain access to your e-mail address, or be able to contact you directly by requesting marketting e-mails. All event adverts will be sent directly by <%= config.siteName %></div>
+								  </div>
+								  <hr>
+							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="card-header bg-white mt-3">

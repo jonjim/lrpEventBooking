@@ -146,7 +146,8 @@ const lrpEventSchema = new mongoose.Schema({
         otherNotes: String
     },
     webhooks: {
-        discord: Boolean
+        discord: Boolean,
+        email: Boolean
     }
 }, {
     virtuals: {

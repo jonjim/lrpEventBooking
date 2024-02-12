@@ -97,6 +97,7 @@ module.exports.accountUpdate = async (req, res, next) => {
     req.body.displayBookings = typeof req.body.displayBookings != 'undefined' ? req.body.displayBookings == 'on' ? true : false : false;
     const systems = await eventSystems.find({ active: true });
     for (system of systems) {
+        req.body[system.systemRef].marketting = typeof req.body[system.systemRef].marketting != 'undefined' ? req.body[system.systemRef].marketting == 'on' ? true : false : false;
         for (field of system.customFields) {
             if (field.type == 'checkbox') {
                 if (field.section == 'character')

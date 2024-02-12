@@ -8,7 +8,8 @@ const emailService = require('../utils/email');
 const ExpressError = require('../utils/ExpressError');
 const {attendeeUpdate} = require('../utils/systemCheck')
 const emailRecord = require('../models/emailRecord')
-const webhooks = require('../utils/webhooks')
+const webhooks = require('../utils/webhooks');
+const user = require('../models/user');
 
 module.exports.listEvents = async(req, res, next) => {
     const eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
@@ -118,6 +119,20 @@ module.exports.updateEvent = async(req, res, next) => {
             webhooks.discordWebhook(res, updatedEvent.eventHost.eventSystem.webhooks.discord, updatedEvent)
         if (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord)
             await Event.findByIdAndUpdate(req.params.id, { webhooks: { discord: true } });
+    }
+    if (event.visible != req.body.event.visible && req.body.event.visible == true && !updatedEvent.webhooks?.email) {
+        const userList = await user.find({
+            [event.eventHost.eventSystem.systemRef]: {
+                marketting: true
+            }
+        });
+        for (user of userList){
+            res.render('email/paidBooking', { booking: eventBooking, title: `A new event is available from ${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''}` }, async function (err, str) {
+                emailService.sendEmail(eventBooking.user.username, `${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''} : ${event.name}`, str);
+            })
+        }
+        if (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord)
+            await Event.findByIdAndUpdate(req.params.id, { webhooks: { email: true } });
     }
     req.flash('success', `${event.name} updated!`);
     res.redirect(`/events/${req.params.id}`)
