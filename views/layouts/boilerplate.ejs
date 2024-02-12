@@ -34,8 +34,8 @@
         <meta property="og:description" content="<%- meta.description %>">
         <meta name="twitter:description" content="<%- meta.description %>">
         <meta property="og:url" content="<%= rootUrl %>><%= meta.path %>">
-        <meta property="og:image" content="https://ogcdn.net/e4b8c678-7bd5-445d-ba03-bfaad510c686/v3/<%= config.siteName %>/<%= encodeURIComponent(meta.title) %>/<%= meta.logo ? encodeURIComponent(meta.logo) : encodeURIComponent(config.siteLogo.url) %>/og.png">
-		<meta property="twitter:image" content="https://ogcdn.net/e4b8c678-7bd5-445d-ba03-bfaad510c686/v3/<%= config.siteName %>/<%= encodeURIComponent(meta.title) %>/<%= meta.logo ? encodeURIComponent(meta.logo) : encodeURIComponent(config.siteLogo.url) %>/og.png">
+        <meta property="og:image" content="<%= meta.logo ? meta.logo : `${rootUrl}/ogcard` %>">
+		<meta property="twitter:image" content="<%= meta.logo ? meta.logo : `${rootUrl}/ogcard` %>">
         <!-- <meta name="twitter:image" content="<%= meta.logo ? meta.logo : config.siteLogo.url %>"> -->
 	<% }} else { %>
             <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -44,8 +44,8 @@
             <meta name="description" content="<%= config.siteDescription %>">
             <meta property="og:description" content="<%= config.siteDescription %>">
             <meta name="twitter:description" content="<%= config.siteDescription %>">
-            <meta property="og:image" content="<%= config.siteLogo.url %>">
-            <meta name="twitter:image" content="<%= config.siteLogo.url %>">
+            <meta property="og:image" content="<%= `${rootUrl}/ogcard` %>">
+            <meta name="twitter:image" content="<%= `${rootUrl}/ogcard` %>">
             <meta property="og:url" content="<%= rootUrl %>">
 	<% } %>
 

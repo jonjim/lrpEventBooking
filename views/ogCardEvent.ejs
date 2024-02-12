@@ -1,0 +1,20 @@
+<% layout('layouts/image') %>
+<div  id="cardLayout" style="width:1200px;height:630px" class="row bg-light">
+    <div class="col-8 py-5 px-5">
+        <h2 class="mt-5 ms-3 text-muted"><%= `${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''}` %> Presents</h2>
+        <h1 class="my-4 ms-3 display-4"><%= event.name %></h1>
+        <h4 class="ms-3 mb-3 text-muted">				<%= dateOutput(event.eventStart) %>
+            <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+            <%= dateOutput(event.eventEnd) %>
+            <% } %></h4>
+        <h4 class="ms-3 mb-5 text-muted"><%= event.location.split(',')[0] %></h4>
+        <% if (event.allowBookings) { %>
+            <button class="btn btn-lg btn-success px-5 ms-3 mt-5">Book Your Tickets Now!</button>    
+            <% } else { %>
+        <button class="btn btn-lg btn-dark px-5 ms-3 mt-5">Find Out More</button>
+        <% } %>
+    </div>
+    <div style="height:630px" class="col py-5 my-5 px-4 align-middle">
+        <img style="border-radius: 15px;transform:rotate(5deg);" class="shadow my-5" src="<%= (typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.img.url).replace('upload/','upload/w_300/') %>" alt="">
+    </div>
+</div>

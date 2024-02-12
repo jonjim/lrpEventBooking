@@ -5,6 +5,7 @@ const FAQ = require('../models/faq')
 const User = require('../models/user')
 const axios = require('axios');
 const emailService = require('../utils/email');
+const imageService = require('../utils/image')
 const express = require('express');
 
 module.exports.privacy = async(req, res, next) => {
@@ -138,4 +139,26 @@ module.exports.registerSystem = async (req, res, next) => {
             })
         }
     })
+}
+
+module.exports.renderOGCard = async(req,res,next) => {
+    if (req.query.preview && !req.query.event)
+        res.render('ogCard', {title:'ogCard'})
+    else if (req.query.event){
+        const event = await Event.findById(req.query.event).populate('eventHost').populate({path:'eventHost', populate: 'eventSystem'});
+        if (req.query.preview)
+            res.render('ogCardEvent', {title:'ogCard', event})
+        else
+            res.render('ogCardEvent', { title: `ogCard`, event}, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await imageService.sendPNG(res,str,'blank.png')
+            })
+    }
+    else{
+        res.render('ogCard', { title: `ogCard`}, async function (err, str) {
+            if (err) throw new ExpressError(err, 500)
+            await imageService.sendPNG(res,str,'blank.png')
+        })
+    }
+    
 }

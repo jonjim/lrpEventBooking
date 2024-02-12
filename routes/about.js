@@ -38,6 +38,9 @@ router.route('/initialConfig')
     .get(catchAsync(controller.renderInitialConfig))
     .post(catchAsync(controller.initialConfig))
 
+router.route('/ogcard')
+    .get(catchAsync(controller.renderOGCard))
+
 router.route('/:id')
     .get(catchAsync(async (req,res,next) => { 
         if (!['','robots.txt','sitemap.xml'].includes(req.params.id))
