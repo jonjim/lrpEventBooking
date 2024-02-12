@@ -6,6 +6,7 @@ return str.replace(/\w\S*/g, function(txt){
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 });
 }; %>
+<%- include('eventManagementPanel') %>
 <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb small">
@@ -46,66 +47,14 @@ return str.replace(/\w\S*/g, function(txt){
     <div class="col col-md-3 text-end">
       <div class="btn-group-vertical" role="group">
         <% if (event.eventEnd > archiveDate) { %>
-        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#cateringModal">
-          <i class="fa fa-cutlery me-1" aria-hidden="true"> </i> Catering
-        </button>
+          <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#managementPanel" aria-controls="managementPanel">
+            <i class="bi bi-sliders"></i> Event Management
+          </button>
         <% } else { %>
           <button class="btn btn-secondary" disabled>Event Archived</button>
         <% } %>
-        <div class="btn-group">
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-envelope-at"></i> E-mail
-          </a>
-
-          <ul class="dropdown-menu text-end">
-            <% if (event.eventEnd > archiveDate) { %>
-            <li><a class="dropdown-item" title="Information for your event attendees" href="" data-bs-toggle="modal" data-bs-target="#eventPackModal">Send Event Pack</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <% } %>
-            <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#customEmailModal">Custom E-mail</a></li>
-          </ul>
         </div>
-        <% if (event.eventEnd > archiveDate) { %>
-        <div class="btn-group">
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-receipt"></i> Event Reports
-          </a>
-
-          <ul class="dropdown-menu text-end">
-            <li><a class="dropdown-item" href="/admin/events/<%= event._id %>/print/signin">Sign In Sheet</a></li>
-            <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/attendees">Attendees Report</a></li>
-            <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/medical">Medical Details</a></li>
-            <li><a class="dropdown-item" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/dietary">Dietary Details</a></li>
-            <li><a class="dropdown-item" title="Information for your event attendees" href="" data-bs-toggle="modal" data-bs-target="#eventPackModal">Event Pack</a></li>
-            <% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="/admin/events/<%= event._id %>/print/pid">Player IDs CSV</a></li>
-            <% } %>
-          </ul>
-        </div>
-        
-        <div class="btn-group">
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-ticket-detailed"></i> Bookings
-          </a>
-
-          <ul class="dropdown-menu text-end">
-            <li><a class="dropdown-item" title="This will require you to know their e-mail address and for them to have an active account" href="/events/<%= event._id %>/book?alt=true">Add Booking</a></li>
-            <li><a href="/events/<%= event._id %>/book?alt=true&manual=true" class="dropdown-item" title="This option should only be used if the player does not have a booking account"><i>Add Manual Booking</i></a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a href="/admin/events/<%= event._id %>/waitinglist" class="dropdown-item">View Unpaid & Waiting List</a></li>
-          </ul>
-        </div>
-        <% } %>
       </div>
-
-    </div>
   </div>
   <div class="card-body">
     <div class="accordion accordion-flush mb-3" id="accordionFinance">

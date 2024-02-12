@@ -1,0 +1,47 @@
+<div class="offcanvas offcanvas-start" tabindex="-1" id="managementPanel" aria-labelledby="managementPanelLabel">
+	<div class="offcanvas-header">
+		<h5 class="offcanvas-title" id="managementPanelLabel"><%= event.name %><br />Event Management</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body">
+		<% if (event.eventEnd > archiveDate) { %>
+		<div class="">
+			<h6>Bookings</h6>
+			<hr class="my-0">
+		</div>
+		<div class="ms-4 mt-0 mb-3 list-group list-group-flush text-start">
+			<a class="list-group-item list-group-item-action" title="This will require you to know their e-mail address and for them to have an active account" href="/events/<%= event._id %>/book?alt=true">Add Booking</a>
+			<a class="list-group-item list-group-item-action" title="This option should only be used if the player does not have a booking account" href="/events/<%= event._id %>/book?alt=true&manual=true">Add Manual Booking</a>
+			<a class="list-group-item list-group-item-action" href="/admin/events/<%= event._id %>/waitinglist">View Waiting List & Unpaid</a>
+		</div>
+        <div class="">
+			<h6>Event Information</h6>
+			<hr class="my-0">
+		</div>
+		<div class="ms-4 mb-3 list-group list-group-flush text-start">
+			<a href="" class="list-group-item list-group-item-action" title="Set and request your catering options" data-bs-toggle="modal" data-bs-target="#cateringModal">Catering Information</a>
+			<a href="" class="list-group-item list-group-item-action" title="Information for your event attendees" data-bs-toggle="modal" data-bs-target="#eventPackModal">Event Pack</a>
+		</div>
+		<div class="">
+			<h6>Email</h6>
+			<hr class="my-0">
+		</div>
+		<div class="ms-4 mb-3 list-group list-group-flush text-start">
+			<a href="" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#customEmailModal">Send a Custom Email</a>
+		</div>
+		<div class="">
+			<h6>Event Reports</h6>
+			<hr class="my-0">
+		</div>
+		<div class="ms-4 mb-3 list-group list-group-flush text-start">
+			<a class="list-group-item list-group-item-action" href="/admin/events/<%= event._id %>/print/signin">Sign In Sheet</a>
+			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/attendees">Attendees Report</a>
+			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/medical">Medical Details <span class="text-danger"><small>Confidential</small></span></a>
+			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/dietary">Dietary Details <span class="text-danger"><small>Confidential</small></span></a>
+			<% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
+			<a href="/admin/events/<%= event._id %>/print/pid" class="list-group-item list-group-item-action">Player ID's CSV</a>
+			<% } %>
+		</div>
+		<% } %>
+	</div>
+</div>
