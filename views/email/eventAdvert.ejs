@@ -1,0 +1,16 @@
+<% layout('layouts/email') %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
+<h2 align="center" style="margin-bottom:5;"><b><%= event.name %></b> </h2>
+<p align="center" style="margin-top: 0;">
+  <%= dateOutput(event.eventStart) %>
+  <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+  <%= dateOutput(event.eventEnd) %>
+  <% } %>
+</p>
+<p align="center" style="margin-top:0"><%= event.location.split(',')[0] %></p>
+<a href="<%= rootUrl %>/events/<%= event._id %>">Click here to find out more!</a>
+<h4>IC Invitation</h4>
+<p><%- event.icInvitation %></p>
+<hr>
+<h4>Event Information</h4>
+<%- event.fullDescription %>

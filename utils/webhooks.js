@@ -41,6 +41,6 @@ module.exports.discordWebhook = async (res, webhook, lrpEvent) => {
             }]
         })
     })
-        .then((response) => console.log(response));
+        // .then((response) => console.log(response));
 }
 

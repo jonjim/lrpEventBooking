@@ -110,29 +110,27 @@ module.exports.updateEvent = async(req, res, next) => {
         event.img = req.file;
         await updatedEvent.save();
     }
-    if (event.visible != req.body.event.visible && req.body.event.visible == true && !updatedEvent.webhooks?.discord) {
-        if (res.locals.config.webhooks?.discord)
-            webhooks.discordWebhook(res, res.locals.config.webhooks.discord, updatedEvent)
-        if (updatedEvent.eventHost.webhooks?.discord)
-            webhooks.discordWebhook(res, updatedEvent.eventHost.webhooks.discord, updatedEvent)
-        if (updatedEvent.eventHost.eventSystem.webhooks?.discord)
-            webhooks.discordWebhook(res, updatedEvent.eventHost.eventSystem.webhooks.discord, updatedEvent)
-        if (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord)
-            await Event.findByIdAndUpdate(req.params.id, { webhooks: { discord: true } });
-    }
-    if (event.visible != req.body.event.visible && req.body.event.visible == true && !updatedEvent.webhooks?.email) {
-        const userList = await user.find({
-            [event.eventHost.eventSystem.systemRef]: {
-                marketting: true
-            }
-        });
-        for (user of userList){
-            res.render('email/paidBooking', { booking: eventBooking, title: `A new event is available from ${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''}` }, async function (err, str) {
-                emailService.sendEmail(eventBooking.user.username, `${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''} : ${event.name}`, str);
-            })
+    if (event.visible != req.body.event.visible && req.body.event.visible == true) {
+        if (!updatedEvent.webhooks?.discord) {
+            if (res.locals.config.webhooks?.discord)
+                webhooks.discordWebhook(res, res.locals.config.webhooks.discord, updatedEvent)
+            if (updatedEvent.eventHost.webhooks?.discord)
+                webhooks.discordWebhook(res, updatedEvent.eventHost.webhooks.discord, updatedEvent)
+            if (updatedEvent.eventHost.eventSystem.webhooks?.discord)
+                webhooks.discordWebhook(res, updatedEvent.eventHost.eventSystem.webhooks.discord, updatedEvent)
         }
-        if (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord)
-            await Event.findByIdAndUpdate(req.params.id, { webhooks: { email: true } });
+        if (!updatedEvent.webhooks?.email) {
+            const userList = await user.find({}, { strict: false });
+            const parsedUsers = JSON.parse(JSON.stringify(userList))
+            //console.log(parsedUsers);
+            for (marketingUser of parsedUsers.filter(a => a[event.eventHost.eventSystem.systemRef]?.marketing == true)) {
+                console.log('Sending to ' + marketingUser.username)
+                res.render('email/eventAdvert', { event, title: `A new event is available from ${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''}` }, async function (err, str) {
+                    emailService.sendEmail(marketingUser.username, `${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''} : ${event.name}`, str);
+                })
+            }                
+        }
+        await Event.findByIdAndUpdate(req.params.id, { webhooks: { email: true, discord: (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord ? true : false) } });
     }
     req.flash('success', `${event.name} updated!`);
     res.redirect(`/events/${req.params.id}`)

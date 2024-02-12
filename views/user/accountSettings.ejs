@@ -105,8 +105,8 @@
 							<div class="my-3">
 								<h6>Marketting preferences</h6>
 								<div class="form-check">
-									<input class="form-check-input" name="<%= eventSystem.systemRef %>[marketting]" type="checkbox" <%= user[eventSystem.systemRef]?.marketting ? 'checked' : '' %> id="<%=eventSystem.systemRef %>Marketting">
-									<label class="form-check-label" for="<%=eventSystem.systemRef %>Marketting" >
+									<input class="form-check-input" name="<%= eventSystem.systemRef %>[marketing]" type="checkbox" <%= user[eventSystem.systemRef]?.marketing ? 'checked' : '' %> id="<%=eventSystem.systemRef %>Marketing">
+									<label class="form-check-label" for="<%=eventSystem.systemRef %>Marketing" >
 									  Please notify me by e-mail when <%= eventSystem.name %> has new events available. 
 									</label>
 									<div class="form-text"><%= eventSystem.name %> will not gain access to your e-mail address, or be able to contact you directly by requesting marketting e-mails. All event adverts will be sent directly by <%= config.siteName %></div>
