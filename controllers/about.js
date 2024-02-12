@@ -39,14 +39,15 @@ module.exports.about = async(req,res,next) => {
 
 module.exports.eventSystem = async (req,res,next) => {
     const eventSystem = await EventSystems.findOne({systemRef: req.params.id});    
-    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() }}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
-    const meta = {
-        title: `LARP Event Bookings: Upcoming Events for ${eventSystem.name}`,
-        description: 'LARP Event Bookings - Event information and booking for LRP events across the United Kingdom',
-        path: '/'
+    if (eventSystem){
+        const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() }}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+        const meta = {
+            title: `LARP Event Bookings: Upcoming Events for ${eventSystem.name}`,
+            description: 'LARP Event Bookings - Event information and booking for LRP events across the United Kingdom',
+            path: '/'
+        }
+            return res.render('about/eventSystem', {title: eventSystem.name, eventSystem, meta, events: eventList.filter(e => e.eventHost.eventSystem.equals(eventSystem._id))})
     }
-    if (eventSystem)
-        return res.render('about/eventSystem', {title: eventSystem.name, eventSystem, meta, events: eventList.filter(e => e.eventHost.eventSystem.equals(eventSystem._id))})
     else
     {
         req.flash('error',`Unable to find your requested LARP System`);

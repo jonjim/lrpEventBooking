@@ -3,13 +3,19 @@
         <div class="col-6 offset-3">
             <div class="alert alert-danger" role="alert">
                 <h4 class="alert-heading">
-                    <%=err.message%>
+                    <% if (err.statusCode) { %>
+                     Could not find requested page! 
+                        <% } else { %>
+                    Something has gone wrong!
+                       <% } %>
                 </h4>
-
-                <p>
-                    <%= err.stack %>
-                </p>
-
+                <p>We're sorry but it apepars the link you've used to reach this page is out of date, or we have a fault. If you believe the link should work please get in touch and we will endeavour to repair it as soon as possible.</p>
+                <% if (process.env.NODE_ENV !== "production") { %>
+                    <div class="lead"><%=err.message%></div>
+                    <p>
+                        <%= err.stack %>
+                    </p>
+                <% } %>
             </div>
         </div>
     </div>

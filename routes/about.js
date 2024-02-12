@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
+const ExpressError = require('../utils/ExpressError')
 
 const catchAsync = require('../utils/catchAsync');
 
@@ -33,14 +34,16 @@ router.route('/system/:id/terms')
 router.route('/checkConfig')
     .get(catchAsync(controller.configCheck))
 
-
 router.route('/initialConfig')
     .get(catchAsync(controller.renderInitialConfig))
     .post(catchAsync(controller.initialConfig))
 
 router.route('/:id')
     .get(catchAsync(async (req,res,next) => { 
-        res.redirect(`/system/${req.params.id}`);
+        if (!['','robots.txt','sitemap.xml'].includes(req.params.id))
+            res.redirect(`/system/${req.params.id}`);
+        else
+            throw new ExpressError('Unable to find requested page',404)
     }))
 
 router.route('/:id/terms')
