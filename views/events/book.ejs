@@ -152,7 +152,7 @@
 						<p>Book to monster/crew <b>
 								<%= event.name %>!</b></p>
 						<form id="monsterTickets" class="validated-form" action="/events/<%= event._id %>/book" method="POST" novalidate>
-							<% if (event.monsterSpaces === 0) { %>
+							<% if (event.monsterSpaces === 0 && !event.overflowQueue) { %>
 							<div class="alert alert-danger" role="alert">
 								Sorry! Monster tickets are currently fully booked.
 							</div>
@@ -178,7 +178,7 @@
 									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 								<div class="invalid-feedback">You must select a ticket</div>
 							</div>
-							<% }} %>
+							<% } %>
 
 							<% var monsterBunkTickets = event.eventTickets.filter(e => ['monsterbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
                                 if (monsterBunkTickets.length > 0){ %>
@@ -229,6 +229,7 @@
 							<button class="btn btn-danger mb-3">
 								<h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Monster Ticket</h5>
 							</button>
+							<% } %>
 						</form>
 					</div> <% } if (staffTickets.length > 0) { %>
 					<div class="tab-pane fade <%= playerTickets.length == 0 && monsterTickets.length == 0 ? 'show active' : '' %>" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
@@ -261,7 +262,7 @@
 									<%= ticket.cost > 0 ? `${currencyOutput(ticket.cost)} - ` : '' %><%= ticket.description %></label>
 								<div class="invalid-feedback">You must select a ticket</div>
 							</div>
-							<% }} %>
+							<% } %>
 
 							<% var staffBunkTickets = event.eventTickets.filter(e => ['staffbunk'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available);
                                 if (staffBunkTickets.length > 0){ %>
@@ -307,6 +308,7 @@
 							<button class="btn btn-primary mb-3">
 								<h5 class="mt-2"><i class="bi bi-ticket-detailed"></i> Book A Staff Ticket</h5>
 							</button>
+							<% } %>
 						</form>
 						<i>Please note: Staff tickets are usually by invitation only. Please do not book as staff without speaking to the event organisers first.</i>
 					</div>

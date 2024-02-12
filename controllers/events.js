@@ -172,6 +172,8 @@ module.exports.createEventBooking = async(req, res, next) => {
     ticketSelected.push(req.body.ticketSelected.staffMeal);
     const tickets = await EventTicket.find({ _id: { $in: ticketSelected } });
 
+    let event = await Event.findById(req.params.id,{strict:false}).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
+
     const booking = await new EventBooking({
         event: req.params.id,
         totalDue: tickets.reduce((acc, t) => acc + t.cost, 0),
@@ -189,22 +191,22 @@ module.exports.createEventBooking = async(req, res, next) => {
     }
     booking.eventTickets.push(...tickets);
     if (booking.totalDue == 0) {
-        booking.paid = true;
+        booking.paid = (booking.bookingType == 'player' && event.playerSpaces > 0) || (booking.bookingType == 'monster' && event.monsterSpaces > 0) || (booking.bookingType == 'staff' && event.staffSpaces > 0) ? true : false;
         booking.displayBooking = user.displayBookings;
         booking.bookingPaid = Date.now()
     }
+
     await booking.save();
     const eventBooking = await EventBooking.findById(booking._id).populate('event').populate('eventTickets').populate('user').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost',populate: {path: 'eventSystem'} } });
-    var event = await Event.findById(eventBooking.event,{strict:false}).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
-    if (booking.totalDue == 0) {
+    if (booking.totalDue == 0 && booking.paid) {
         await Event.findByIdAndUpdate(eventBooking.event, {
             $push: {
                 attendees: { ...await attendeeUpdate(event.eventHost.eventSystem,eventBooking)}
             }
         }, {strict: false})
     }
-    if (booking.paid) {
-        if (!manual){
+    if (booking.totalDue == 0) {
+        if (!manual && booking.paid){
             await res.render('print/ticket', { eventBooking, title: `Event Ticket` }, async function (err, ticket) {
                 await pdfService.generatePDF(ticket)
                     .then(async (ticketPdf) => {
