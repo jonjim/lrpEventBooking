@@ -9,6 +9,7 @@ const ics = require('ics');
 const moment = require("moment")
 const RSS = require('rss');
 const pdfService = require('../utils/pdf');
+const turndownService  = require('turndown');
 
 
 module.exports.upcomingEvents = async(req, res, next) => {
@@ -80,18 +81,20 @@ module.exports.rssEvents = async(req,res,next) => {
     res.send(feed.xml({indent: true}));
 }
 
-module.exports.showEvent = async(req, res) => {
+module.exports.showEvent = async (req, res) => {
+    let turndownS = new turndownService();
     const event = await Event.findById(req.params.id).populate('eventTickets').populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
     if (event.eventHost.eventSystem.active || res.locals.adminGroups.includes(res.locals.currentUser.role) ||
         (res.locals.hostGroups.includes(res.locals.currentUser.role) && (res.locals.currentUser.eventHosts.includes(event.eventHost._id) || res.locals.currentUser.eventSystems.includes(event.eventHost.eventSystem._id)))) {
         const meta = {
-            title: `LARP Event Bookings: ${event.name}`,
-            description: `${event.promoDescription}`,
-            path: `/events/${event._id}`
+            title: `${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''}: ${event.name}`,
+            description: new turndownService().turndown(event.promoDescription),
+            path: `/events/${event._id}`,
+            logo: typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.img.url
         }
         if (!event.eventHost.eventSystem.active)
             req.flash('error','Please note this event is not visible to the public!')
-        return res.render('events/show', { title: event.name, event, meta });
+        return res.render('events/show', { title: event.name, event, meta: meta });
     }
     else {
         req.flash('error', 'Could not find the selected event!')
@@ -191,7 +194,7 @@ module.exports.createEventBooking = async(req, res, next) => {
         booking.bookingPaid = Date.now()
     }
     await booking.save();
-    var eventBooking = await EventBooking.findById(booking._id).populate('eventTickets').populate('user').populate('event');
+    const eventBooking = await EventBooking.findById(booking._id).populate('event').populate('eventTickets').populate('user').populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventTickets' } }).populate({ path: 'event', populate: { path: 'eventHost',populate: {path: 'eventSystem'} } });
     var event = await Event.findById(eventBooking.event,{strict:false}).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
     if (booking.totalDue == 0) {
         await Event.findByIdAndUpdate(eventBooking.event, {
