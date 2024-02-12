@@ -287,7 +287,7 @@
 							<% } } %>
 							<div class="<%= !event.eventHost.eventSystem.terms ? 'mb-3' : '' %> form-check">
 								<input type="checkbox" name="terms" id="termsStaff" class="form-check-input" required>
-								<label for="termsStaff">I agree to <%= config.siteName %> <a class="link-dark" href="/terms" target="_blank">Terms & Conditions</a></label>
+								<label for="termsStaff">I agree to <%= config.siteName %> <a class="link-dark" href="/terms"  data-bs-toggle="modal" data-bs-target="#termsModal" href="/terms" target="_blank">Terms & Conditions</a></label>
 								<div class="invalid-feedback">In order to book an event hosted by <%= config.siteName %> you must agree to our Terms & Conditions</div>
 							</div>
 							<% if (event.eventHost.eventSystem.terms) { %>
