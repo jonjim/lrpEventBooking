@@ -204,20 +204,12 @@ module.exports.createEventBooking = async(req, res, next) => {
         }, {strict: false})
     }
     if (booking.paid) {
-        // res.render('email/paidBooking', { booking: eventBooking, title: '' }, async function(err, str) {
-        //      emailService.sendEmail(eventBooking.user.username, `Event booking for ${eventBooking.event.name}`, str);
-        //     if (req.body.username || manual)
-        //         return res.redirect(`/admin/events/${req.params.id}/manage`)
-        //     else
-        //         return res.redirect('/account/bookings');
-        // })
         if (!manual){
             await res.render('print/ticket', { eventBooking, title: `Event Ticket` }, async function (err, ticket) {
                 await pdfService.generatePDF(ticket)
                     .then(async (ticketPdf) => {
                         res.render('email/paidBooking', { booking: eventBooking, title: 'Your payment and ticket wait inside' }, async function (err, str) {
                             emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str, ticketPdf ,`ticket.pdf`);
-                            return res.status(httpStatusCode).json(jsonResponse);
                         })
                 })
             })
