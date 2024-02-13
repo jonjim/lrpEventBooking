@@ -36,8 +36,16 @@
 		<div class="ms-4 mb-3 list-group list-group-flush text-start">
 			<a class="list-group-item list-group-item-action" href="/admin/events/<%= event._id %>/print/signin">Sign In Sheet</a>
 			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/attendees">Attendees Report</a>
-			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/medical">Medical Details <span class="text-danger"><small>Confidential</small></span></a>
-			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/dietary">Dietary Details <span class="text-danger"><small>Confidential</small></span></a>
+			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/medical">
+				<div class="d-flex w-100 justify-content-between">
+					Medical Details <small class="badge bg-danger rounded-pill my-auto">Confidential</small>
+				</div>
+			</a>
+			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/dietary">
+				<div class="d-flex w-100 justify-content-between">
+					Dietary Details <small class="badge bg-danger rounded-pill my-auto">Confidential</small>
+				</div>
+			</a>
 			<% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
 			<a href="/admin/events/<%= event._id %>/print/pid" class="list-group-item list-group-item-action">Player ID's CSV</a>
 			<% } %>

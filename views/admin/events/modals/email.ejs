@@ -1,0 +1,31 @@
+<div class="modal fade" id="customEmailModal" tabindex="-1" aria-labelledby="customEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="customEmailModalLabel">E-mail Event Attendees</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="customEmailForm" action="/admin/events/<%= event._id %>/email" method="POST">
+            <div class="mb-3">
+              <label for="subject" class="form-label">E-mail Subject</label>
+              <div class="input-group">
+                <span class="input-group-text" id="subjectName"><%= event.name %> - </span>
+                <input type="text" class="form-control" id="subject" name="subject" aria-describedby="subjectName subjectDescription" required>
+              </div>
+              <div class="form-text" id="subjectDescription">Please enter a subject for your e-mail</div>
+            </div>
+            <div class="mb-3">
+              <label for="message">E-mail Message</label>
+              <textarea class="form-control" name="message" id="message" cols="30" rows="10"></textarea>
+            </div>
+          </form>
+          <div id="spinnerDivEmail"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="customEmail()"><i class="bi bi-envelope-at"></i> Send E-mail</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,127 @@
+<div class="modal fade" id="eventPackModal" tabindex="-1" aria-labelledby="eventPackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="eventPackModalLabel">Event Pack Information</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Use this form to generate your own event pack with all the vital information your attendees will need.</p>
+          <form id="eventPackForm" action="/admin/events/<%= event._id %>/print/eventPack" method="POST" novalidate class="validated-form">
+            <h5>Arrival & Departure</h5>
+            <div class="row mb-3">
+              <div class="col-6 col-md-4">
+                <label for="arrivalTime">Arrival Time</label>
+                <input class="form-control" required type="time" name="returnPack[arrivalDeparture][arrivalTime]" id="arrivalTime" value="<%= event.returnPack.arrivalDeparture.arrivalTime %>">
+              </div>
+              <div class="col-6 col-md-4">
+                <label for="departureTime">Departure Time</label>
+                <input class="form-control" required type="time" name="returnPack[arrivalDeparture][departureTime]" id="departureTime" value="<%= event.returnPack.arrivalDeparture.departureTime %>">
+              </div>
+              <div class="form-text">When can your event attendees arrive and when do they need to leave?</div>
+            </div>
+            <div class="mb-3">
+              <label for="arrivalNotes">Notes</label>
+              <textarea class="form-control" name="returnPack[arrivalDeparture][notes]" id="arrivalNotes" cols="30" rows="3"><% event.returnPack.arrivalDeparture.notes %></textarea>
+              <div class="form-text">Are there any other notes for or advice for attendees for their arrival or departure? e.g. Gates are locked after a certain time?</div>
+            </div>
+            <hr>
+            <h5>Time In & Out</h5>
+            <div class="row mb-3">
+              <div class="col-6 col-md-4">
+                <label for="arrivalTimeIn">First Time In</label>
+                <input class="form-control" required type="time" name="returnPack[timeInOut][arrivalTimeIn]" id="arrivalTimeIn" value="<%= event.returnPack.timeInOut.arrivalTimeIn %>">
+              </div>
+              <div class="col-6 col-md-4">
+                <label for="departureTimeOut">Final Time Out</label>
+                <input class="form-control" required type="time" name="returnPack[timeInOut][departureTimeOut]" id="departureTimeOut" value="<%= event.returnPack.timeInOut.departureTimeOut %>">
+              </div>
+              <div class="form-text">When can your event attendees except Time In to start and end for your event overall?</div>
+            </div>
+            <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd))  { %>
+              <div class="row mb-3">
+                <div class="col-6 col-md-4">
+                  <label for="dailyTimeIn">Daily Time In</label>
+                  <input class="form-control" required type="time" name="returnPack[timeInOut][dailyTimeIn]" id="dailyTimeIn" value="<%= event.returnPack.timeInOut.dailyTimeIn %>">
+                </div>
+                <div class="col-6 col-md-4">
+                  <label for="dailyTimeOut">Daily Time Out</label>
+                  <input class="form-control" required type="time" name="returnPack[timeInOut][dailyTimeOut]" id="dailyTimeOut" value="<%= event.returnPack.timeInOut.dailyTimeOut %>">
+                </div>
+                <div class="form-text">When can your event attendees except Time In to start and end for each day of your event?</div>
+              </div>
+            <% } %>
+            <hr>
+            <div class="mb-3">
+              <h5>Event Staff</h5>
+              <table class="table table-hover">
+                <thead>
+                  <th>Position</th>
+                  <th>Staff</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="align-middle">Game Operations / Logistics</td>
+                    <td><input type="text" class="form-control form-control-sm" name="returnPack[eventStaff][gameOperations]" value="<%= event.returnPack.eventStaff.gameOperations %>"></td>
+                  </tr>
+                  <tr>
+                    <td class="align-middle">Plot Actuation</td>
+                    <td><input type="text" class="form-control form-control-sm" name="returnPack[eventStaff][plotActuation]" value="<%= event.returnPack.eventStaff.plotActuation %>"></td>
+                  </tr>
+                  <tr>
+                    <td class="align-middle">Plot Team</td>
+                    <td><input type="text" class="form-control form-control-sm" name="returnPack[eventStaff][plotTeam]" value="<%= event.returnPack.eventStaff.plotTeam %>"></td>
+                  </tr>
+                  <tr>
+                    <td class="align-middle">Referees</td>
+                    <td><input type="text" class="form-control form-control-sm" name="returnPack[eventStaff][referees]" value="<%= event.returnPack.eventStaff.referees %>"></td>
+                  </tr>
+                  <tr>
+                    <td class="align-middle">First Aid</td>
+                    <td><input type="text" class="form-control form-control-sm" name="returnPack[eventStaff][firstAid]" value="<%= event.returnPack.eventStaff.firstAid %>"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="form-text">Any fields left blank will be omitted from the event pack.</div>
+            </div>
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="parkingSwitch" <%= event.returnPack.parking ? 'checked' : '' %>>
+                <label class="form-check-label text-muted" for="parkingSwitch"><h5>Parking Instructions</h5></label>
+              </div>
+              <textarea style="transition: all 1s; " class="form-control <%= !event.returnPack.parking ? 'd-none' : '' %>"  name="returnPack[parking]" id="parking" <%= !event.returnPack.parking ? 'disabled' : '' %> cols="30" rows="0"><%= event.returnPack.parking %></textarea>
+            </div>
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="campingSwitch" <%= event.returnPack.camping ? 'checked' : '' %>>
+                <label class="form-check-label text-muted" for="campingSwitch"><h5>Camping Instructions</h5></label>
+              </div>
+              <textarea class="form-control <%= !event.returnPack.camping ? 'd-none' : '' %>" name="returnPack[camping]" id="camping" <%= !event.returnPack.camping ? 'disabled' : '' %> cols="30" rows="3"><%= event.returnPack.camping %></textarea>
+            </div>
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="bunkSwitch" <%= event.returnPack.bunks ? 'checked' : '' %>>
+                <label class="form-check-label text-muted" for="bunkSwitch"><h5>Bunk Room's</h5></label>
+              </div>
+              <textarea class="form-control <%= !event.returnPack.bunks ? 'd-none' : '' %>" name="returnPack[bunks]" id="bunks" <%= !event.returnPack.bunks ? 'disabled' : '' %> cols="30" rows="3"><%= event.returnPack.bunks %></textarea>
+            </div>
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="notesSwitch" <%= event.returnPack.otherNotes ? 'checked' : '' %>>
+                <label class="form-check-label text-muted" for="notesSwitch"><h5>Other Notes</h5></label>
+              </div>
+              <textarea class="form-control <%= !event.returnPack.otherNotes ? 'd-none' : '' %>" name="returnPack[otherNotes]" id="notes" <%= !event.returnPack.otherNotes ? 'disabled' : '' %> cols="30" rows="3"><%= event.returnPack.otherNotes %></textarea>
+            </div>
+          </form>
+          <div id="spinnerDiv"></div>
+        </div>
+        <div class="modal-footer">
+          <button id="eventPackModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary" onclick="eventPackDownload()"><i class="bi bi-filetype-pdf"></i> Save & Download</button>
+            <button type="button" class="btn btn-primary" onclick="eventPackEmail()"><i class="bi bi-envelope-at"></i> Save & Email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
