@@ -8,6 +8,7 @@ const emailService = require('../utils/email');
 const imageService = require('../utils/image')
 const express = require('express');
 
+
 module.exports.privacy = async(req, res, next) => {
     const config = await siteConfig.find();
     res.render('about/privacy', { title: 'Privacy Policy', config: config[0] });
@@ -25,7 +26,10 @@ module.exports.faq = async(req, res, next) => {
 
 module.exports.organisers = async(req,res,next) => {
     const meta = {
-        crawl: true
+        title: `LRPTickets.co.uk - Made for Event Organisers`,
+        description: 'Tailor made event management for Live Role Play events.',
+        path: `${res.locals.rootUrl}/organisers/`,
+        logo: `${res.locals.rootUrl}/ogcard`
     }
     res.render('about/organisers',{title:'Event Organisers', meta});
 }

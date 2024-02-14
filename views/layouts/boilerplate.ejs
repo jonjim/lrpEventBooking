@@ -16,16 +16,22 @@
 
 
 	<meta name="author" content="<%= rootUrl %>">
-
 	<meta name="keywords" content="live role play,live action role play,lrp,larp">
 	<meta property="og:site_name" content="<%= config.siteName %>">
-
 	<meta property="og:type" content="website">
 	<meta property="og:locale" content="en_GB">
 	<meta name="twitter:card" content="summary_large_image">
     <% if (typeof meta != 'undefined') { %>
 	<% if (meta.crawl) { %>
 	    <meta name="robots" content="noindex">
+		<meta property="og:title" content="<%= config.siteName %>: <%= title %>">
+		<meta name="twitter:title" content="<%= config.siteName %>: <%= title %>">
+		<meta name="description" content="<%= new turndownService().turndown(config.siteDescription) %>">
+		<meta property="og:description" content="<%= new turndownService().turndown(config.siteDescription)  %>">
+		<meta name="twitter:description" content="<%= new turndownService().turndown(config.siteDescription) %>">
+		<meta property="og:image" content="<%= `${rootUrl}/ogcard` %>">
+		<meta name="twitter:image" content="<%= `${rootUrl}/ogcard` %>">
+		<meta property="og:url" content="<%= rootUrl %>">
 	<% } else { %>
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <meta property="og:title" content="<%= meta.title %>">
@@ -38,11 +44,11 @@
 		<meta property="twitter:image" content="<%= meta.logo ? meta.logo : `${rootUrl}/ogcard` %>">
 	<% }} else { %>
             <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-            <meta property="og:title" content="<%= config.siteName %>">
-            <meta name="twitter:title" content="<%= config.siteName %>">
-            <meta name="description" content="<%= config.siteDescription %>">
-            <meta property="og:description" content="<%= config.siteDescription %>">
-            <meta name="twitter:description" content="<%= config.siteDescription %>">
+            <meta property="og:title" content="<%= config.siteName %>: <%= title %>">
+            <meta name="twitter:title" content="<%= config.siteName %>: <%= title %>">
+            <meta name="description" content="<%= new turndownService().turndown(config.siteDescription) %>">
+            <meta property="og:description" content="<%= new turndownService().turndown(config.siteDescription) %>">
+            <meta name="twitter:description" content="<%= new turndownService().turndown(config.siteDescription) %>">
             <meta property="og:image" content="<%= `${rootUrl}/ogcard` %>">
             <meta name="twitter:image" content="<%= `${rootUrl}/ogcard` %>">
             <meta property="og:url" content="<%= rootUrl %>">
