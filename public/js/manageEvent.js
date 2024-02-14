@@ -58,13 +58,13 @@ notesSwitch.addEventListener('change', () => {
     notesText.disabled = !notesSwitch.checked;
 })
 
-async function eventPackDownload(){
+async function eventPackDownload(eventId){
     const eventPackForm = document.getElementById('eventPackForm');
-    eventPackForm.action= `/admin/events/<%= event._id %>/print/eventPack`;
+    eventPackForm.action= `/admin/events/${eventId}/print/eventPack`;
     eventPackForm.submit();
   }
 
-  async function eventPackEmail(){
+  async function eventPackEmail(eventId){
     const eventPackForm = document.getElementById('eventPackForm');
     eventPackForm.classList.add('d-none');
     var spinner = document.createElement("div");
@@ -77,7 +77,7 @@ async function eventPackDownload(){
     for (const pair of new FormData(eventPackForm)) {
         data.append(pair[0], pair[1]);
     }
-    fetch(`/admin/events/<%= event._id %>/print/eventPack?email=true`, {
+    fetch(`/admin/events/${eventId}/print/eventPack?email=true`, {
         method: 'post',
         body: data,
     })
@@ -94,7 +94,7 @@ async function eventPackDownload(){
     });
   }
 
-  async function customEmail(){
+  async function customEmail(eventId){
     const customEmailForm = document.getElementById('customEmailForm');
     const spinnerDiv = document.getElementById('spinnerDivEmail');
     customEmailForm.classList.add('d-none');
@@ -108,7 +108,7 @@ async function eventPackDownload(){
     for (const pair of new FormData(customEmailForm)) {
         data.append(pair[0], pair[0] == 'message' ? tinyMCE.get('message').getContent() : pair[1]);
     }
-    fetch(`/admin/events/<%= event._id %>/email`, {
+    fetch(`/admin/events/${eventId}/email`, {
         method: 'post',
         body: data,
     })
@@ -206,7 +206,7 @@ async function eventPackDownload(){
       document.getElementById(parent).removeChild(option);
   }
 
-  function emailCatering(){
-    document.getElementById('cateringForm').action = '/admin/events/<%= event._id %>/catering?email=true'
+  function emailCatering(eventId){
+    document.getElementById('cateringForm').action = `/admin/events/${eventId}/catering?email=true`
     document.getElementById('cateringForm').submit()
   }

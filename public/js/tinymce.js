@@ -30,6 +30,7 @@ tinymce.init({
     body {
       background: #fff;
       font-size: 10pt;
+      margin: 10px 10px 10px 10px;
     }
 …
 `

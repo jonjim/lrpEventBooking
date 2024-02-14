@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Encounter = require('./encounter');
 
 const imgSchema = new mongoose.Schema({
     url: String,
@@ -118,10 +119,10 @@ const lrpEventSchema = new mongoose.Schema({
     }],
     returnPack: {
         timeInOut:{
-            arrivalTimeIn: String,
-            dailyTimeIn: String, 
-            dailyTimeOut: String,
-            departureTimeOut: String,
+            arrivalTimeIn: Date,
+            dailyTimeIn: Date, 
+            dailyTimeOut: Date,
+            departureTimeOut: Date,
             notes: String
         },
         arrivalDeparture:{
@@ -148,7 +149,11 @@ const lrpEventSchema = new mongoose.Schema({
     webhooks: {
         discord: Boolean,
         email: Boolean
-    }
+    },
+    encounters: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'encounter'
+    }]
 }, {
     virtuals: {
         playerSpaces: {
@@ -202,5 +207,10 @@ lrpEventSchema.virtual('img.path')
         this.img.url = value;
     })
 
+    lrpEventSchema.post('findOneAndDelete', async function(event) {
+        if (event.encounters.length) {
+            const res = await Encounter.deleteMany({ _id: { $in: event.encounters } });
+        }
+    })
 
 module.exports = mongoose.model('lrpEvent', lrpEventSchema);

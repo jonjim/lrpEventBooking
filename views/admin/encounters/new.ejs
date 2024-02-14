@@ -1,0 +1,89 @@
+<% layout('layouts/boilerplate') %>
+<% const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; 
+    function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+function addTime(date,minutes){
+    return new Date(date.getTime() + minutes*60000)
+} %>
+<script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
+      <li class="breadcrumb-item" aria-current="page"><a class="link-dark" href="/admin/events/<%=event._id %>/manage"><%= event.name %></a></li>
+        <li class="breadcrumb-item"><a href="/admin/events/<%= event._id %>/encounters" class="link-dark">Encounters</a></li>
+      <li class="breadcrumb-item active">Create new encounter</li>
+    </ol>
+  </nav>
+<form action="/admin/events/<%= event._id %>/encounters" method="POST">
+  <div class="row small">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow py-3 px-3 mb-3">
+        <div class="card-header bg-white mb-3">
+            <h4>Create an Encounter</h4>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-2">
+              <label for="encounterName">Event Name</label>
+              <input class="form-control form-control-sm" disabled type="text" id="encounterEventName" value="<%= event.name %>">
+              <input class="form-control form-control-sm visually-hidden" disabled type="text" id="encounterEventNameSubmit" name="encounter[event]" value="<%= event._id %>">
+            </div>
+            <div class="mb-2">
+              <label for="encounterName">Encounter Name</label>
+              <input class="form-control form-control-sm" type="text" id="encounterName" name="encounter[name]">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+            <div class="">
+              <label for="encounterDay">Day</label>
+              <select name="encounter[day]" class="form-select form-select-sm" id="encounterDay">
+                <%  for (let i = 0; addDays(event.eventStart, i) <= event.eventEnd; i++ ){ %>
+                <option value="<%= addDays(event.eventStart,i) %>">
+                  <%= weekday[addDays(event.eventStart,i).getDay()] %>
+                </option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="">
+              <label for="encounterTime">Time</label>
+              <select name="encounter[time]" id="encounterTime" class="form-select form-select-sm">
+                <% let startTime = event.returnPack?.timeInOut?.dailyTimeIn ? event.returnPack?.timeInOut?.dailyTimeIn : event.returnPack?.timeInOut?.arrivalTimeIn ? event.returnPack?.timeInOut?.arrivalTimeIn : event.eventStart; %>
+                <% let endTime = event.returnPack?.timeInOut?.dailyTimeOut ? event.returnPack?.timeInOut?.dailyTimeOut : event.returnPack?.timeInOut?.departureTimeOut ? event.returnPack?.timeInOut?.departureTimeOut : event.eventEnd; %>
+                <% for (let currentTime = moment(startTime); moment(currentTime).isBefore(endTime); currentTime = moment(currentTime).add(30,'m')) { %>
+                    <option value="<%= timeOutput(currentTime) %>"><%= timeOutput(currentTime) %></option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+            <label for="encounterType">Encounter Type</label>
+            <select name="encounter[type]" id="encounterType" class="form-select form-select-sm">
+              <option value="Non-Combat">Non-Combat</option>
+              <option selected value="Non-Combat/Combat">Non-Combat/Combat</option>
+              <option value="Combat">Combat</option>
+              <option value="Ritual">Ritual</option>
+            </select>
+          </div>
+        </div>
+        <hr>
+        <div class="">
+          <label for="encounterDescription">Encounter Description</label>
+          <textarea class="form-control form-control-sm" name="encounter[description]" id="encounterDescription" cols="30" rows="6"></textarea>
+        </div>
+        <hr>
+        <div class="d-grid gap-2 mb-3">
+          <button class="btn btn-success">Create and Edit Encounter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<script src="/js/tinymce.js"></script>

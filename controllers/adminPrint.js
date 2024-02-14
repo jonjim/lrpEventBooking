@@ -92,13 +92,18 @@ module.exports.attendeesEvent = async(req, res, next) => {
 };
 
 module.exports.eventPack = async(req,res,next) => {
-    const event = await Event.findById(req.params.id).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
-    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+    const lookupEvent = await Event.findById(req.params.id).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
+    if (req.user.eventHosts.filter(a => a._id.equals(lookupEvent.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
         if (req.query.preview) {
             const event = await Event.findById(req.params.id).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
             return res.render('print/eventPack', { title: `Event Pack: ${event.name}`, event });
         }
         else {
+            req.body.returnPack.timeInOut.arrivalTimeIn = req.body.returnPack.timeInOut?.arrivalTimeIn ? `${lookupEvent.eventStart.toISOString().split('T')[0]}T${req.body.returnPack.timeInOut?.arrivalTimeIn}:00.000Z` : undefined;
+            req.body.returnPack.timeInOut.departureTimeOut = req.body.returnPack.timeInOut?.departureTimeOut ? `${(lookupEvent.eventEnd == lookupEvent.eventStart ? new Date(lookupEvent.eventEnd) + 1 : lookupEvent.eventEnd).toISOString().split('T')[0]}T${req.body.returnPack.timeInOut?.departureTimeOut}:00.000Z` : undefined;
+            req.body.returnPack.timeInOut.dailyTimeIn = req.body.returnPack.timeInOut?.dailyTimeIn ? `${lookupEvent.eventStart.toISOString().split('T')[0]}T${req.body.returnPack.timeInOut?.dailyTimeIn}:00.000Z` : undefined;
+            req.body.returnPack.timeInOut.dailyTimeOut = req.body.returnPack.timeInOut?.dailyTimeOut ? `${lookupEvent.eventEnd.toISOString().split('T')[0]}T${req.body.returnPack.timeInOut?.dailyTimeOut}:00.000Z` : undefined;
+             
             const event = await Event.findByIdAndUpdate(req.params.id, req.body,{new:true}).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });
             res.render('print/eventPack', { title: `Manage ${event.name}`, event }, async function (err, str) {
                 if (err) throw new ExpressError(err, 500)
@@ -119,6 +124,24 @@ module.exports.eventPack = async(req,res,next) => {
         }
     } else {
         req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+}
+
+module.exports.encounters = async(req,res,next) => {
+    const lookupEvent = await Event.findById(req.params.id).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate('encounters').populate({path:'encounters', populate: {path:'monsters', populate:'monster'}});
+    if (req.user.eventHosts.filter(a => a._id.equals(lookupEvent.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        if (req.query.preview) {
+            return res.render('print/encounters', { title: `Encounters: ${lookupEvent.name}`, event: lookupEvent });
+        }
+        else {
+            res.render('print/encounters', { title: `Encounter ${lookupEvent.name}`, event:lookupEvent }, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                    await pdfService.sendPDF(res, str, `${lookupEvent.name} Encounters.pdf`);
+            })
+        }
+    } else {
+        req.flash('error', `You do not have permission to manage ${lookupEvent.name}`)
         return res.redirect('/');
     }
 }

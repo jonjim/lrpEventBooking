@@ -33,7 +33,7 @@ module.exports.icsEvents = async(req,res,next) => {
     function stripHtml(html){
         return html.replace('<p>','').replace('</p>')
     }
-    for (e of eventList){
+    for (e of eventList.filter(a => a.eventHost.eventSystem.active == true)){
         icsList.push({
             title: e.name,
             start: moment(e.eventStart).format('YYYY-M-D-H-m').split("-").map((a) => parseInt(a)),

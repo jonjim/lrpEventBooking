@@ -118,8 +118,8 @@
         <div class="modal-footer">
           <button id="eventPackModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <div class="btn-group" role="group">
-            <button type="button" class="btn btn-outline-primary" onclick="eventPackDownload()"><i class="bi bi-filetype-pdf"></i> Save & Download</button>
-            <button type="button" class="btn btn-primary" onclick="eventPackEmail()"><i class="bi bi-envelope-at"></i> Save & Email</button>
+            <button type="button" class="btn btn-outline-primary" onclick="eventPackDownload('<%= event._id %>')"><i class="bi bi-filetype-pdf"></i> Save & Download</button>
+            <button type="button" class="btn btn-primary" onclick="eventPackEmail('<%= event._id %>')"><i class="bi bi-envelope-at"></i> Save & Email</button>
           </div>
         </div>
       </div>

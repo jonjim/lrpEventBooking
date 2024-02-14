@@ -1,0 +1,44 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+  <div class="col">
+    <div class="card shadow py-3 px-3 mb-3">
+        <div class="card-header bg-white">
+            <div class="row">
+                <div class="col">
+                    <h4>Your Monsters</h4>
+                </div>
+                <div class="col">
+                    <div class="col text-end"><a href="/admin/monsters/new" class="btn btn-secondary btn-sm">New Monster</a>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="card-body">
+      <table class="table table-striped table-hover p-0">
+        <thead>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <% if (systemList.length > 1) { %>
+          <th scope="col" width="200px">Event System</th>
+          <% } %>
+        </thead>
+        <tbody>
+          <% for (monster of monsters.sort((a,b) => a.eventSystem.name.localeCompare(b.eventSystem.name) || a.name.localeCompare(b.name))){ %>
+          <tr onclick="window.location='/admin/monsters/<%= monster._id%>'" style="cursor:pointer;">
+            <td scope="row">
+              <%= monster.name %>
+            </td>
+            <td scope="row">
+              <%= monster.type %>
+            </td>
+            <td scope="row">
+                <%= monster.eventSystem.name %>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </div>
+</div>

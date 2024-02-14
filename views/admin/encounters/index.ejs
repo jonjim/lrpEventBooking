@@ -1,0 +1,90 @@
+<% layout('layouts/boilerplate') %>
+<% const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; 
+    function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+        function addTime(date,minutes){
+        return new Date(date.getTime() + minutes*60000)
+    }
+    // function getDate(epoch){
+    //     return new Date().setUTCSeconds(currentTime);
+    // }
+    %>
+<% let startTime = event.returnPack?.timeInOut?.dailyTimeIn ? event.returnPack?.timeInOut?.dailyTimeIn : event.returnPack?.timeInOut?.arrivalTimeIn ? event.returnPack?.timeInOut?.arrivalTimeIn : new Date(event.eventStart).toISOString().split('T')[0] + 'T10:00:00.000Z'%>
+<% let endTime = event.returnPack?.timeInOut?.dailyTimeOut ? event.returnPack?.timeInOut?.dailyTimeOut : event.returnPack?.timeInOut?.departureTimeOut ? event.returnPack?.timeInOut?.departureTimeOut : addDays(new Date(event.eventStart),1).toISOString().split('T')[0] + 'T01:00:00.000Z' %>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a class="link-dark" href="/admin/events/<%=event._id %>/manage"><%= event.name %></a></li>
+    <li class="breadcrumb-item active">Encounters</li>
+  </ol>
+</nav>
+<div class="card shadow py-3 px-3 mb-3">
+  <div class="sticky-top ms-auto">
+    <a href="/admin/events/<%= event._id %>/encounters/new" class="btn btn-secondary">Add Encounter</a>
+  </div>
+  <div class="overflow-auto">
+    <table class="table table-striped table-hover p-0 pTable">
+      <thead>
+        <th width="50px"></th>
+        <%  for (let i = 0; addDays(event.eventStart, i) <= event.eventEnd; i++ ){ %>
+        <th scope="col" class="text-center">
+          <%= weekday[addDays(event.eventStart,i).getDay()] %>
+        </th>
+        <% } %>
+      </thead>
+      <tbody>
+        <% for (let currentTime = moment(startTime); moment(currentTime).isBefore(endTime); currentTime = moment(currentTime).add(30,'m')) { 
+                let tmpDate = new Date(currentTime); %>
+        <tr>
+          <td scope="row" style="max-width:100px">
+            <%= timeOutput(currentTime)%>
+          </td>
+          <%  for (let i = 0; addDays(event.eventStart, i) <= event.eventEnd; i++ ){
+                                            let tmpDateString = addDays(event.eventStart, i).toISOString().split('T')[0];
+                                            tmpDateString = `${tmpDateString}T${tmpDate.toLocaleTimeString('en-gb')}.000Z`;
+                                            const array = event.encounters.filter(e => e.date.toISOString() === tmpDateString);
+                                            %>
+          <td  scope="row" class="text-center">
+            <ul class="list-group list-group-flush">
+              <% if (array) { %>
+              <% for (enc of array){ %>
+              <li class="encounter-list list-group-item py-0" style="background:none !important;">
+                <a class="link-dark text-muted" href="/admin/events/<%= event._id %>/encounters/<%= enc._id %>"><%= enc.name %></a>
+              </li>
+              <% }} %>
+            </ul>
+          </td>
+          <% } %>
+        </tr>
+        <%  } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="text-end" style="margin-top:20px"><small><a href="" class="link-dark" data-bs-toggle="modal" data-bs-target="#jsonModal">View JSON</a></small></div>
+
+<% function replacer(key,value)
+{
+    if (key=="_id") return undefined;
+    else if (key=="__v") return undefined;
+    else return value;
+} %>
+<div id="jsonModal" class="modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">JSON View</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <pre id="jsonText" onclick="selectText('jsonText')"><%= JSON.stringify(event.encounters,replacer,2) %></pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

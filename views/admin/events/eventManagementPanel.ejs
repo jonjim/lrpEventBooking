@@ -21,6 +21,8 @@
 		<div class="ms-4 mb-3 list-group list-group-flush text-start">
 			<a href="" class="list-group-item list-group-item-action" title="Set and request your catering options" data-bs-toggle="modal" data-bs-target="#cateringModal">Catering Information</a>
 			<a href="" class="list-group-item list-group-item-action" title="Information for your event attendees" data-bs-toggle="modal" data-bs-target="#eventPackModal">Event Pack</a>
+			<a href="/admin/events/<%= event._id %>/encounters" class="list-group-item list-group-item-action" title="Your events encounters">Encounters</a>
+			<a href="/admin/monsters" class="list-group-item list-group-item-action" title="Your Monster Manual">Monster Manual</a>
 		</div>
 		<div class="">
 			<h6>Email</h6>
@@ -46,6 +48,7 @@
 					Dietary Details <small class="badge bg-danger rounded-pill my-auto">Confidential</small>
 				</div>
 			</a>
+			<a href="/admin/events/<%= event._id %>/encounters/print" class="list-group-item list-group-item-action" title="Generate a PDF report of your planned encounters">Encounter Book</a>
 			<% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
 			<a href="/admin/events/<%= event._id %>/print/pid" class="list-group-item list-group-item-action">Player ID's CSV</a>
 			<% } %>

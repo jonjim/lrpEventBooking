@@ -3,7 +3,7 @@ function dateOutput(str){
 }
 
 function timeOutput(str){
-    return new Date(str).toLocaleTimeString('en-GB')
+    return new Date(str).toLocaleTimeString('en-GB',{hour: '2-digit', minute:'2-digit'})
 }
 
 function currencyOutput(str){

@@ -1,0 +1,99 @@
+<% layout('layouts/print') %>
+<% const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; %>
+<h1 class="display-3 mt-5">
+  <%= event.name %>
+</h1>
+<p class="lead mb-0">
+  Hosted By the
+  <%= event.eventHost.name %>
+</p>
+<p class="lead mt-0 mb-5">
+  <small><%= dateOutput(event.eventStart) %>
+    <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> to
+    <%= dateOutput(event.eventEnd) %>
+    <% } %>
+  </small>
+</p>
+<p class="display-5 text-danger mt-5 pt-5">Event Encounters: Confidential</p>
+<div class="mt-5" style="page-break-after:always;"></div>
+<% for (encounter of event.encounters.sort((a,b) => a < b)) { %>
+<div id="encounter<%= encounter._id %>" style="page-break-after:always;">
+  <div class="row border-bottom">
+    <h4><%= event.name %>: <%=encounter.name %></h4>
+    <div class="row">
+      <div class="col">
+        <p class="lead mb-0"><%= dayNames[new Date(encounter.date).getDay()] %> <%= timeOutput(encounter.date) %></p>
+      </div>
+      <div class="col">
+        <p class="lead mb-0"><%= encounter.type %></p>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-8">
+      <h5>Encounter details</h5>
+      <%- encounter.description %>
+    </div>
+    <div class="col">
+      <h5>Inbound</h5>
+      <p><%= encounter.inbound.description %></p>
+      <h5>Outbound</h5>
+      <p><%= encounter.outbound.description %></p>
+    </div>
+  </div>
+  <div class="row border-bottom mb-3">
+    <div class="col">
+        <h5>Costume Notes</h5>
+        <%- encounter.costumeNotes %>
+    </div>
+    <div class="col">
+        <h5>Makeup Notes</h5>
+        <%- encounter.makeupNotes %>
+    </div>
+  </div>
+  <h5>Monsters</h5>
+  <% for (monster of encounter.monsters) { %>
+  <div class="border-bottom mt-3">
+    <h6><%= monster.qty %> x <%= monster.monster.name %></h6>
+    <div class="row mb-3">
+        <div class="col">
+            <b>Hit Points:</b><br/><%= monster.monster.lhv %>
+        </div>
+        <div class="col">
+            <b>Type:</b><br/><%= monster.monster.type %>
+        </div>
+        <div class="col">
+            <b>Strikes For:</b><br/><%= monster.monster.strikesFor %>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-8">
+            <b>Summoning Ability:</b><br/><%= monster.monster.summoningAbility %>
+        </div>
+        <div class="col">
+            <b>Immunities:</b><br/><%= monster.monster.immunities %>
+        </div>
+    </div>
+    <% if (monster.monster.abilityOne || monster.monster.abilityTwo || monster.monster.abilityThree) { %>
+    <div class="mb-3">
+        <b>Special Abilities</b><br/>
+        <%= monster.monster.abilityOne ? `${monster.monster.abilityOne}<br/>` : '' %>
+        <%= monster.monster.abilityTwo ? `${monster.monster.abilityTwo}<br/>` : '' %>
+        <%= monster.monster.abilityThree ? `${monster.monster.abilityThree}<br/>` : '' %>
+    </div>
+    <% } %>
+    <div class="mb-3">
+        <b>Upstats:</b><br/>
+        <%= monster.monster.upstats ? monster.monster.upstats : 'None permitted' %>
+    </div>
+    <% if (monster.monster.restrictionsNotes) { %>
+        <div class="mb-3">
+            <b>Restrictions & Notes:</b><br/>
+            <%= monster.monster.restrictionsNotes %>
+        </div>
+    <% } %>
+  </div>
+  <% } %>
+</div>
+<% } %>

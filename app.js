@@ -22,6 +22,8 @@ const eventRouter = require('./routes/events');
 const aboutRouter = require('./routes/about');
 const paypalRouter = require('./routes/paypal');
 const adminRouter = require('./routes/admin');
+const encounterRouter = require('./routes/encounters');
+const monsterRouter = require('./routes/monsters')
 
 const emailService = require('./utils/email');
 const ExpressError = require('./utils/ExpressError')
@@ -175,6 +177,8 @@ app.use('/', authRouter);
 app.use('/', aboutRouter)
 app.use('/paypal', paypalRouter);
 app.use('/admin/', adminRouter);
+app.use('/admin/events/:id/encounters', encounterRouter);
+app.use('/admin/monsters', monsterRouter);
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))

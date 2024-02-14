@@ -30,9 +30,11 @@
                                     </h6>
                                 </li>
                                 <li><a class="dropdown-item text-muted" href="/admin/hosts">Manage Event Hosts</a></li>
+                                <li><a href="/admin/monsters" class="dropdown-item text-muted">Manage Monster Manual</a></li>
                                 <% if (['systemAdmin','admin','superAdmin'].includes(currentUser.role)) { %>
                                     <li><a href="/admin/systems" class="dropdown-item text-muted">Manage Event Systems</a></li>
                                     <% if (['admin','superAdmin'].includes(currentUser.role)) { %>
+                                        
                                         <li><a class="dropdown-item text-muted" href="/admin/events/all">Manage All Events</a></li>
                                         <li><a class="dropdown-item text-muted" href="/admin/users">Manage Users</a></li>
                                         <li><a href="/admin/email" class="dropdown-item text-muted">Manage E-mails</a></li>

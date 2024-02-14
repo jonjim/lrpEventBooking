@@ -45,11 +45,11 @@
 
 <div class="mb-3">
   <p class="display-6">Time-In & Time-out</p>
-  <p><strong>Arrival Time-In: <%= event.returnPack?.timeInOut?.arrivalTimeIn %></strong></p>
+  <p><strong>Arrival Time-In: <%= timeOutput(event.returnPack?.timeInOut?.arrivalTimeIn) %></strong></p>
   <% if (dateOutput(event.eventStart) != dateOutput(event.eventEnd)) { %> 
-    <p><strong>Daily Time-In: <%= event.returnPack?.timeInOut?.dailyTimeIn %> - <%= event.returnPack?.timeInOut?.dailyTimeOut %></strong></p>
+    <p><strong>Daily Time-In: <%= timeOutput(event.returnPack?.timeInOut?.dailyTimeIn) %> - <%= timeOutput(event.returnPack?.timeInOut?.dailyTimeOut) %></strong></p>
   <% } %>
-  <p><strong>Final Time-Out: <%= event.returnPack?.timeInOut?.departureTimeOut %></strong></p>
+  <p><strong>Final Time-Out: <%= timeOutput(event.returnPack?.timeInOut?.departureTimeOut) %></strong></p>
   <%- event.returnPack?.timeInOut?.notes %>
   <hr>
 </div>

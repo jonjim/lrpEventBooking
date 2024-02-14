@@ -169,3 +169,58 @@ div.img {
     background-color: #f9f9f9;
     border: 1px solid #CCCCCC;
 }
+
+.talkbubble-left,
+.talkbubble-right {
+    position: relative;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 75%;
+}
+
+.talkbubble-left {
+    border: solid #0dcaf0;
+    margin-left: 20px;
+}
+
+.talkbubble-right {
+    margin-left: auto;
+    margin-right: 20px;
+    border: solid #ffc107;
+}
+
+.talkbubble-right:after {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 25%;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-left: 26px solid #ffc107;
+    border-bottom: 13px solid transparent;
+}
+
+.talkbubble-left:before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 25%;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-right: 26px solid #0dcaf0;
+    border-bottom: 13px solid transparent;
+}
+
+.talkbubble-left textarea,
+.talkbubble-right textarea {
+    position: inherit;
+    width: 100%;
+    height: inherit;
+    background: inherit;
+    margin: 0;
+    padding: 0;
+    border: none;
+    resize: none;
+}

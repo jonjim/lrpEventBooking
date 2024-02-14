@@ -1,0 +1,381 @@
+<% layout('layouts/boilerplate') %>
+<% const weekday=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; function addDays(date,
+        days) { var result=new Date(date); result.setDate(result.getDate() + days); return result; } function
+        addTime(date,minutes){ return new Date(date.getTime() + minutes*60000) } %>
+<script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a class="link-dark" href="/admin/events/<%=event._id %>/manage"><%= event.name %></a></li>
+    <li class="breadcrumb-item"><a href="/admin/events/<%= event._id %>/encounters" class="link-dark">Encounters</a></li>
+    <li class="breadcrumb-item active"><%= encounter.name %></li>
+  </ol>
+</nav>
+<form action="/admin/events/<%= encounter.event._id %>/encounters/<%= encounter._id %>?_method=PUT" method="POST">
+  <div class="row small">
+    <div class="col">
+      <div class="card shadow py-3 px-3 mb-3">
+        <div class="row">
+          <div class="col">
+            <div class="mb-2">
+              <label for="encounterName">Event Name</label>
+              <input class="form-control form-control-sm" disabled type="text" id="encounterEventName" value="<%= encounter.event.name %>">
+              <input class="form-control form-control-sm visually-hidden" disabled type="text" id="encounterEventNameSubmit" name="encounter[event]" value="<%= encounter.event._id %>">
+            </div>
+            <div class="mb-2">
+              <label for="encounterName">Encounter Name</label>
+              <input class="form-control form-control-sm" type="text" id="encounterName" value="<%= encounter.name %>" name="encounter[name]">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <div class="">
+              <label for="encounterDay">Day</label>
+              <select name="encounter[day]" class="form-select form-select-sm" id="encounterDay">
+                <% for (let i=0; addDays(encounter.event.eventStart, i)
+                                            <=encounter.event.eventEnd; i++ ){ %>
+                <option <%= encounter.date.toLocaleDateString('en-gb') === addDays(encounter.event.eventStart,i).toLocaleDateString('en-gb') ? 'selected' : '' %> value="<%= addDays(encounter.event.eventStart,i) %>">
+                  <%= weekday[addDays(encounter.event.eventStart,i).getDay()] %>
+                </option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="">
+              <label for="encounterTime">Time</label>
+              <select name="encounter[time]" id="encounterTime" class="form-select form-select-sm">
+                <% console.log(encounter.date) %>
+                <% let startTime = event.returnPack?.timeInOut?.dailyTimeIn ? event.returnPack?.timeInOut?.dailyTimeIn : event.returnPack?.timeInOut?.arrivalTimeIn ? event.returnPack?.timeInOut?.arrivalTimeIn : event.eventStart; %>
+                <% let endTime = event.returnPack?.timeInOut?.dailyTimeOut ? event.returnPack?.timeInOut?.dailyTimeOut : event.returnPack?.timeInOut?.departureTimeOut ? event.returnPack?.timeInOut?.departureTimeOut : event.eventEnd; %>
+                <% for (let currentTime = moment(startTime); moment(currentTime).isBefore(endTime); currentTime = moment(currentTime).add(30,'m')) { %>
+                <option value="<%= timeOutput(currentTime) %>" <%= timeOutput(encounter.date) == timeOutput(currentTime) ? 'selected' : '' %>><%= timeOutput(currentTime) %></option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+            <label for="encounterType">Encounter Type</label>
+            <select name="encounter[type]" id="encounterType" class="form-select form-select-sm">
+              <option value="Non-Combat">Non-Combat</option>
+              <option selected value="Non-Combat/Combat">Non-Combat/Combat</option>
+              <option value="Combat">Combat</option>
+              <option value="Ritual">Ritual</option>
+            </select>
+          </div>
+        </div>
+        <hr>
+        <div class="">
+          <label for="encounterDescription">Encounter Description</label>
+          <textarea class="form-control form-control-sm" name="encounter[description]" id="encounterDescription" cols="30" rows="6"><%= encounter.description %></textarea>
+        </div>
+        <hr>
+        <div id="commentSection">
+          <% if (encounter.comments && encounter.comments.length> 0) {
+                                for (comment of encounter.comments) {
+                                const date = new Date(comment.created);
+                                %>
+          <div class="mb-2 talkbubble-<%= comment.linkedAuthor.equals(encounter.author) ? 'left' : 'right' %>">
+            <p class="mb-0 ">
+              <%- comment.text %>
+            </p>
+            <div class="row">
+              <div class="col">
+                <p class="mb-0 text-muted <%= !comment.linkedAuthor.equals(encounter.author) ? 'text-end' : '' %>">
+                  <%= comment.authorName %>
+                </p>
+              </div>
+              <div class="col text-muted <%= !comment.linkedAuthor.equals(encounter.author) ? 'order-first' : 'text-end' %>">
+                <%= dateOutput(date)%>
+                <%= timeOutput(date) %>
+              </div>
+            </div>
+
+          </div>
+          <% } %>
+          <hr id="commentRule">
+          <% } %>
+        </div>
+        <div class="d-grid gap-2 mb-3">
+          <button class="btn btn-success">Update Encounter</button>
+        </div>
+        <div class="row">
+          <div class="col"></div>
+          <div class="col"></div>
+          <div class="col">
+            <div class="d-grid gap-2 mb-3">
+              <a data-bs-toggle="modal" data-bs-target="#commentModal" role="button" href="#commentModal" class="btn btn-warning">Comment</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <div class="card shadow py-3 px-3 mb-3">
+        <div class="row">
+          <div class="col">
+            <div class="row  align-items-center">
+              <div class="col-lg-3 col-xl-3 text-center"><strong>INBOUND</strong></div>
+              <div class="col-lg-9 col-xl">
+                <input class="form-control form-control-sm" type="text" id="encounterInboundDescription" name="encounter[inbound][description]" list="transportCircles" value="<%= encounter.inbound.description %>">
+                <div class="form-text">How will your encounter arrive?</div>
+              </div>
+            </div>
+            <hr>
+            <div class="row  align-items-center">
+              <div class="col-lg-3 col-xl-3 text-center"><strong>OUTBOUND</strong></div>
+              <div class="col-lg-9 col-xl">
+                <input class="form-control form-control-sm" type="text" id="encounterOutboundDescription" name="encounter[outbound][description]" list="transportCircles" value="<%= encounter.outbound.description %>">
+                <div class="form-text">How will your encounter leave/end?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card shadow py-3 px-3 mb-3">
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <p class="mb-1"><strong>Costume Information</strong></p>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="encounter[costumeInformation]" id="encounterCosutmeInformation1" <%= encounter.costumeInformation === "None" ? 'checked' : '' %> value="None">
+                <label class="form-check-label" for="encounterCosutmeInformation1">None/Costume
+                  Supplied</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="encounter[costumeInformation]" id="encounterCosutmeInformation2" value="Basic" <%= encounter.costumeInformation === "Basic" ? 'checked' : '' %>>
+                <label class="form-check-label" for="encounterCosutmeInformation2" data-bs-toggle="tooltip" data-bs-placement="top" title="Simple costume from wardrobe">Basic</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="encounter[costumeInformation]" id="encounterCosutmeInformation3" value="Character" <%= encounter.costumeInformation === "Character" ? 'checked' : '' %>>
+                <label class="form-check-label" for="encounterCosutmeInformation3" data-bs-toggle="tooltip" data-bs-placement="top" title="Complete unique character/creature costume">Character</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="encounterCostumeNotes">Costume Notes</label>
+              <textarea class="form-control form-control-sm" name="encounter[costumeNotes]" id="encounterCostumeNotes" placeholder="e.g. Simple traveller costume, earthy colours" cols="30" rows="2"><%= encounter.costumeNotes %></textarea>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <p class="mb-1"><strong>Makeup Information</strong></p>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="encounter[makeupInformation]" id="encounterMakeupInformation1" <%= encounter.makeupInformation=== "None" ? 'checked' : '' %> value="None">
+                <label class="form-check-label" for="encounterMakeupInformation1">None</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="encounter[makeupInformation]" id="encounterMakeupInformation2" value="Simple" <%= encounter.makeupInformation=== "Simple" ? 'checked' : '' %>>
+                <label class="form-check-label" for="encounterMakeupInformation2" data-bs-toggle="tooltip" data-bs-placement="top" title="One Colour">Simple</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="encounter[makeupInformation]" id="encounterMakeupInformation3" value="Moderate" <%= encounter.makeupInformation=== "Moderate" ? 'checked' : '' %>>
+                <label class="form-check-label" for="encounterMakeupInformation3" data-bs-toggle="tooltip" data-bs-placement="top" title="Simple design with more than one colour">Moderate</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="encounter[makeupInformation]" id="encounterMakeupInformation4" value="Complex" <%= encounter.makeupInformation=== "Complex" ? 'checked' : '' %>>
+                <label class="form-check-label" for="encounterMakeupInformation4" data-bs-toggle="tooltip" data-bs-placement="top" title="Complex design, prosphetics or unique character">Complex</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="encounterMakeupNotes">Makeup Notes</label>
+              <textarea class="form-control form-control-sm" name="encounter[makeupNotes]" id="encounterMakeupNotes" placeholder="e.g. Dark poisoned veins effect" cols="30" rows="2"><%= encounter.makeupNotes %></textarea>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="card shadow py-3 px-3 mb-3">
+        <div class="row mb-3">
+          <div class="col-2">
+            <label for="monsterQty">Qty</label>
+            <select name="monsters[qty]" id="monsterQty" class="form-select form-select-sm">
+              <option value="" selected></option>
+              <option value="1">1</option>
+              <option value="1-5">1-5</option>
+              <option value="5-10">5-10</option>
+              <option value="<20">
+
+                < 20</option>
+              <option value="<30">
+
+                < 30</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="monsterName">Monster</label>
+            <select name="monsters[name]" id="monsterName" class="form-select form-select-sm">
+              <option value="" selected></option>
+              <% if (monsters) { %>
+              <% for (monster of monsters) { %>
+              <option value="<%= monster._id %>"><%= monster.name %></option>
+              <% }} %>
+            </select>
+          </div>
+          <div class="col-1 mt-auto me-3">
+            <a class="btn btn-secondary btn-sm" onclick="addMonster()">Add</a>
+          </div>
+        </div>
+        <div class="accordion" id="monsterAccordion">
+          <% if (encounter.monsters?.length > 0) {
+                                for (monster of encounter.monsters) { %>
+          <div class="accordion-item" id="monsterItem<%= monster._id %>">
+            <p class="accordion-header" id="monsterHeading<%= monster._id %>">
+              <a class="accordion-button py-1 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#monster<%= monster._id %>" aria-expanded="false" aria-controls="monster<%= monster._id %>"><small><%= console.log(monster) %><%= monster.qty %> - <%= monster.monster.name %></small></a>
+            </p>
+            <div id="monster<%= monster._id %>" class="accordion-collapse collapse" aria-labelledby="monsterHeading<%= monster._id %>" data-bs-parent="#monsterAccordion">
+              <div class="accordion-body">
+                <div class="row">
+                  <div class="col-3"><strong>Race</strong> <%= monster.monster.race %></div>
+                  <div class="col">
+                    <div class="mb-2">
+                      <strong>Hits</strong> <%= monster.monster.lhv %> 
+                    </div>
+                  </div>
+                  <div class="col-1"><a class="btn btn-danger" onclick="deleteMonster('<%= monster._id %>')"><i class="bi bi-trash"></i></a></div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col">
+                    <div>
+                      <strong>Type</strong> <%= monster.monster.type %>
+                    </div>
+                  </div>
+                </div>
+                <% if (monster.monster.immunities) { %><div class="mb-2"><strong>Immunities</strong> <%= monster.monster.immunities %></div> <% } %>
+                <div class="mb-2"><strong>Strikes For</strong> <%= monster.monster.strikesFor %></div>
+                <% if (monster.monster.roleplayGuidelines) { %> <div class="mb-2"><strong>Guidelines</strong> <%= monster.monster.roleplayGuidelines %></div><% } %>
+                <% if (monster.monster.restrictionsNotes) { %> <div class="mb-2"><strong>Restrictions</strong> <%= monster.monster.restrictionsNotes %></div><% } %>
+                <% if (monster.monster.upstats) { %> <div class="mb-2"><strong>Upstats</strong> <%= monster.monster.upstats %></div><% } %>
+                <% if (monster.monster.makeupNotes) { %> <div class="mb-2"><strong>Makeup</strong> <%= monster.monster.makeupNotes %></div><% } %>
+              </div>
+            </div>
+          </div>
+          <% } } %>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">
+          <%= encounter.name %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="comment-text" class="col-form-label">Enter your comment below:</label>
+            <textarea class="form-control" id="comment-text"></textarea>
+            <div class="form-text"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submitComment" data-bs-dismiss="modal" onclick="submitComment()">Send
+          message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function submitComment() {
+    const commentField = document.getElementById('comment-text');
+    const commentDiv = document.getElementById('commentSection');
+    const commentRule = document.getElementById('commentRule');
+    const encAuthor = '<%= encounter.author %>';
+    fetch('/admin/events/<%= encounter.event._id %>/encounters/<%= encounter._id %>/comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({comment: tinymce.get('comment-text').getContent()})
+      })
+      .then((response) => {return response.json()})
+      .then(data => {
+        console.log(data)
+        commentField.value = "";
+        const date = new Date(data.created);
+        const chatBubble = document.createElement('div');
+        chatBubble.classList.add('mb-3')
+        chatBubble.classList.add(data.linkedAuthor == encAuthor ? 'talkbubble-left' : 'talkbubble-right');
+        const cText = document.createElement('p');
+        cText.classList.add('mb-0');
+        cText.innerHTML = data.text;
+        chatBubble.appendChild(cText);
+        const cRow = document.createElement('div');
+        cRow.classList.add('row');
+        const cCol1 = document.createElement('div');
+        cCol1.classList.add('col')
+        cCol1.classList.add('text-muted')
+        if (data.linkedAuthor != encAuthor)
+          cCol1.classList.add('text-end');
+        cCol1.innerHTML = data.authorName;
+        cRow.appendChild(cCol1);
+        const cCol2 = document.createElement('div');
+        cCol2.classList.add('col');
+        cCol2.classList.add('text-muted');
+        if (data.linkedAuthor != encAuthor)
+          cCol2.classList.add('order-first');
+        else
+          cCol2.classList.add('text-end');
+        cCol2.innerHTML = `${date.toLocaleDateString('en-gb')} ${date.toLocaleTimeString('en-gb').replace(':00', '')}`
+        cRow.appendChild(cCol2);
+        chatBubble.appendChild(cRow);
+        if (commentRule)
+          commentDiv.insertBefore(chatBubble, commentRule)
+        else {
+          commentDiv.appendChild(chatBubble);
+          const hr = document.createElement('hr');
+          commentDiv.appendChild(hr);
+        }
+      });
+    }
+
+  async function addMonster() {
+    const qtyField = document.getElementById('monsterQty');
+    const monsterField = document.getElementById('monsterName');
+    const accordion = document.getElementById('monsterAccordion');
+    const status = document.getElementById('encounterStatus')
+     await fetch('/admin/events/<%= encounter.event._id %>/encounters/<%= encounter._id %>/monster', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ monster: monsterField.value, qty: qtyField.value})
+      })
+      .then(data => {
+        if(!data.ok) {
+        return data.text().then(text => { throw new Error(text) })
+       }
+        console.log(data)
+        if (data) {
+          data.text().then(text => accordion.innerHTML +=text)
+          qtyField.value = 1;
+          monsterField.value = '';
+        }
+      })
+  }
+
+  function deleteMonster(id) {
+    const accordionItem = document.getElementById('monsterItem' + id)
+    const status = document.getElementById('encounterStatus')
+    fetch('/admin/events/<%= encounter.event._id %>/encounters/<%= encounter._id %>/monster/' + id, {
+        method: 'DELETE'
+    })
+      .then(data => {
+        accordionItem.remove();
+      })
+  }
+</script>
+<script src="/js/tinymce.js"></script>

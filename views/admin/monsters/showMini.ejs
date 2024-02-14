@@ -1,0 +1,34 @@
+<div class="accordion-item" id="monsterItem<%= monsterDetails._id %>">
+    <p class="accordion-header" id="monsterHeading<%= monsterDetails._id %>">
+        <a class="accordion-button py-1 collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#monster<%= monsterDetails._id %>" aria-expanded="false"
+            aria-controls="monster<%= monsterDetails._id %>"><small><%= monsterDetails.qty %> - <%= monster.name %></small></a>
+    </p>
+    <div id="monster<%= monsterDetails._id %>" class="accordion-collapse collapse" aria-labelledby="monsterHeading<%= monsterDetails._id %>"
+        data-bs-parent="#monsterAccordion">
+        <div class="accordion-body">
+            <div class="row">
+                <div class="col-3"><strong>Race</strong> <%= monster.race %></div>
+                <div class="col">
+                    <div class="mb-2">
+                        <strong>Hits</strong> <%= monster.lhv %>
+                    </div>
+                </div>
+                <div class="col-1"><a class="btn btn-danger" onclick="deleteMonster('<%= monsterDetails._id %>')"><i class="bi bi-trash"></i></a></div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <strong>Type</strong> <%= monster.type %>
+                    </div>
+                </div>
+            </div>
+            <% if (monster.immunities) { %><div class="mb-2"><strong>Immunities</strong> <%= monster.immunities %></div> <% } %>
+            <div class="mb-2"><strong>Strikes For</strong> <%= monster.strikesFor %></div>
+            <% if (monster.roleplayGuidelines) { %> <div class="mb-2"><strong>Guidelines</strong> <%= monster.roleplayGuidelines %></div><% } %>
+            <% if (monster.restrictionsNotes) { %> <div class="mb-2"><strong>Restrictions</strong> <%= monster.restrictionsNotes %></div><% } %>
+            <% if (monster.upstats) { %> <div class="mb-2"><strong>Upstats</strong> <%= monster.upstats %></div><% } %>
+            <% if (monster.makeupNotes) { %> <div class="mb-2"><strong>Makeup</strong> <%= monster.makeupNotes %></div><% } %>
+        </div>
+    </div>
+</div>

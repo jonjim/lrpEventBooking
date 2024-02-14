@@ -107,7 +107,7 @@ module.exports.updateEvent = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventTickets').populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } })
     const updatedEvent = await Event.findByIdAndUpdate(id, { $set: {...req.body.event } }, { new: true }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
     if (req.file) {
-        event.img = req.file;
+        updatedEvent.img = req.file;
         await updatedEvent.save();
     }
     if (event.visible != req.body.event.visible && req.body.event.visible == true) {

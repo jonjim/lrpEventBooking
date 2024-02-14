@@ -1,0 +1,101 @@
+<% layout('layouts/boilerplate') %>
+<div class="card shadow py-3 px-3 mb-3 small">
+  <div class="card-header bg-white">
+    <h4>Create a new Monster</h4>
+  </div>
+  <form action="/admin/monsters" method="POST" class="validated-form" novalidate>
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="col">
+        <label for="monsterName">Name</label>
+        <input class="form-control" type="text" id="monsterName" name="monster[name]" required>
+      </div>
+      <div class="col">
+        <label for="monsterRace">Race</label>
+        <input type="text" id="monsterRace" name="monster[race]" class="form-control">
+      </div>
+      <% if (currentUser.eventHosts.length > 0 || currentUser.eventSystems.length > 0) { %>
+      <div class="col">
+        <label for="systemSelect">Event System</label>
+        <select name="monster[eventSystem]" id="systemSelect" class="form-select">
+            <% for (system of eventSystems.sort((a,b) => a.name.localeCompare(b.name))){ %>
+                <option value="<%= system._id %>"><%= system.name %></option>
+            <% } %>
+        </select>
+      </div>
+      <% } %>
+    </div>
+    <hr>
+    <div class="row mb-3">
+        <div class="col">
+            <label for="monsterLhv">Hit Points</label>
+            <input type="text" class="form-control" name="monster[lhv]" id="monsterLhv" placeholder="e.g. 3 per location, 10 total body">
+            <div class="form-text">Remember to label the hit points appropriately for your event system!</div>
+        </div>
+        <div class="col">
+            <label for="monsterType">Type</label>
+            <input type="text" name="monster[type]" id="monsterType" class="form-control" placeholder="e.g. Undead">
+        </div>
+        <div class="col">
+            <label for="monsterStrikesFor">Weapon Strikes For</label>
+            <input type="text" name="monster[strikesFor]" id="monsterStrikesFor" class="form-control ">
+          </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label for="monsterImmunities">Immunities</label>
+            <textarea name="monster[immunities]" id="" cols="30" rows="2" class="form-control form-control-sm"></textarea>
+        </div>
+        <div class="col">
+            <label for="monsterSummoningAbility">Summoning Ability</label>
+            <textarea name="monster[summoningAbility]" id="monsterSummoningAbility" cols="30" rows="2" class="form-control form-control-sm" placeholder="e.g. May summon skeletons"></textarea>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="mb-3">
+                <label for="monsterAbilityOne">Special Ability One</label>
+                <textarea name="monster[abilityOne]" id="" cols="30" rows="2" class="form-control form-control-sm"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="monsterAbilityTwo">Special Ability Two</label>
+                <textarea name="monster[abilityTwo]" id="" cols="30" rows="2" class="form-control form-control-sm"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="monsterAbilityThree">Special Ability Three</label>
+                <textarea name="monster[abilityThree]" id="" cols="30" rows="2" class="form-control form-control-sm"></textarea>
+              </div>
+
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="monsterRoleplayGuidelines">Roleplay Guidelines</label>
+                <textarea name="monster[roleplayGuidelines]" id="" cols="30" rows="2" class="form-control form-control-sm"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="monsterMakeupNotes">Makeup Notes</label>
+                <textarea name="monster[makeupNotes]" id="" cols="30" rows="2" class="form-control form-control-sm"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="monsterRestrictionNotes">Restrictions & Notes</label>
+                <textarea name="monster[restrictionsNotes]" id="" cols="30" rows="2" class="form-control form-control-sm"></textarea>
+              </div>
+        </div>
+    </div>
+      <hr>
+      <div class="mb-3">
+        <label for="monsterUpstats">Upstats</label>
+        <textarea name="monster[upstats]" id="" cols="30" rows="2" class="form-control form-control-sm" placeholder="Please list appropriate aways to upstat your monster, should it be required"></textarea>
+      </div>
+      <hr>
+  </div>
+  
+
+
+
+    <div class="d-grid gap-2 mb-3">
+      <button class="btn btn-success">Create Monster</button>
+    </div>
+
+  </form>
+</div>
