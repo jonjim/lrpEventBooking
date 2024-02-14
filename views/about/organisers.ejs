@@ -123,8 +123,8 @@
         <p>Putting together event packs, planning encounters, statting your monsters, it can all become a formatting nightmare</p>
         <p>We've crunched the numbers, and planned the document.</p>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="We make it possible to create and timetable your encounters, as well as generate that into an easily readable document.">Encounter timetabling <small class="text-danger">Coming Soon!</small></li>
-          <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="We all need a good old fashioned Monster Manual. We make it simple to update your systems monsters and generate a manual of their stats.">Manage your own Monster Manual <small class="text-danger">Coming Soon!</small></li>
+          <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="We make it possible to create and timetable your encounters, as well as generate that into an easily readable document.">Encounter timetabling & reports</li>
+          <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="We all need a good old fashioned Monster Manual. We make it simple to update your systems monsters and generate a manual of their stats.">Manage your own Monster Manual</li>
           <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Do you need an event pack telling your players what to expect? Maybe they need directions or gate codes to your venue? We've taken care of it, and will even send it to your players">Event Pack PDF generation and automatic e-mailing</li>
           <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="We've skipped the nightmare of designing and laying out a character card. A basic template gives you a quick and easy way to track your attendees characters.">Character Card printing <small class="text-danger">Coming Soon!</small></li>
           <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Many systems use laminated cards as a way of tracking magical/special items. We've included that template and library for each of your events">"Lammie" Printing <small class="text-danger">Coming Soon!</small></li>
@@ -143,70 +143,6 @@
       <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="This is one we wont move on. Modern web browsers are essential to keeping your players, and your own, data secure">We require modern web browsers, this may affect older computers</li>
       <li class="list-group-item" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="We have tried to make every option as generic as possible, or as variable as possible. However there is no guarantee it will fit your needs. If we are able we will to try to adjust the system to fit everyone, but occasionally that may not be possible.">One size doesn't always fit all</li>
     </ul>
-  </div>
-</div>
-
-
-<div class=" d-none card shadow  py-3 px-3 mb-3">
-  <div class="card-header bg-white mb-3">
-    <h4>About Our Event Organisers</h4>
-  </div>
-  <div class="card-body">
-    <div class="card-body">
-      <figure class="text-center">
-        <blockquote class="blockquote">
-          <p>By Live Role Players, For Live Role Players</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-          <cite title="Source Title">Almost Every LRP Organiser</cite>
-        </figcaption>
-      </figure>
-      <div class="mb-3">
-        <p>There is no denying that the root of Live Role Play is as a community hobby. Most trace back to university and gaming groups that wanted to branch away from the traditional table top gaming.</p>
-        <p>In recent years that ideal has shifted slightly and now a large number of highly successful commercial event organisers make it difficult (not deliberately) for smaller systems to compete. So we wanted to bring back that age old mantra used by so many; <i>"By Live Role Players, For Live Role Players"</i></p>
-        <p>One of the largest hurdles faced by LRP Event Organisers is the logistics of getting attendees to their events, whilst ensuring that all the necessary protections to their privacy can be met. To solve this problem, we have created something tailor made to LRP Event Organisers. Giving access to only the data required for their event, as well as streamlining the booking and payment process.</p>
-      </div>
-      <hr>
-      <div class="row mb-3">
-        <div class="col-md-6 mt-3">
-          <h5>What features exist for Event Organisers?</h5>
-          <p>As a brief overview, an Event Organiser can register their Event System (they may also register individaul hosts - such as a particular nation may be hosting the event), and create their events to be advertised and booked on the system. Here we will go into the details.</p>
-          <ul>
-            <li>Advertise your event with no commitment to use the booking features</li>
-            <li>Varying Admin rights, allowing you to control which users can create events for your system or individual hosts</li>
-            <li>Allow event bookings with varying prices depending on date boundaries (e.g. early booking)</li>
-            <li><em>Or,</em> allow bookings from an external website</li>
-            <li>Optionally allow automatic bookings of meal tickets and bunks</li>
-            <li>Creation of manual bookings to consolidate your booking information into one place</li>
-            <li>Financial reports: adding key information about your event allows you to see breakeven points at a glance</li>
-            <li>Streamlined payment through PayPal</li>
-            <li>Seperate PDF Event Reports: for your event attendees, medical notes, and dietary notes.</li>
-            <li>Automated PDF Event Pack generation and e-mail</li>
-            <li>Bulk e-mail features to securely contact your event attendees</li>
-            <li>Option for recording character and player details, or even adding character progression*</li>
-            <li>All data stored and processed within the United Kingdom, complying with GDPR regulations.</li>
-          </ul>
-          <small>*Some features may require additional work which we may have to charge for depending on how translatable they are to other event systems.</small>
-        </div>
-        <div class="col-md-6 mt-3">
-          <h5>How do I register as an Event Organiser?</h5>
-          <p>For now, to sign up as an Event Organiser is a manual process. We do hope to make this an automated process in the future to make event organisation even easier for new organisers.</p>
-          <p>Please <a href="mailto:<%= config.techContactEmail %>?subject=Event System Registration&body=Hi, I would like to add my Event System to the booking website!">E-Mail <%= config.techContactName %></a> to express your interest.</p>
-          <br>
-          <h5>How much does it cost?</h5>
-          <% if (config.hostingCharge == 0) { %>
-          <p><b>Nothing!</b> Whilst we work out the finanical implications for running and hosting this, there is no charge to run your event through us!</p>
-          <% } else { %>
-          <p>A one-off fee per event of <b><%= currencyOutput(config.hostingCharge) %></b>.<br>This fee is to cover the hosting and e-mail costs of running the website. We do not take a slice from each individual booking. We are operating strictly as Not-For-Profit.</p>
-          <% } %>
-          <br>
-          <h5>What are the downsides?</h5>
-          <p>This is an obvious concern. If you're going to use this system, what are the potential risks to your system?</p>
-          <p><b>PayPal</b> is a double edged sword. It's convenient and friendly to use, it does however charge for transactions. Some organisers encourage their attendees to pay via <em>"Friends and Family"</em> however this removes any buyer protection for the attendee. As such, we've decided this is the safest solution all round, despite the costs.</p>
-          <p><b>A Shared Space</b> again has its pro's and con's. Whilst giving you increased exposure to new audiences, it also mean's your events may face new competition from other events. It is our sincere hope that overall this proves to be beneficial for the hobby.</p>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
