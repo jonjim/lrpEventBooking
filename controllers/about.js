@@ -60,6 +60,12 @@ module.exports.eventSystem = async (req,res,next) => {
     }
 }
 
+module.exports.sitemap = async (req,res,next) => {
+    const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() }}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
+    res.contentType("text/xml");
+    return res.render('about/sitemap',{eventList})
+}
+
 module.exports.eventSystemTerms = async(req,res,next) => {
     const meta = {
         crawl: true

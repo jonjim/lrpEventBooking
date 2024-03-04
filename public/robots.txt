@@ -1,0 +1,21 @@
+User-agent: *
+
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Allow: /privacy
+Allow: /terms
+Allow: /faq
+Allow: /about
+Allow: /organisers
+
+Disallow: /auth/google
+Disallow: /auth/google/callback
+Disallow: /auth/facebook
+Disallow: /auth/facebook/callback
+Disallow: /account
+Disallow: /account/bookings
+Disallow: /organisers/register
+
+Sitemap: https://www.lrptickets.co.uk/sitemap.xml

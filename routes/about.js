@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 const ExpressError = require('../utils/ExpressError')
-
 const catchAsync = require('../utils/catchAsync');
-
 const controller = require('../controllers/about');
 
 router.route('/about')
@@ -40,6 +38,9 @@ router.route('/initialConfig')
 
 router.route('/ogcard')
     .get(catchAsync(controller.renderOGCard))
+
+router.route('/sitemap.xml')
+    .get(catchAsync(controller.sitemap))
 
 router.route('/:id')
     .get(catchAsync(async (req,res,next) => { 

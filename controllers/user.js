@@ -5,7 +5,10 @@ const eventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
 const emailService = require('../utils/email');
 
-module.exports.renderRegister =async (req, res, next) => {
+module.exports.renderRegister = async (req, res, next) => {
+    if (req.isAuthenticated) {
+        res.redirect('/account')
+    }
     const systems = await eventSystems.find({active:true})
     res.render('user/register', { title: 'Create New Account', systems });
 };
@@ -116,6 +119,9 @@ module.exports.accountUpdate = async (req, res, next) => {
 };
 
 module.exports.renderLoginForm = (req, res) => {
+    if (req.isAuthenticated) {
+        res.redirect('/account')
+    }
     res.render('user/login', { title: 'Login to your account' });
 };
 
@@ -200,7 +206,7 @@ module.exports.resetPasswordLink = async(req, res, next) => {
     })
 }
 
-module.exports.resetPasswordForm = async(req, res, next) => {
+module.exports.resetPasswordForm = async (req, res, next) => {
     const user = await User.findOne({ resetPassword: req.params.id });
     if (!user) {
         req.flash('error', 'This password reset link is not valid');

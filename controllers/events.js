@@ -15,8 +15,8 @@ const turndownService  = require('turndown');
 module.exports.upcomingEvents = async(req, res, next) => {
     const eventList = await Event.find({ visible: true, cancelled: false, eventEnd: { $gte: new Date() } }).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'asc' });
     const meta = {
-        title: 'LARP Event Bookings: Upcoming Events',
-        description: 'LARP Event Bookings - Event information and booking for LRP events across the United Kingdom',
+        title: 'LRPTickets.co.uk : Upcoming Events',
+        description: 'LRPTickets.co.uk - Event information and booking for LRP events across the United Kingdom',
         path: '/'
     }
     res.render(req.query.view == 'calendar' ? 'events/calendar' : 'events/list', {

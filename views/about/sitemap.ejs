@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.lrptickets.co.uk/</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.lrptickets.co.uk/login</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.lrptickets.co.uk/register</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.lrptickets.co.uk/about</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.lrptickets.co.uk/faq</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.lrptickets.co.uk/organisers</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.lrptickets.co.uk/privacy</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.lrptickets.co.uk/terms</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <% for (event of eventList) { %>
+    <url>
+      <loc>https://www.lrptickets.co.uk/events/<%= event._id %></loc>
+      <lastmod><%= event.created %></lastmod>
+      <changefreq>monthly</changefreq>
+    </url>
+  <% } %>
+</urlset>
