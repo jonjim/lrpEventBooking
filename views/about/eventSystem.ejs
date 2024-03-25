@@ -66,6 +66,8 @@
                 <% } %>
                 <a href="<%= eventSystem.website %>" class="link-dark"><%= eventSystem.website %></a>
                 <hr class="mb-3">
+                <small><%= config.siteName %> is not affiliated with <%= eventSystem.name %>, as such we are unable to answer any queries related to the running of their games.</small>
+                <hr class="mb-3">
                 <small><%- eventSystem.description %></small>
                 <hr class="mb-3">
                 <% if (eventSystem.facebook?.length > 0) {  %>
