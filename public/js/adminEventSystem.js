@@ -94,8 +94,6 @@ function newField(eventSystemId){
     document.getElementById('deleteFieldBtn').classList.add('d-none');
 }
 function editField(eventSystemId,json) {
-    console.log(json);
-    console.log(json.display);
     document.getElementById('customFieldModalLabel').innerText = 'Update Custom Field';
     document.getElementById('fieldSubmit').innerText = 'Update Field';
     document.getElementById('customId').value = json._id;
@@ -121,4 +119,49 @@ function editField(eventSystemId,json) {
 function deleteField(){
     document.getElementById('deleteId').value = document.getElementById('customId').value;
     document.getElementById('deleteFieldForm').submit();
+}
+function newLammieField(eventSystemId){
+    document.getElementById('customLammieFieldModalLabel').innerText = 'Create New Lammie Field';
+    document.getElementById('lammieFieldSubmit').innerText = 'Create Field';
+    document.getElementById('customLammieId').value = '';
+    document.getElementById('customLammieName').value = '';
+    document.getElementById('customLammieLabel').value = '';
+    document.getElementById('customLammieType').value = 'text'; 
+    document.getElementById('customLammieOptions').parentElement.classList.add('d-none')
+    document.getElementById('customLammieOptions').value = '';
+    document.getElementById('customLammieRequired').checked = false;
+    document.getElementById('customLammieError').parentElement.classList.add('d-none')
+    document.getElementById('customLammieError').value = '';
+    document.getElementById('customLammieDefaultValue').value = '';
+    document.getElementById('customLammieDescription').value = '';
+    document.getElementById('customLammiePlaceholder').value = '';
+    document.getElementById('customLammieError').value = '';
+    document.getElementById('customLammieFieldForm').action = `/admin/systems/${eventSystemId}/lammiefields`;
+    document.getElementById('deleteLammieFieldBtn').classList.add('d-none');
+}
+function editLammieField(eventSystemId,json) {
+    document.getElementById('customLammieFieldModalLabel').innerText = 'Update Lammie Field';
+    document.getElementById('lammieFieldSubmit').innerText = 'Update Field';
+    document.getElementById('customLammieId').value = json._id;
+    document.getElementById('customLammieName').value = json.name;
+    document.getElementById('customLammieLabel').value = json.label;
+    document.getElementById('customLammieSection').value = json.section;
+    document.getElementById('customLammieType').value = json.type;
+    if(json.type == 'select' ) document.getElementById('customOptions').parentElement.classList.remove('d-none'); 
+    else document.getElementById('customLammieOptions').parentElement.classList.add('d-none')
+    document.getElementById('customLammieOptions').value = json.options.join(',');
+    document.getElementById('customLammieRequired').checked = json.required;
+    if (json.required) document.getElementById('customLammieError').parentElement.classList.remove('d-none')
+    else document.getElementById('customLammieError').parentElement.classList.add('d-none')
+    document.getElementById('customLammieError').value = json.error;
+    document.getElementById('customLammieDefaultValue').value = json.defaultValue;
+    document.getElementById('customLammieDescription').value = json.description;
+    document.getElementById('customLammiePlaceholder').value = json.placeholder;
+    document.getElementById('customLammieError').value = json.error;
+    document.getElementById('customLammieFieldForm').action = `/admin/systems/${eventSystemId}/lammiefields?_method=PUT`
+    document.getElementById('deleteLammieFieldBtn').classList.remove('d-none');
+}
+function deleteLammieField(){
+    document.getElementById('lammieDeleteId').value = document.getElementById('customLammieId').value;
+    document.getElementById('deleteLammieFieldForm').submit();
 }

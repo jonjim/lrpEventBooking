@@ -141,6 +141,16 @@ module.exports.eventSystemAddField = async (req, res, next) => {
     res.redirect(`/admin/systems/${req.params.id}`)
 }
 
+module.exports.eventSystemAddLammieField = async (req, res, next) => {
+    req.body.required = typeof req.body.required != 'undefined' ? req.body.required == 'on' ? true : false : false;
+    req.body.display = typeof req.body.display != 'undefined' ? req.body.display == 'on' ? true : false : false;
+    if (req.body.options != '') req.body.options = req.body.options.split(',');
+    else req.body.options = undefined;
+    await EventSystems.findByIdAndUpdate(req.params.id, { $push: { lammieFields: { ...req.body }  } })
+    req.flash('success','Added Custom Lammie Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
 module.exports.eventSystemUpdateField = async (req, res, next) => {
     const fieldId = req.body.idField;
     req.body.idField = undefined;
@@ -154,9 +164,28 @@ module.exports.eventSystemUpdateField = async (req, res, next) => {
     res.redirect(`/admin/systems/${req.params.id}`)
 }
 
+module.exports.eventSystemUpdateLammieField = async (req, res, next) => {
+    const fieldId = req.body.idField;
+    req.body.idField = undefined;
+    req.body.required = typeof req.body.required != 'undefined' ? req.body.required == 'on' ? true : false : false;
+    req.body.display = typeof req.body.display != 'undefined' ? req.body.display == 'on' ? true : false : false;
+    if (req.body.options != '') req.body.options = req.body.options.split(',');
+    else req.body.options = undefined;
+    await EventSystems.findByIdAndUpdate(req.params.id, { $pull: { lammieFields: { _id: fieldId } } });
+    await EventSystems.findByIdAndUpdate(req.params.id, { $push: { lammieFields: { ...req.body } } });
+    req.flash('success','Updated Custom Lammie Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
 module.exports.eventSystemDeleteField = async (req, res, next) => {
     await EventSystems.findByIdAndUpdate(req.params.id, { $pull: { customFields: { _id: req.body.idField } } });
     req.flash('success','Deleted Custom Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
+module.exports.eventSystemDeleteLammieField = async (req, res, next) => {
+    await EventSystems.findByIdAndUpdate(req.params.id, { $pull: { lammieFields: { _id: req.body.idField } } });
+    req.flash('success','Deleted Custom Lammie Field');
     res.redirect(`/admin/systems/${req.params.id}`)
 }
 
@@ -190,4 +219,33 @@ module.exports.eventSystemNew = async(req, res, next) => {
     await new EventSystems({...req.body }).save();
     req.flash('success', 'New Event System Created');
     return res.redirect('/admin/systems')
+}
+
+module.exports.eventSystemAddLammieField = async (req, res, next) => {
+    req.body.required = typeof req.body.required != 'undefined' ? req.body.required == 'on' ? true : false : false;
+    req.body.display = typeof req.body.display != 'undefined' ? req.body.display == 'on' ? true : false : false;
+    if (req.body.options != '') req.body.options = req.body.options.split(',');
+    else req.body.options = undefined;
+    await EventSystems.findByIdAndUpdate(req.params.id, { $push: { lammieFields: { ...req.body }  } })
+    req.flash('success','Added Custom Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
+module.exports.eventSystemUpdateLammieField = async (req, res, next) => {
+    const fieldId = req.body.idField;
+    req.body.idField = undefined;
+    req.body.required = typeof req.body.required != 'undefined' ? req.body.required == 'on' ? true : false : false;
+    req.body.display = typeof req.body.display != 'undefined' ? req.body.display == 'on' ? true : false : false;
+    if (req.body.options != '') req.body.options = req.body.options.split(',');
+    else req.body.options = undefined;
+    await EventSystems.findByIdAndUpdate(req.params.id, { $pull: { lammieFields: { _id: fieldId } } });
+    await EventSystems.findByIdAndUpdate(req.params.id, { $push: { lammieFields: { ...req.body } } });
+    req.flash('success','Updated Custom Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
+}
+
+module.exports.eventSystemDeleteLammieField = async (req, res, next) => {
+    await EventSystems.findByIdAndUpdate(req.params.id, { $pull: { lammieFields: { _id: req.body.idField } } });
+    req.flash('success','Deleted Custom Field');
+    res.redirect(`/admin/systems/${req.params.id}`)
 }

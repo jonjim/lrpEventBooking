@@ -49,6 +49,39 @@ const eventSystemSchema = new mongoose.Schema({
             }
         }
     ],
+    lammieFields: [
+        {
+            label: String,
+            name: String,
+            type: {
+                type: String,
+                enum: ['text', 'number', 'checkbox', 'select'],
+                default: 'text'
+            },
+            position: {
+                type: String,
+                lowercase: true,
+                enum: ['topLeft','topCentre','topRight','midLeft','midCentre','midRight','botLeft','botCentre','botRight']
+            },
+            options: [{type: String}],
+            required: {
+                type:Boolean,
+                default: false
+            },
+            section: {
+                type: String, 
+                enum: ['front','back']
+            },
+            defaultValue: String,
+            description: String,
+            placeholder: String,
+            error: String,
+            display: {
+                type: Boolean,
+                default: false
+            }
+        }
+    ],
     customTools:[{ type: String }],
     sanctioningFee: {
         type: Number,

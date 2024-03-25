@@ -67,6 +67,11 @@ router.route('/systems/:id/fields')
     .put(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemUpdateField))
     .delete(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemDeleteField))
 
+router.route('/systems/:id/lammiefields')
+    .post(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemAddLammieField))
+    .put(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemUpdateLammieField))
+    .delete(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemDeleteLammieField))
+
 router.route('/systems/:id/image')
     .delete(isLoggedIn, isMatchingSystemAdmin, catchAsync(adminController.eventSystemDelImg))
 
