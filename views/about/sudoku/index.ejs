@@ -1,0 +1,13 @@
+<% layout('layouts/boilerplate') %>
+
+<h2>Lorien Trust Sudoku Generator</h2>
+<p>The following tool is provided free-of-charge to generate sudoku puzzles using the elemental symbols of the Lorien Trust.</p>
+<form action="/sudoku" method="POST" class="validated-form" novalidate>
+    <div class="mb-3 col-4">
+        <label for="pid">Player ID</label>
+        <input id="pid" name="pid" type="text" class="form-control" required>
+        <div class="form-text">Your player ID is required for the IC document label</div>
+        <div class="invalid-feedback">Really, it is required.</div>
+    </div>
+    <button type="submit" class="btn btn-success">Generate a set of puzzles</button>
+</form>

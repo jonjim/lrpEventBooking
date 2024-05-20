@@ -1,0 +1,38 @@
+[
+    {
+        "cadre": "neutrality",
+        "elements": [
+            "law.png",
+            "chaos.png",
+            "good.png",
+            "evil.png"
+        ]
+    },
+    {
+        "cadre": "existence",
+        "elements": [
+            "reality.png",
+            "illusion.png",
+            "fortune.png",
+            "fate.png"
+        ]
+    },
+    {
+        "cadre": "void",
+        "elements": [
+            "knowledge.png",
+            "magic.png",
+            "spirit.png",
+            "time.png"
+        ]
+    },
+    {
+        "cadre": "creation",
+        "elements": [
+            "earth.png",
+            "air.png",
+            "water.png",
+            "fire.png"
+        ]
+    }
+]

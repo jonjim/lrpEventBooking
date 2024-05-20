@@ -1,0 +1,338 @@
+<% layout('layouts/sudoku') %>
+<% const elementsNeutrality = elementMap.find(a => a.cadre == `neutrality`).elements; %>
+<% const elementsExistence = elementMap.find(a => a.cadre == `existence`).elements; %>
+<% const elementsVoid = elementMap.find(a => a.cadre == `void`).elements; %>
+<% const elementsCreation = elementMap.find(a => a.cadre == `creation`).elements; %>
+<div class="div text-center mt-5" style="page-break-after:always;">
+    <h1 class="text-centre my-5 display-1">Elements of Erdreja</h1>
+    <div class="row my-5 py-5 text-center">
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[0] %>" alt="1">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[1] %>" alt="2">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[2] %>" alt="3">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[3] %>" alt="4">
+        </div>
+    </div>
+    <hr>
+    <div class="text-center my-5">
+        <table class="table table-bordered mt-5 text-center align-middle" style="width:500px !important;height:500px !important;margin: 0 auto !important; ">
+            <% for (row of entries[0].rows) { %> 
+                <tr style="height:125px;">
+                    <td style="width:125px">
+                        <% if (row[0] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[1] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[2] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[3] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+    <div class="ltLabel" style="position:relative;text-align:right;color:black;">
+        <img height="60px" src="<%= url %>/img/sudoku/icDocLabel.png" alt="">
+        <div style="position:absolute; letter-spacing: 5px; top: 30%;right:5%;">
+            <strong><%= pid %></strong>
+        </div>
+    </div>
+</div>
+
+<div class="div text-center mt-5" style="page-break-after:always;">
+    <h1 class="text-centre my-5 display-1">Elements of Erdreja</h1>
+    <div class="row my-5 py-5 text-center">
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsExistence[0] %>" alt="1">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsExistence[1] %>" alt="2">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsExistence[2] %>" alt="3">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsExistence[3] %>" alt="4">
+        </div>
+    </div>
+    <hr>
+    <div class="text-center my-5">
+        <table class="table table-bordered mt-5 text-center align-middle" style="width:500px !important;height:500px !important;margin: 0 auto !important; ">
+            <% for (row of entries[1].rows) { %> 
+                <tr style="height:125px;">
+                    <td style="width:125px">
+                        <% if (row[0] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[1] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[2] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[3] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+    <div class="mt-5 text-end">
+        <div class="ltLabel" style="position:relative;text-align:right;color:black;">
+            <img height="60px" src="<%= url %>/img/sudoku/icDocLabel.png" alt="">
+            <div style="position:absolute; letter-spacing: 5px; top: 30%;right:5%;">
+                <strong><%= pid %></strong>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="div text-center mt-5" style="page-break-after:always;">
+    <h1 class="text-centre my-5 display-1">Elements of Erdreja</h1>
+    <div class="row my-5 py-5 text-center">
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsVoid[0] %>" alt="1">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsVoid[1] %>" alt="2">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsVoid[2] %>" alt="3">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsVoid[3] %>" alt="4">
+        </div>
+    </div>
+    <hr>
+    <div class="text-center my-5">
+        <table class="table table-bordered mt-5 text-center align-middle" style="width:500px !important;height:500px !important;margin: 0 auto !important; ">
+            <% for (row of entries[2].rows) { %> 
+                <tr style="height:125px;">
+                    <td style="width:125px">
+                        <% if (row[0] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[1] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[2] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[3] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+    <div class="ltLabel" style="position:relative;text-align:right;color:black;">
+        <img height="60px" src="<%= url %>/img/sudoku/icDocLabel.png" alt="">
+        <div style="position:absolute; letter-spacing: 5px; top: 30%;right:5%;">
+            <strong><%= pid %></strong>
+        </div>
+    </div>
+</div>
+
+<div class="div text-center mt-5" style="page-break-after:always;">
+    <h1 class="text-centre my-5 display-1">Elements of Erdreja</h1>
+    <div class="row my-5 py-5 text-center">
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsCreation[0] %>" alt="1">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsCreation[1] %>" alt="2">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsCreation[2] %>" alt="3">
+        </div>
+        <div class="col">
+            <img src="<%= url %>/img/sudoku/<%= elementsCreation[3] %>" alt="4">
+        </div>
+    </div>
+    <hr>
+    <div class="text-center my-5">
+        <table class="table table-bordered mt-5 text-center align-middle" style="width:500px !important;height:500px !important;margin: 0 auto !important; ">
+            <% for (row of entries[3].rows) { %> 
+                <tr style="height:125px;">
+                    <td style="width:125px">
+                        <% if (row[0] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[1] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[2] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td style="width:125px">
+                        <% if (row[3] != "") { %>
+                            <img src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+    <div class="ltLabel" style="position:relative;text-align:right;color:black;">
+        <img height="60px" src="<%= url %>/img/sudoku/icDocLabel.png" alt="">
+        <div style="position:absolute; letter-spacing: 5px; top: 30%;right:5%;">
+            <strong><%= pid %></strong>
+        </div>
+    </div>
+</div>
+
+<h1 class="my-5 display-1 text-center">ANSWER SHEET</h1>
+<div class="row my-3">
+    <div class="col-6">
+        <table class="table table-bordered mt-5 text-center align-middle" >
+            <% for (row of entries[0].solution) { %> 
+                <tr >
+                    <td >
+                        <% if (row[0] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[1] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[2] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[3] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsNeutrality[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+    <div class="col-6">
+        <table class="table table-bordered mt-5 text-center align-middle" >
+            <% for (row of entries[1].solution) { %> 
+                <tr>
+                    <td >
+                        <% if (row[0] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[1] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[2] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[3] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsExistence[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <table class="table table-bordered mt-5 text-center align-middle" >
+            <% for (row of entries[2].solution) { %> 
+                <tr>
+                    <td>
+                        <% if (row[0] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (row[1] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (row[2] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (row[3] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsVoid[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+    <div class="col-6">
+        <table class="table table-bordered mt-5 text-center align-middle" >
+            <% for (row of entries[3].solution) { %> 
+                <tr >
+                    <td >
+                        <% if (row[0] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[0] - 1}`] %>" alt="<%= row[0] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[1] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[1] - 1}`] %>" alt="<%= row[1] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[2] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[2] - 1}`] %>" alt="<%= row[2] %>">
+                        <% } %>
+                    </td>
+                    <td >
+                        <% if (row[3] != "") { %>
+                            <img class="img-fluid" src="<%= url %>/img/sudoku/<%= elementsCreation[`${row[3] - 1}`] %>" alt="<%= row[3] %>">
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+</div>
+

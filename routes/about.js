@@ -42,6 +42,11 @@ router.route('/ogcard')
 router.route('/sitemap.xml')
     .get(catchAsync(controller.sitemap))
 
+router.route('/sudoku')
+    .get(catchAsync(controller.sudokuIndex))
+    .post(catchAsync(controller.sudokuGenerator));
+
+
 router.route('/:id')
     .get(catchAsync(async (req,res,next) => { 
         if (!['','robots.txt','sitemap.xml'].includes(req.params.id))

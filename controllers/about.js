@@ -7,6 +7,10 @@ const axios = require('axios');
 const emailService = require('../utils/email');
 const imageService = require('../utils/image')
 const express = require('express');
+var data4 = require('../data/4grid.json');
+const pdfService = require('../utils/pdf');
+var elementMap = require('../data/elements.json')
+const ExpressError = require('../utils/ExpressError')
 
 
 module.exports.privacy = async(req, res, next) => {
@@ -171,4 +175,31 @@ module.exports.renderOGCard = async(req,res,next) => {
         })
     }
     
+}
+
+module.exports.sudokuIndex = async (req, res, next) => {
+    return res.render('about/sudoku/index',{title:'LT Sudoku Generator'})
+}
+
+module.exports.sudokuGenerator = async (req, res, next) => {
+    const meta = {
+        title: `LRPTickets.co.uk - Made for Event Organisers`,
+        description: 'Tailor made event management for Live Role Play events.',
+        path: `${res.locals.rootUrl}/organisers/`,
+        logo: `${res.locals.rootUrl}/ogcard`
+    }
+    async function getMultipleRandom(arr, num) {
+        const shuffled = [...arr].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, num);
+    }
+    console.log(req.body);
+    const pid = req.body.pid;
+    if (!pid) {
+        req.flash("error", "A player ID is required for this action!");
+        return res.redirect('/sudoku');
+    }
+    res.render('about/sudoku/four', { entries: await getMultipleRandom(data4, 4), pid, meta, elementMap: elementMap, url: req.protocol + '://' + req.get('host') }, async function (err, str) {
+        if (err) throw new ExpressError(err, 500)
+        await pdfService.sendPDF(res, str, `Elemental Sudoku 4x4.pdf`);
+    })
 }
