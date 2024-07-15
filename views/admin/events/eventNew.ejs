@@ -2,38 +2,38 @@
     <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <h2>Create a new event</h2>
     <div class="card shadow py-3 px-3 mb-3">
-        <form action="/admin/events/new" method="POST">
+        <form action="/admin/events/new" method="POST" class="validated-form" novalidate>
             <div class="row">
                 <div class="col border-end">
                     <div class="mb-3">
                         <label for="eventName">Event Name</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" id="eventName" name="event[name]">
+                            <input class="form-control" type="text" id="eventName" name="event[name]" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
                                 <label for="eventStartDate">Start Date</label>
-                                <input class="form-control" type="date" id="eventStartDate" name="event[eventStart]">
+                                <input class="form-control" type="date" id="eventStartDate" name="event[eventStart]" required>
                             </div>
                         </div>
                         <div class="col">
                             <div class="mb-3">
                                 <label for="eventEndDate">End Date</label>
-                                <input class="form-control" type="date" id="eventEndDate" name="event[eventEnd]">
+                                <input class="form-control" type="date" id="eventEndDate" name="event[eventEnd]" required>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="eventLocation">Event Location</label>
-                        <input class="form-control" type="text" id="eventLocation" name="event[location]">
+                        <input class="form-control" type="text" id="eventLocation" name="event[location]" required>
                     </div>
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
-                                <select class="form-select" aria-label="Default select example" onchange="setHostImageUrl(this)" id="eventHost" name="event[eventHost]">
-                                    <option >Select an Event Host</option>
+                                <select class="form-select" aria-label="Default select example" onchange="setHostImageUrl(this)" id="eventHost" name="event[eventHost]" required>
+                                    <option selected disabled value="">Select an Event Host</option>
                                     <% if (['admin','superAdmin'].includes(currentUser.role)) { %>
                                     <option  value="Lorien Trust">Lorien Trust</option>
                                     <% } %>
@@ -55,15 +55,18 @@
                 <div class="col">
                     <div class="mb-3">
                         <label for="eventPromoDescription">Promo Description</label>
-                        <textarea class="form-control" name="event[promoDescription]" id="eventPromoDescription" cols="30" rows="2"></textarea>
+                        <textarea class="form-control" name="event[promoDescription]" id="eventPromoDescription" cols="30" rows="2" required></textarea>
+                        <p class="invalid-feedback">Please add a promotional description</p>
                     </div>
                     <div class="mb-3">
                         <label for="eventIcInvitation">IC Invitation</label>
-                        <textarea class="form-control" name="event[icInvitation]" id="eventIcInvitation" cols="30" rows="8"></textarea>
+                        <textarea class="form-control" name="event[icInvitation]" id="eventIcInvitation" cols="30" rows="8" required></textarea>
+                        <p class="invalid-feedback">Please add an invitation for your characters</p>
                     </div>
                     <div class="mb-3">
                         <label for="eventDescription">Event Description</label>
-                        <textarea class="form-control" name="event[fullDescription]" id="eventDescription" cols="30" rows="8"></textarea>
+                        <textarea class="form-control" name="event[fullDescription]" id="eventDescription" cols="30" rows="8" required></textarea>
+                        <p class="invalid-feedback">Please add details about your event</p>
                     </div>
 
                 </div>
