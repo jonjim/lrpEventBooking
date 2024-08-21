@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const emailService = require('../utils/email');
 
 module.exports.renderRegister = async (req, res, next) => {
-    if (req.isAuthenticated) {
+    if (req.isAuthenticated()) {
         res.redirect('/account')
     }
     const systems = await eventSystems.find({active:true})

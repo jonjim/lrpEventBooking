@@ -70,6 +70,7 @@
                     <% if (event.eventHost.eventSystem.terms) { %>
                         <br /><a class="" href="/system/<%= event.eventHost.eventSystem.systemRef %>/terms">Terms & Conditions</a>
                     <% } %>
+
 					<% if (event.eventHost.eventSystem.website?.length > 0) { %>
 						<br /><br/><a class="" href="<%= event.eventHost.eventSystem.website %>"><%= event.eventHost.eventSystem.website.split('://')[1] %></a>
 					<% } %>

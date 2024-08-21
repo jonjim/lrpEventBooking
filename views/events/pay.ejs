@@ -6,13 +6,12 @@
       <div class="row h-100 g-0">
         <div class="col-md-4">
           <div class="card-body">
-            <div class="img align-middle text-center ms-2"><img id="eventImg<%= eventBooking._id %>" aria-label="event-logo" class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-              <% if (eventBooking.event.img?.url) { %>
-                <img style="top:-60px !important; left:0px !important;" id="hostImg<%= eventBooking._id %>" aria-label="host-logo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" alt="">
-              <% } %>
-              <% if (eventBooking.event.eventHost.eventSystem.img?.url) { %>
-                <img  id="hostSystemImg<%= eventBooking._id %>" src="<%= eventBooking.event.eventHost.eventSystem.img.url %>" class="img-fluid mt-3" alt=""> 
-              <% } %>
+            <div class="img align-middle text-center ms-2">
+              <% if (eventBooking.event.img.url || eventBooking.event.eventHost.img.url) { %>
+                <img id="eventImg" <% if (eventBooking.event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= eventBooking.event.eventHost.name %>" class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img.url : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                <% if (eventBooking.event.img.url) { %><img style="left:65px" id="hostLogo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" title="Hosted By <%= event.eventHost.name %>" alt="">
+                <% } %>
+                <% } %>
             </div>
           </div>
         </div>
@@ -70,6 +69,6 @@
   </div>
 </div>
 
-<script src="https://www.paypal.com/sdk/js?client-id=AZr-Xodo9qz8Q-0Njgl8w_oKSWtKJBdZNo_wMhQmEjN3WvXWeBR7mk36zmCZImmz03JWjbMmJoegZqmg&currency=GBP"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AcZBxEtVxq308mof8Cb7uFmiM8CmzmlRX3e3TF1OhAx8RzRfDFxF-dp0OQYEMPbgNf7-qqw5pj96EyNq&currency=GBP"></script>
 <script src="/js/paypal.js"></script>
 <script src="/js/eventLogo.js"></script>
