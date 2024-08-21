@@ -161,7 +161,7 @@
 											<label for="<%= eventSystem.systemRef %><%= field.name %>"><%= field.label %></label>
 											<select name="<%= eventSystem.systemRef %>[<%= field.name %>]" id="<%= eventSystem.systemRef %><%= field.name %>" class="form-select form-select-sm" <%= field.required ? 'required' : '' %>>
 												<% for (option of field.options) { %>
-												<option value="<%= option %>" <%= user[eventSystem.systemRef]?.[field.name] == option ? 'selected' : '' %> <%= option %></option>
+												<option value="<%= option %>" <%= user[eventSystem.systemRef]?.[field.name] == option ? 'selected' : '' %>> <%= option %></option>
 													<% } %>
 											</select>
 											<% } else if (field.type == 'checkbox') { %>
