@@ -9,12 +9,12 @@
             <% } %></h3>
         <h3 class="ms-3 mb-5 text-muted"><%= event.location.split(',')[0] %></h3>
         <% if (event.allowBookings) { %>
-            <button class="btn btn-lg btn-success px-5 ms-3 mt-5"><h2>Book Your Tickets Now!</h2></button>    
+            <button class="btn btn-lg btn-success px-5 ms-3 mt-5 text-white"><h2>Book Your Tickets Now!</h2></button>    
             <% } else { %>
-        <button class="btn btn-lg btn-dark px-5 ms-3 mt-5"><h2>Find Out More</h2></button>
+        <button class="btn btn-lg btn-dark px-5 ms-3 mt-5 text-white"><h2>Find Out More</h2></button>
         <% } %>
     </div>
     <div style="height:630px" class="col py-5 my-5 px-4 align-middle">
-        <img style="border-radius: 15px;transform:rotate(5deg);margin-left:-80px" class="shadow my-5" src="<%= (typeof event.img.url === 'undefined' ? event.eventHost.img.url : event.img.url).replace('upload/','upload/w_300/') %>" alt="">
+        <img style="border-radius: 15px;transform:rotate(5deg);margin-left:-80px" class="shadow my-5" src="<%= (typeof event.img?.url === 'undefined' || typeof event.img === 'undefined' ? event.eventHost.img.url : event.img.url).replace('upload/','upload/w_300/') %>" alt="">
     </div>
 </div>

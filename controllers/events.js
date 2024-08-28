@@ -90,7 +90,7 @@ module.exports.showEvent = async (req, res) => {
             title: `${event.eventHost.eventSystem.name}${event.eventHost.display ? ` - ${event.eventHost.name}`: ''}: ${event.name}`,
             description: new turndownService().turndown(event.promoDescription),
             path: `/events/${event._id}`,
-            logo: `${res.locals.rootUrl}/ogcard?event=${event._id}`
+            logo: event.ogCard?.url ? event.ogCard?.url : `${res.locals.rootUrl}/ogcard?event=${event._id}`
         }
         if (!event.eventHost.eventSystem.active)
             req.flash('error','Please note this event is not visible to the public!')

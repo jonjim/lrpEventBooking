@@ -169,7 +169,8 @@ module.exports.renderEditForm = async(req, res, next) => {
 module.exports.renderAccountSettings = async (req, res, next) => {
     const user = await User.findById(req.user._id, { strict: false });
     const systems = await eventSystems.find();
-    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems, user: JSON.parse(JSON.stringify(user)) });
+    const selectedSystem = req.query.system;
+    res.render('user/accountSettings', { title: 'My Account', eventSystems: systems, user: JSON.parse(JSON.stringify(user)), selectedSystem });
 };
 
 module.exports.ltAPI = async(req, res, next) => {

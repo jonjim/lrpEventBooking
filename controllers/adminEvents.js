@@ -10,6 +10,7 @@ const {attendeeUpdate} = require('../utils/systemCheck')
 const emailRecord = require('../models/emailRecord')
 const webhooks = require('../utils/webhooks');
 const user = require('../models/user');
+const { default: axios } = require('axios');
 
 module.exports.listEvents = async(req, res, next) => {
     const eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
@@ -132,6 +133,7 @@ module.exports.updateEvent = async(req, res, next) => {
         }
         await Event.findByIdAndUpdate(req.params.id, { webhooks: { email: true, discord: (res.locals.config.webhooks?.discord || updatedEvent.eventHost.webhooks?.discord || updatedEvent.eventHost.eventSystem.webhooks?.discord ? true : false) } });
     }
+    axios.get(process.env.ROOT_URL + '/genogcard?event=' + event.id);
     req.flash('success', `${event.name} updated!`);
     res.redirect(`/events/${req.params.id}`)
 }

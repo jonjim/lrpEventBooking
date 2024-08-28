@@ -34,6 +34,10 @@ const lrpEventSchema = new mongoose.Schema({
         url: String,
         filename: String
     },
+    ogCard: {
+        url: String,
+        filename: String
+    },
     registrationFee:{
         value: {
             type: Number,

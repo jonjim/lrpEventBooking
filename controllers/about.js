@@ -161,12 +161,13 @@ module.exports.renderOGCard = async(req,res,next) => {
     else if (req.query.event){
         const event = await Event.findById(req.query.event).populate('eventHost').populate({path:'eventHost', populate: 'eventSystem'});
         if (req.query.preview)
-            res.render('ogCardEvent', {title:'ogCard', event})
-        else
-            res.render('ogCardEvent', { title: `ogCard`, event}, async function (err, str) {
+            res.render('ogCardEvent', { title: 'ogCard', event })
+        else {
+            res.render('ogCardEvent', { title: `ogCard`, event }, async function (err, str) {
                 if (err) throw new ExpressError(err, 500)
-                await imageService.sendPNG(res,str,'blank.png')
+                await imageService.sendPNG(res, str, 'blank.png')
             })
+        }
     }
     else{
         res.render('ogCard', { title: `ogCard`}, async function (err, str) {
@@ -174,7 +175,28 @@ module.exports.renderOGCard = async(req,res,next) => {
             await imageService.sendPNG(res,str,'blank.png')
         })
     }
-    
+}
+
+module.exports.generateOGCard = async(req,res,next) => {
+    if (req.query.preview && !req.query.event)
+        res.render('ogCard', {title:'ogCard'})
+    else if (req.query.event){
+        const event = await Event.findById(req.query.event).populate('eventHost').populate({path:'eventHost', populate: 'eventSystem'});
+        if (req.query.preview)
+            res.render('ogCardEvent', {title:'ogCard', event})
+        else
+            res.render('ogCardEvent', { title: `ogCard`, event}, async function (err, str) {
+                if (err) throw new ExpressError(err, 500)
+                await imageService.createPNG(str, event.id);
+                
+            })
+    }
+    else{
+        res.render('ogCard', { title: `ogCard`}, async function (err, str) {
+            if (err) throw new ExpressError(err, 500)
+            const imgResponse = await imageService.createPNG(str)
+        })
+    }
 }
 
 module.exports.sudokuIndex = async (req, res, next) => {

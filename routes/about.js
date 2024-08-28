@@ -38,6 +38,9 @@ router.route('/initialConfig')
 
 router.route('/ogcard')
     .get(catchAsync(controller.renderOGCard))
+    
+router.route('/genogCard')
+.get(catchAsync(controller.generateOGCard))
 
 router.route('/sitemap.xml')
     .get(catchAsync(controller.sitemap))
