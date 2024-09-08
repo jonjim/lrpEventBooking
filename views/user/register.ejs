@@ -44,10 +44,11 @@
         <div class="row mt-5 py-3">
             
             <% for (system of systems) { %>
+				<% if (system.img?.thumbnail) { %>
                 <div class="col-xl mb-3">
                     <img class="img-fluid" src="<%= system.img?.thumbnail %>" alt="">
                 </div>
-            <% } %>
+            <% }} %>
         </div>
     </div>
     <% } %>

@@ -55,8 +55,6 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
-
-
 const Auth = require('./models/user')
 const siteConfig = require('./models/siteConfig');
 

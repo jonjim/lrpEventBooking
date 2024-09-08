@@ -23,6 +23,7 @@ module.exports.isMatchingEventHost = (req, res, next) => {
 }
 
 module.exports.isEventHost = (req, res, next) => {
+    console.log('User is admin: ' + ['eventHost', 'systemAdmin', 'admin', 'superAdmin'].includes(req.user.role));
     if (!['eventHost','systemAdmin', 'admin', 'superAdmin'].includes(req.user.role)) {
         req.flash('error', "You don't have permission to do that!");
         return res.redirect('/');

@@ -107,7 +107,7 @@ module.exports.showEventBooking = async(req, res, next) => {
     const eventTickets = await event.eventTickets.filter(a => new Date(a.availableFrom) <= new Date() && new Date(a.availableTo) >= new Date() && a.available)
     const changeUser = typeof req.query.alt == 'undefined' || !req.query.alt ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
     const manual = typeof req.query.manual == 'undefined' || !req.query.manual ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
-    if (eventTickets.length > 0) {
+    if (eventTickets.length > 0 && event.allowBookings) {
         if (systemCheck(req, res, event.eventHost.eventSystem, req.user))
             return res.render('events/book', { title: event.name, event, changeUser, manual });
     }

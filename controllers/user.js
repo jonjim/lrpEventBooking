@@ -119,8 +119,8 @@ module.exports.accountUpdate = async (req, res, next) => {
 };
 
 module.exports.renderLoginForm = (req, res) => {
-    if (req.isAuthenticated) {
-        res.redirect('/account')
+    if (req.isAuthenticated && req.user) {
+        return res.redirect('/account')
     }
     res.render('user/login', { title: 'Login to your account' });
 };

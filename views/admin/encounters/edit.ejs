@@ -2,7 +2,7 @@
 <% const weekday=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]; function addDays(date,
         days) { var result=new Date(date); result.setDate(result.getDate() + days); return result; } function
         addTime(date,minutes){ return new Date(date.getTime() + minutes*60000) } %>
-<script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<!-- <script src="https://cdn.tiny.cloud/1/9rpfmnglpt10wzitgh0d0zn5ru3343oti9q4hfwl9of7mwpu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb small">
     <li class="breadcrumb-item"><a href="/admin/events/<%= currentUser.role == 'eventHost' ? '' : 'all' %>" class="link-dark">Manage Events</a></li>

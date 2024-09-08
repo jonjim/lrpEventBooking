@@ -11,6 +11,7 @@ const emailRecord = require('../models/emailRecord')
 const webhooks = require('../utils/webhooks');
 const user = require('../models/user');
 const { default: axios } = require('axios');
+const { isEventAdmin } = require('../utils/generic');
 
 module.exports.listEvents = async(req, res, next) => {
     const eventList = await Event.find({}).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).sort({ eventStart: 'desc' });
@@ -194,7 +195,8 @@ module.exports.bookingCash = async(req, res, next) => {
 
 module.exports.deleteBooking = async(req, res, next) => {
     const booking = await eventBooking.findById(req.params.id).populate('event').populate({ path: 'event', populate: { path: 'eventHost' } });
-    if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    // if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    if (isEventAdmin(req.user, booking.event.eventHost._id, booking.event.eventHost.eventSystem._id)){
         await eventBooking.findByIdAndDelete(req.params.id);
         res.redirect(`/admin/events/${booking.event._id}/manage`);
     } else {
@@ -205,7 +207,8 @@ module.exports.deleteBooking = async(req, res, next) => {
 
 module.exports.addToQueue = async(req, res, next) => {
     const booking = await eventBooking.findById(req.params.id).populate('event').populate({ path: 'event', populate: { path: 'eventHost' } });
-    if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    // if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    if (isEventAdmin(req.user, booking.event.eventHost._id, booking.event.eventHost.eventSystem._id)){
         await eventBooking.findByIdAndUpdate(req.params.id, { inQueue: true });
         res.redirect(`/admin/events/${booking.event._id}/manage`);
     } else {
@@ -216,7 +219,8 @@ module.exports.addToQueue = async(req, res, next) => {
 
 module.exports.delFromQueue = async(req, res, next) => {
     const booking = await eventBooking.findById(req.params.id).populate('event').populate({ path: 'event', populate: { path: 'eventHost' } });
-    if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    // if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    if (isEventAdmin(req.user, booking.event.eventHost._id, booking.event.eventHost.eventSystem._id)){
         await eventBooking.findByIdAndUpdate(req.params.id, { inQueue: false });
         res.redirect(`/admin/events/${booking.event._id}/manage`);
     } else {
@@ -227,7 +231,8 @@ module.exports.delFromQueue = async(req, res, next) => {
 
 module.exports.cancelBookingPayment = async(req, res, next) => {
     const booking = await eventBooking.findById(req.params.id).populate('event').populate({ path: 'event', populate: { path: 'eventHost' } });
-    if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    if (isEventAdmin(req.user, booking.event.eventHost._id, booking.event.eventHost.eventSystem._id)){
+    // if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
         await eventBooking.findByIdAndUpdate(req.params.id, {
             paid: false,
             bookingPaid: null,
@@ -254,7 +259,7 @@ module.exports.manageBooking = async(req, res, next) => {
         req.flash('error', 'Could not find the selected booking!');
         return res.redirect('/');
     }
-    if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(booking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    if (isEventAdmin(req.user, booking.event.eventHost._id, booking.event.eventHost.eventSystem._id)){
         res.render('admin/events/bookingManage', { title: 'Manage Booking', eventBooking: booking, eventTickets, waitingList });
     } else {
         req.flash('error', `You don't have permission to view this booking`);
@@ -268,7 +273,8 @@ module.exports.updateEventBooking = async(req, res, next) => {
         req.flash('error', 'Could not find the selected booking!');
         return res.redirect('/');
     }
-    if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(booking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
+    if (isEventAdmin(req.user, booking.event.eventHost._id, booking.event.eventHost.eventSystem._id)){
+    //if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(booking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
         const ticket = await EventTicket.findById(req.body.eventTicket);
         await eventBooking.findByIdAndUpdate(req.params.id, { $push: { eventTickets: req.body.eventTicket }, totalDue: booking.totalDue + ticket.cost, paid: booking + ticket.cost == booking.totalPaid })
         req.flash('success', 'Event Booking Updated');
