@@ -78,23 +78,27 @@ function toTitleCase(str) {
                                 <div class="mb-3">
                                     <%- event.catering.notes %>
                                 </div>
-                                <hr>
                                 <% const catering = JSON.parse(JSON.stringify(event.catering)) %>
-                                <div class="row">
-                                <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
-                                    <div class="col text-center">
-                                        <div class="lead"><%=  dayNames[new Date(d).getDay()] %></div>
-                                        <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
-                                            <p class="mb-0 mt-3"><b><%= catering.menu[dayNames[new Date(d).getDay()]].meals[meal].name %></b></p>
-                                            <ul class="list-group list-group-flush">
-                                                <% for (option of catering.menu[dayNames[new Date(d).getDay()]].meals[meal].options){ %>
-                                                    <li class="list-group-item" style="border-bottom:none"><%= option %></li>
+                                <% if (catering?.menu) { %>
+                                    <hr>
+                                    <div class="row">
+                                    <% for (var d = new Date(event.eventStart); d <= new Date(event.eventEnd); d.setDate(d.getDate() + 1)) { %>
+                                        <% if (dayNames[new Date(d).getDay()]) { %>
+                                        <div class="col text-center">
+                                            <div class="lead"><%=  dayNames[new Date(d).getDay()] %></div>
+                                            <% for (meal of Object.keys(catering?.menu[dayNames[new Date(d).getDay()]].meals)) { %>
+                                                <p class="mb-0 mt-3"><b><%= catering.menu[dayNames[new Date(d).getDay()]].meals[meal].name %></b></p>
+                                                <ul class="list-group list-group-flush">
+                                                    <% for (option of catering.menu[dayNames[new Date(d).getDay()]].meals[meal].options){ %>
+                                                        <li class="list-group-item" style="border-bottom:none"><%= option %></li>
                                                     <% } %>
-                                            </ul>
+                                                </ul>
+                                            <% } %>
+                                        </div>
                                         <% } %>
+                                    <% } %>
                                     </div>
                                 <% } %>
-                                </div>
                             </div>
                         <% } %>
                         
