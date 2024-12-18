@@ -42,8 +42,20 @@ module.exports.manageEvent = async(req, res, next) => {
     }
 };
 
+module.exports.bookingStats = async(req, res, next) => {
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).populate('eventTickets');
+    const eventBookings = await eventBooking.find({ event: req.params.id }).populate('user').populate('eventTickets');
+    const config = await siteConfig.find();
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || req.user.eventSystems.filter(a => a._id.equals(event.eventHost.eventSystem._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        return res.render('admin/events/eventStats', { title: `Manage ${event.name}`, event, eventBookings, config: config[0] });
+    } else {
+        req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+};
+
 module.exports.eventWaitingList = async(req, res, next) => {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } }).populate('eventTickets');
     const eventBookings = await eventBooking.find({ event: req.params.id, paid: false, payOnGate: false }).populate('user').populate('eventTickets');
     const config = await siteConfig.find();
     if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || req.user.eventSystems.filter(a => a._id.equals(event.eventHost.eventSystem._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {

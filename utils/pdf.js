@@ -1,4 +1,6 @@
-const { chromium } = require('playwright')
+const { chromium } = require('playwright');
+const PDFDocument = require('pdfkit');
+
 async function sendPDF(res, html, filename) {
     let browser;
     (async() => {
@@ -26,6 +28,20 @@ async function generatePDF(html) {
     return pdf
 }
 
+// async function generatePDFKit(res, html, filename) {
+//     const doc = new PDFDocument();
+//     res.contentType("application/pdf");
+//     res.setHeader(
+//         "Content-Disposition",
+//         `attachment; filename="${filename}"`
+//     );
+//     doc.pipe(res);
+//     doc.
+//     doc.fontSize(25).text('LRPTickets.co.uk')
+
+
+//     doc.end();
+// }
 
 async function sendConfidentialPDF(res, html, filename) {
     let browser;

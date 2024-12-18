@@ -5,6 +5,8 @@ const Event = require('./lrpEvent')
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
+    salt: String,
+    hash: String,
     email: String,
     verifyCode: {
         type: String,

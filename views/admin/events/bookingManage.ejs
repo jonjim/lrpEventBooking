@@ -39,7 +39,7 @@
                                         <%} }%>
                                 <tr>
                                     <td class="fw-bold">Character Name</td>
-                                    <td class="text-capitalize"><%= eventBooking.user[eventBooking.event.eventHost.eventSystem.systemRef].character.characterName.toLowerCase() %></td>
+                                    <td class="text-capitalize"><%= eventBooking.user[eventBooking.event.eventHost.eventSystem.systemRef]?.character?.characterName?.toLowerCase() %></td>
                                 </tr>
                                 <% for (field of eventBooking.event.eventHost.eventSystem.customFields.filter(a => a.section == 'character')) { 
                                     let systemCharacter = eventBooking.user[eventBooking.event.eventHost.eventSystem.systemRef]?.character; %>

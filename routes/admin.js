@@ -105,6 +105,9 @@ router.route('/events/:id/email')
 router.route('/events/:id/cancel')
     .post(isLoggedIn, isEventHost, catchAsync(adminEventsController.cancelEvent))
 
+router.route('/events/:id/stats')
+    .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.bookingStats))
+
 router.route('/events/:id/print/signin')
     .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.signinEvent))
 
@@ -116,6 +119,9 @@ router.route('/events/:id/print/attendees')
 
 router.route('/events/:id/print/dietary')
     .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.dietaryEvent))
+
+router.route('/events/:id/csv/dietary')
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.dietaryEventToCSV))
 
 router.route('/events/:id/print/pid')
     .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.pidEvent))

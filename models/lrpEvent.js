@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Encounter = require('./encounter');
 
+mongoose.set('strict',false)
+
 const imgSchema = new mongoose.Schema({
     url: String,
     filename: String
@@ -197,13 +199,13 @@ const lrpEventSchema = new mongoose.Schema({
         },
         imgThumbnail: {
             get() {
-                return this.img.url.replace('/upload', '/upload/c_fill,w_140,h_140');
+                return this.img.url.replace('/upload', '/upload/c_fill,w_300,h_300');
             }
         }
     }
 }, {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toObject: { virtuals: true }
 })
 
 lrpEventSchema.virtual('img.path')

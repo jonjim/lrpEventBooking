@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
-<% var playerTickets = event.eventTickets.filter(e => ['player','playerchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
-<% var monsterTickets = event.eventTickets.filter(e => ['monster','monsterchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
-<% var staffTickets = event.eventTickets.filter(e => ['staff'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
+<% var playerTickets = event.eventTickets.filter(e => ['player','playerchild'].includes(e.ticketType) && new Date(e.availableFrom) <= new Date() && new Date(e.availableTo) >= new Date() && e.available);  %>
+<% var monsterTickets = event.eventTickets.filter(e => ['monster','monsterchild'].includes(e.ticketType) && new Date(e.availableFrom) <= new Date() && new Date(e.availableTo) >= new Date() && e.available); %>
+<% var staffTickets = event.eventTickets.filter(e => ['staff'].includes(e.ticketType) && new Date(e.availableFrom) <= new Date() && new Date(e.availableTo) >= new Date() && e.available); %>
 <% const systemPrefix = ['i','e','a','o','u'].includes(event.eventHost.eventSystem.name.toLowerCase().charAt(0)) ? 'an' : 'a'; %>
 <% const hostPrefix = ['i','e','a','o','u'].includes(event.eventHost.name.toLowerCase().charAt(0)) ? 'an' : 'a'; %>
 <div class="row">
@@ -14,7 +14,7 @@
 			</div>
 			<% var mealTickets = event.eventTickets.filter(e => ['mealticket','mealticketchild'].includes(e.ticketType) && new Date(e.availableFrom) < new Date() && new Date(e.availableTo) > new Date() && e.available); %>
 			<div class="card-body">
-				<% if (event.attendees.find(a => a.user?.equals(currentUser._id)) && !changeUser) { %>
+				<% if ((event.attendees.find(a => a.user?.equals(currentUser._id)) || eventBookings.length > 0)&& !changeUser ) { %>
 				<div class="alert alert-warning">
 					You already have a booking for this event! <a href="/account/bookings" class="alert-link">Click here</a> to view your booking.
 				</div>

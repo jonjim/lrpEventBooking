@@ -51,7 +51,7 @@
               <% } %>
             </ul>
             <hr>
-            <% if (eventBooking.eventTickets.filter(a => new Date(a.availableTo) < new Date()).length > 0 ) {%>
+            <% if (eventBooking.eventTickets.filter(a => dateOutput(a.availableTo) < new Date().getDate()).length > 0 ) {%>
             <div class="alert alert-danger">
               <p>The tickets you have selected are no longer available!</p>
               <p><a href="#" onclick="document.getElementById('deleteRebook').submit()" class="alert-link">Click here</a> to delete this booking and re-book.</p>

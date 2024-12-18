@@ -12,7 +12,7 @@ module.exports.pidEvent = async(req, res, next) => {
         if (['player', 'playerChild'].includes(attendee.ticketType)) ticketType = "Player";
         else if (['monster', 'monsterChild'].includes(attendee.ticketType)) ticketType = "Monster";
         else if (['staff'].includes(attendee.ticketType)) ticketType = "Staff";
-        csv += `${attendee.user.playerId},${attendee.user.firstname},${attendee.user.surname},${new Date(attendee.user.dob).toLocaleDateString()},${ticketType}\n`
+        csv += `${attendee.user.lorienTrust.playerId},${attendee.user.firstname},${attendee.user.surname},${new Date(attendee.user.dob).toLocaleDateString()},${ticketType}\n`
     }
     res.attachment(`${event.name} Pid.csv`).send(csv);
 };
@@ -63,7 +63,8 @@ module.exports.dietaryEvent = async(req, res, next) => {
         else {
             res.render('print/eventDietary', { title: `Manage ${event.name}`, event }, async function (err, str) {
                 if (err) throw new ExpressError(err, 500)
-                await pdfService.sendConfidentialPDF(res, str, `${event.name} Dietary.pdf`);
+                    await pdfService.generatejsPDF(res,str,`${event.name} Dietary.pdf`)
+                //await pdfService.sendConfidentialPDF(res, str, `${event.name} Dietary.pdf`);
             })
         }
     } else {
@@ -71,6 +72,31 @@ module.exports.dietaryEvent = async(req, res, next) => {
         return res.redirect('/');
     }
 };
+
+module.exports.dietaryEventToCSV = async (req, res, next) => {
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'attendees', populate: { path: 'booking' } });
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        let csv = 'Player ID,Player Firstname,Player Surname,Email,Starter,Main,Dessert,Allergy Notes\n'
+        for (attendee of event.attendees) {
+            let starter = '';
+            let main = '';
+            let dessert = '';
+            if (attendee.booking.cateringChoices) {
+                var choices = attendee.booking.cateringChoices;
+                if (choices.length == 3) {
+                    starter = attendee.booking.cateringChoices[0].choice;
+                    main = attendee.booking.cateringChoices[1].choice;
+                    dessert = attendee.booking.cateringChoices[2].choice
+                }
+            }
+            csv += `${attendee.user.lorienTrust.playerId},"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${starter}","${main}","${dessert}","${attendee.user.allergyDietary}"\n`
+        }
+        return res.attachment(`${event.name} Dietary.csv`).send(csv);
+    } else {
+        req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+}
 
 module.exports.attendeesEvent = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'eventHost', populate: { path: 'eventSystem' } });

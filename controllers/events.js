@@ -107,9 +107,10 @@ module.exports.showEventBooking = async(req, res, next) => {
     const eventTickets = await event.eventTickets.filter(a => new Date(a.availableFrom) <= new Date() && new Date(a.availableTo) >= new Date() && a.available)
     const changeUser = typeof req.query.alt == 'undefined' || !req.query.alt ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
     const manual = typeof req.query.manual == 'undefined' || !req.query.manual ? false : res.locals.hostGroups.includes(req.user.role) ? true : false;
+    const eventBookings = await EventBooking.find({ user: req.user._id, event: req.params.id })
     if (eventTickets.length > 0 && event.allowBookings) {
         if (systemCheck(req, res, event.eventHost.eventSystem, req.user))
-            return res.render('events/book', { title: event.name, event, changeUser, manual });
+            return res.render('events/book', { title: event.name, event, changeUser, manual, eventBookings });
     }
         req.flash('error', `${event.name} is not currently open for bookings!`);
         return res.redirect(`/events/${event._id}`)
@@ -130,7 +131,7 @@ module.exports.updateEventBooking = async(req, res, next) => {
     const eventBooking = await EventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate({ path: 'event', populate: { path: 'eventTickets' } });
     if (req.user._id.equals(eventBooking.user._id)) {
         const ticket = await EventTicket.findById(req.body.eventTicket);
-        await EventBooking.findByIdAndUpdate(req.params.id, { $push: { eventTickets: req.body.eventTicket }, totalDue: eventBooking.totalDue + ticket.cost, paid: eventBooking + ticket.cost == eventBooking.totalPaid })
+        await EventBooking.findByIdAndUpdate(req.params.id, { $push: { eventTickets: req.body.eventTicket }, totalDue: eventBooking.totalDue + ticket.cost, paid: eventBooking + ticket.cost == eventBooking.totalPaid, inQueue: eventBooking.paid || eventBooking.inQueue || eventBooking.payOnGate })
         req.flash('success', 'Event Booking Updated');
         res.redirect(`/events/booking/${req.params.id}`)
     } else
@@ -207,14 +208,17 @@ module.exports.createEventBooking = async(req, res, next) => {
     }
     if (booking.totalDue == 0) {
         if (!manual && booking.paid){
-            await res.render('print/ticket', { eventBooking, title: `Event Ticket` }, async function (err, ticket) {
-                await pdfService.generatePDF(ticket)
-                    .then(async (ticketPdf) => {
+            // await res.render('print/ticket', { eventBooking, title: `Event Ticket` }, async function (err, ticket) {
+            //     await pdfService.generatePDF(ticket)
+            //         .then(async (ticketPdf) => {
+            //             res.render('email/paidBooking', { booking: eventBooking, title: 'Your payment and ticket wait inside' }, async function (err, str) {
+            //                 emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str, ticketPdf ,`ticket.pdf`);
+            //             })
+            //     })
+            // })
                         res.render('email/paidBooking', { booking: eventBooking, title: 'Your payment and ticket wait inside' }, async function (err, str) {
-                            emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str, ticketPdf ,`ticket.pdf`);
+                            emailService.sendEmail(eventBooking.user.username, `Payment receipt for ${eventBooking.event.name}`, str);
                         })
-                })
-            })
         }
         if (req.body.username || manual)
                 return res.redirect(`/admin/events/${req.params.id}/manage`)
@@ -233,7 +237,7 @@ module.exports.createEventBooking = async(req, res, next) => {
 
 module.exports.giftBooking = async(req, res, next) => {
     const user = await User.findOne({ username: req.body.username });
-    if (user.length > 0) {
+    if (user) {
         if (user._id.equals(req.user._id))
             res.sendStatus(418);
         const booking = await EventBooking.findById(req.body.eventBooking).populate('user');
