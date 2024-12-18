@@ -4,6 +4,7 @@ const emailService = require('../utils/email');
 const EventSystems = require('../models/eventSystems')
 const crypto = require('crypto');
 const { cloudinary } = require('../utils/cloudinary');
+const eventBooking = require('../models/eventBooking');
 
 module.exports.eventHosts = async(req, res, next) => {
     const eventHosts = await eventHost.find().populate('eventSystem');
@@ -66,9 +67,10 @@ module.exports.listUsers = async(req, res, next) => {
 
 module.exports.editUser = async(req, res, next) => {
     const user = await User.findById(req.params.id).populate('eventHosts').populate('eventSystems');
+    const bookings = await eventBooking.find({ user: user }).populate('event').populate('eventTickets');
     const hosts = await eventHost.find();
     const systems = await EventSystems.find();
-    return res.render('admin/users/editUser', { title: `Edit User: ${user.firstname} ${user.surname}`, user, eventHosts: hosts, eventSystems: systems })
+    return res.render('admin/users/editUser', { title: `Edit User: ${user.firstname} ${user.surname}`, user, eventHosts: hosts, eventSystems: systems, eventBookings: bookings })
 }
 
 module.exports.delUser = async(req, res, next) => {

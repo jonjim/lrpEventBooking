@@ -1,4 +1,4 @@
-<% layout('layouts/boilerplate') %>
+<% layout('layouts/boilerplate') %> 
 <nav aria-label="breadcrumb">
 	<ol class="breadcrumb small">
 		<li class="breadcrumb-item"><a href="/admin/users" class="link-dark">Manage Users</a></li>
@@ -138,6 +138,33 @@
 				</div>
 			</div>
 		</form>
+		<hr>
+		<div class="row">
+			<table class="table table-striped">
+				<thead>
+					<th>Event</th>
+					<th>Type</th>
+					<th>Paid</th>
+					<th>Payment Date</th>
+				</thead>
+				<tbody>
+					<% for (booking of eventBookings) { %>
+						<tr>
+							<td><a class="link-dark" href="/events/<% booking.event._id %>"><%= booking.event.name %></a></td>
+							<td>
+								<% if (booking.eventTickets.filter(t => ['player','playerchild'].includes(t.ticketType)).length > 0) { %> Player <% } %>
+								<% if (booking.eventTickets.filter(t => ['monster','monsterchild'].includes(t.ticketType)).length > 0) { %> Monster <% } %>
+								<% if (booking.eventTickets.filter(t => ['staff'].includes(t.ticketType)).length > 0) { %> Staff <% } %>
+							</td>
+							<td>
+								<% if (booking.paid) {  %> <i class="bi bi-check-circle-fill text-success"></i><% } else { %><i class="bi bi-x-circle-fill text-danger"></i><% } %>
+							</td>
+							<td><%= dateOutput(booking.bookingPaid) %> <%= timeOutput(booking.bookingPaid) %></td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
