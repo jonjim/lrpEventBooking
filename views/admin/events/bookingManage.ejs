@@ -94,7 +94,7 @@
 												<% if (['monster','monsterchild'].includes(eventTicket.ticketType)) { %> <i class='bi bi-bug-fill nav_icon'></i><% } %>
 												<% if (['staff'].includes(eventTicket.ticketType)) { %> <i class="bi bi-stopwatch"></i><% } %>
 												<% if (['mealticket','mealticketchild'].includes(eventTicket.ticketType)) { %> <i class="fa fa-cutlery" aria-hidden="true"></i><% } %>
-												<%= eventTicket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - `: '' %><%= eventTicket.description %> <a class="link-dark" href="" data-bs-toggle="modal" data-bs-target="#deleteTicketModal"><i class="bi bi-trash"></i></a>
+												<%= eventTicket.cost > 0 ? `${currencyOutput(eventTicket.cost)} - `: '' %><%= eventTicket.description %> <!---<a class="link-dark" href="" data-bs-toggle="modal" data-bs-target="#deleteTicketModal"><i class="bi bi-trash"></i></a>--->
 											</li>
 											<% } %>
 										</ul>
@@ -146,7 +146,7 @@
 							<% if (eventBooking.inQueue) { %><button id="btnDelQueue" class="btn btn-outline-dark" title="This returns the player to the waiting list"><i class="bi bi-person-lines-fill"></i> Return to Waiting List</button> <% } %>
 							<% if (eventBooking.totalPaid != 0 || eventBooking.payOnGate) { %><a class="btn btn-outline-danger mt-3" data-bs-toggle="modal" data-bs-target="#cancelModal"><i class="bi bi-x-circle"></i> Cancel Payment</a><% } %>
 							<% if (['admin','systemAdmin','superAdmin','eventHost'].includes(currentUser.role)) { %>
-							<!---- <a id="btnDeleteLink" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-danger mt-3" <%= eventBooking.paid ? 'disabled' : '' %>><i class="bi bi-trash"></i> Delete</a>  ---->
+							<a id="btnDeleteLink" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-danger mt-3" <%= eventBooking.paid ? 'disabled' : '' %>><i class="bi bi-trash"></i> Delete</a>  
 							<% } %>
 						</div>
 						<% } %>
