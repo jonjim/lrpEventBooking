@@ -145,8 +145,8 @@
 							<% } %>
 							<% if (eventBooking.inQueue) { %><button id="btnDelQueue" class="btn btn-outline-dark" title="This returns the player to the waiting list"><i class="bi bi-person-lines-fill"></i> Return to Waiting List</button> <% } %>
 							<% if (eventBooking.totalPaid != 0 || eventBooking.payOnGate) { %><a class="btn btn-outline-danger mt-3" data-bs-toggle="modal" data-bs-target="#cancelModal"><i class="bi bi-x-circle"></i> Cancel Payment</a><% } %>
-							<% if (['admin','systemAdmin','superAdmin'].includes(currentUser.role)) { %>
-							<a id="btnDeleteLink" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-danger mt-3"><i class="bi bi-trash"></i> Delete</a>
+							<% if (['admin','systemAdmin','superAdmin','eventHost'].includes(currentUser.role)) { %>
+							<!---- <a id="btnDeleteLink" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-danger mt-3" <%= eventBooking.paid ? 'disabled' : '' %>><i class="bi bi-trash"></i> Delete</a>  ---->
 							<% } %>
 						</div>
 						<% } %>
