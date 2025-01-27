@@ -1,6 +1,6 @@
 const mssql = require('mssql');
 const SiteConfig = require('../models/siteConfig');
-const { insertImage } = require('./utils.js');
+const { insertImage, importPageContent } = require('./utils.js');
 
 module.exports = async function importSiteConfig() {
     let config = await SiteConfig.findOne();
@@ -34,5 +34,8 @@ module.exports = async function importSiteConfig() {
             else
             console.log(error.message);
         }
+        await importPageContent(1,'Terms & Conditions',config.terms);
+        await importPageContent(2,'Privacy Policy', config.privacyPolicy);
+
     }
 }

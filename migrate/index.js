@@ -29,6 +29,8 @@ mongoose.connect(process.env.MONGODB_URL)
                     await importEvents();
                     await importUsers(eventSystemFields);
                     await importEventBookings();
+                    console.log("Import Completed");
+                    process.exit();
                 })
                 .catch(err => {
                     console.log('Error connecting to MSSQL');
