@@ -26,7 +26,7 @@ const siteConfigSchema = new mongoose.Schema({
     virtuals: {
         imgThumbnail: {
             get() {
-                return this.siteLogo.url.replace('/upload', '/upload/c_fill,w_250,h_113');
+                return this.siteLogo.url.replace('/upload', '/upload/c_fill,h_113');
             }
         },
         siteAvatar:{

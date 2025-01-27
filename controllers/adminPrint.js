@@ -78,18 +78,25 @@ module.exports.dietaryEventToCSV = async (req, res, next) => {
     if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
         let csv = 'Player ID,Player Firstname,Player Surname,Email,Starter,Main,Dessert,Allergy Notes\n'
         for (attendee of event.attendees) {
-            let starter = '';
-            let main = '';
-            let dessert = '';
-            if (attendee.booking.cateringChoices) {
-                var choices = attendee.booking.cateringChoices;
-                if (choices.length == 3) {
-                    starter = attendee.booking.cateringChoices[0].choice;
-                    main = attendee.booking.cateringChoices[1].choice;
-                    dessert = attendee.booking.cateringChoices[2].choice
+            if (attendee.user) {
+                let starter = '';
+                let main = '';
+                let dessert = '';
+                if (attendee.booking.cateringChoices) {
+                    var choices = attendee.booking.cateringChoices;
+                    if (choices.length == 3) {
+                        starter = attendee.booking.cateringChoices[0].choice;
+                        main = attendee.booking.cateringChoices[1].choice;
+                        dessert = attendee.booking.cateringChoices[2].choice
+                    }
                 }
             }
-            csv += `${attendee.user.lorienTrust.playerId},"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${starter}","${main}","${dessert}","${attendee.user.allergyDietary}"\n`
+            try {
+                csv += `${attendee.user?.lorienTrust?.playerId ?? 0},"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${starter}","${main}","${dessert}","${attendee.user.allergyDietary}"\n`
+            }
+            catch (ex) {
+                console.log(req.user._id)
+            }
         }
         return res.attachment(`${event.name} Dietary.csv`).send(csv);
     } else {

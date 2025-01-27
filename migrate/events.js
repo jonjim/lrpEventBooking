@@ -4,6 +4,22 @@ const EventTicket = require('../models/eventTicket')
 const { insertImage } = require('./utils.js');
 //const { dateOutput, timeOutput, currencyOutput } = require('../utils/generic');
 const datesBetween = require('dates-between');
+const KEBAB_REGEX = /\p{Lu}/gu;
+const JON_REGEX = /[^A-Z0-9]/ig;
+const kebabCase = (str, keepLeadingDash = true) => {
+	const result = str.replace(KEBAB_REGEX, (match) => `-${match.toLowerCase()}`);
+
+	if (keepLeadingDash) {
+		return result;
+	}
+
+	if (result.startsWith("-")) {
+		return result.slice(1);
+	}
+};
+const kebabed = (str) => {
+    return str.replace(JON_REGEX, (match) => `-${match.toLowerCase()}`);
+}
 
 module.exports = async function importEvents() {
     const events = await Event.find().populate('eventTickets');
@@ -33,6 +49,7 @@ module.exports = async function importEvents() {
                 const eventRequest = new mssql.Request()
                     .input('legacyId', mssql.VarChar, lrpEvent._id)
                     .input('name', mssql.VarChar, lrpEvent.name)
+                    .input('eventLink', mssql.VarChar,Math.floor(Math.random() * (9999 - 1000) + 1000) + '-' + lrpEvent.name.toLowerCase().replace(/[^A-Z0-9]+/ig, "-"))
                     .input('created', mssql.DateTime, lrpEvent.created)
                     .input('eventStart', mssql.DateTime, lrpEvent.eventStart)
                     .input('eventEnd', mssql.DateTime, lrpEvent.eventEnd)
@@ -54,7 +71,7 @@ module.exports = async function importEvents() {
                     .input('webhooksDiscord', mssql.Bit, lrpEvent.webhooks.discord ? 1 : 0)
                     .input('imgId', mssql.Int, imgInsert)
                     .input('ogCardId', mssql.Int, ogInsert);
-                const eventResult = await eventRequest.query`INSERT INTO events (legacyId,name,created,eventStart,eventEnd,visible,cancelled,eventHostId,registrationFeeId,location,locationWeb,externalBooking,icInvitation,fullDescription,promoDescription,bunksAvailable,allowBookings,overflowQueue,bookingsOpen,webhooksEmail,webhooksDiscord,imgId,ogCardId) OUTPUT INSERTED.Id VALUES (@legacyId,@name,@created,@eventStart,@eventEnd,@visible,@cancelled,@eventHostId,@registrationFeeId,@location,@locationWeb,@externalBooking,@icInvitation,@fullDescription,@promoDescription,@bunksAvailable,@allowBookings,@overflowQueue,@bookingsOpen,@webhooksEmail,@webhooksDiscord,@imgId,@ogCardId)`
+                const eventResult = await eventRequest.query`INSERT INTO events (legacyId,name,eventLink,created,eventStart,eventEnd,visible,cancelled,eventHostId,registrationFeeId,location,locationWeb,externalBooking,icInvitation,fullDescription,promoDescription,bunksAvailable,allowBookings,overflowQueue,bookingsOpen,webhooksEmail,webhooksDiscord,imgId,ogCardId) OUTPUT INSERTED.Id VALUES (@legacyId,@name,@eventLink,@created,@eventStart,@eventEnd,@visible,@cancelled,@eventHostId,@registrationFeeId,@location,@locationWeb,@externalBooking,@icInvitation,@fullDescription,@promoDescription,@bunksAvailable,@allowBookings,@overflowQueue,@bookingsOpen,@webhooksEmail,@webhooksDiscord,@imgId,@ogCardId)`
                 console.log(`   ${lrpEvent.name} inserted`);
                 
                 try {
