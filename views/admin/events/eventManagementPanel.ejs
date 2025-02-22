@@ -39,6 +39,11 @@
 			<a class="list-group-item list-group-item-action" href="/admin/events/<%= event._id %>/stats">Booking Statistics</a>
 			<a class="list-group-item list-group-item-action" href="/admin/events/<%= event._id %>/print/signin">Sign In Sheet</a>
 			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/attendees?preview=true">Attendees Report</a>
+			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/csv/attendees">
+				<div class="d-flex w-100 justify-content-between">
+					Attendees Details (CSV Format) <small class="badge bg-info rounded-pill my-auto"><i class="bi bi-filetype-csv"></i></small>
+				</div>
+			</a>
 			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/print/medical?preview=true">
 				<div class="d-flex w-100 justify-content-between">
 					Medical Details <small class="badge bg-danger rounded-pill my-auto">Confidential</small>

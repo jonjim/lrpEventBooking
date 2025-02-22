@@ -28,12 +28,11 @@ async function insertImage(url, filename) {
 async function importPageContent(id,title,content) {
     try {
         let request = new mssql.Request()
-            .input('id', mssql.Int, id)
             .input('created', mssql.DateTime, new Date())
             .input('modified', mssql.DateTime, new Date())
             .input('title', mssql.VarChar, title)
             .input('content', mssql.VarChar, content);
-        let result = await request.query`INSERT INTO page_content (id,created, modified,title,content) OUTPUT INSERTED.Id VALUES (@id,@created,@modified,@title,@content)`;
+        let result = await request.query`INSERT INTO page_content (created, modified,title,content) OUTPUT INSERTED.Id VALUES (@created,@modified,@title,@content)`;
         console.log("Inserted content: " + title);
     }
     catch (error) {

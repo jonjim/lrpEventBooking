@@ -90,12 +90,12 @@ module.exports.dietaryEventToCSV = async (req, res, next) => {
                         dessert = attendee.booking.cateringChoices[2].choice
                     }
                 }
-            }
-            try {
-                csv += `${attendee.user?.lorienTrust?.playerId ?? 0},"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${starter}","${main}","${dessert}","${attendee.user.allergyDietary}"\n`
-            }
-            catch (ex) {
-                console.log(req.user._id)
+                try {
+                    csv += `${attendee.user?.lorienTrust?.playerId ?? 0},"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${starter}","${main}","${dessert}","${attendee.user.allergyDietary}"\n`
+                }
+                catch (ex) {
+                    console.log(req.user._id,ex)
+                }
             }
         }
         return res.attachment(`${event.name} Dietary.csv`).send(csv);
@@ -123,6 +123,59 @@ module.exports.attendeesEvent = async(req, res, next) => {
         return res.redirect('/');
     }
 };
+
+module.exports.attendeesEventToCSV = async (req, res, next) => {
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
+
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        let csv = 'Player Firstname,Player Surname,Email,Booking Type'
+        
+        // Add custom fields - seperated to build in order
+        let playerFields = event.eventHost.eventSystem.customFields.filter(a => a.section == 'player');
+        let characterFields = event.eventHost.eventSystem.customFields.filter(a => a.section == 'character');
+        for (field of playerFields) {
+            csv += `,${field.label}`
+        }
+        for (field of characterFields) {
+            csv += `,${field.label}`
+        }
+        csv += '\n';
+
+        let attendeeList = event.attendees.sort((a, b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname));
+
+        for (attendee of attendeeList) {
+            try {
+                let playerData = attendee.user[event.eventHost.eventSystem.systemRef];
+                let characterData = attendee.user[event.eventHost.eventSystem.systemRef]?.character;
+
+                csv += `"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${attendee.ticketType}"`
+
+                for (field of playerFields) {
+                    let fieldData = '';
+                    if (playerData?.[field.name]?.length > 0) {
+                        fieldData = playerData?.[field.name];
+                    }
+                    csv += `,"${fieldData}"`;
+                }
+                for (field of characterFields) {
+                    let fieldData = '';
+                    if (characterData?.[field.name]?.length > 0) {
+                        fieldData = characterData?.[field.name];
+                    }
+                    csv += `,"${fieldData}"`;
+                }
+                csv += '\n';
+            }
+            catch (ex) {
+                console.log(req.user._id,ex)
+            }
+        }
+        return res.attachment(`${event.name} Attendees.csv`).send(csv);
+    } else {
+        req.flash('error', `You do not have permission to manage ${event.name}`)
+        return res.redirect('/');
+    }
+}
 
 module.exports.eventPack = async(req,res,next) => {
     const lookupEvent = await Event.findById(req.params.id).populate('eventHost').populate({path:'eventHost', populate: {path: 'eventSystem'}}).populate({ path: 'attendees', populate: { path: 'user' } });

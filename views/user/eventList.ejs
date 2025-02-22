@@ -16,7 +16,7 @@
         <div class="row h-100 g-0 pb-0">
           <div class="col-4 col-md-4 mt-2">
             <div class="img align-middle text-center ms-2">
-              <img id="eventImg<%= eventBooking._id %>" aria-label="event-logo" class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+              <img id="eventImg<%= eventBooking._id %>" aria-label="event-logo" class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img.url : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
               <% if (eventBooking.event.img?.url) { %>
                 <img style="top:-60px !important; left:0px !important;" id="hostImg<%= eventBooking._id %>" aria-label="host-logo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" alt="">
               <% } %>

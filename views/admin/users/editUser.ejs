@@ -150,7 +150,7 @@
 				<tbody>
 					<% for (booking of eventBookings) { %>
 						<tr>
-							<td><a class="link-dark" href="/events/<% booking.event._id %>"><%= booking.event.name %></a></td>
+							<td><a class="link-dark" href="/events/<% booking?.event?._id %>"><%= booking?.event?.name %></a></td>
 							<td>
 								<% if (booking.eventTickets.filter(t => ['player','playerchild'].includes(t.ticketType)).length > 0) { %> Player <% } %>
 								<% if (booking.eventTickets.filter(t => ['monster','monsterchild'].includes(t.ticketType)).length > 0) { %> Monster <% } %>

@@ -20,9 +20,11 @@ const siteConfig = require('../models/siteConfig');
 const EventSystems = require('../models/eventSystems');
 const FAQ = require('../models/faq')
 const LrpEvent = require('../models/lrpEvent');
+const User = require('../models/user')
 
 // JSON Imports
 const faq = require('./faq.json');
+const eventsJson = require('./events.json')
 
 
 // Seed demo data
@@ -43,34 +45,47 @@ const seedDb = async() => {
     }
 
     const demoEventSystem = await new EventSystems({
-            "img": {
-                "filename": "lrpEvents/n9wzcogl0o0lco8q5v1m",
-                "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702297296/lrpEvents/n9wzcogl0o0lco8q5v1m.png"
-              },
-              "customTools": [],
-              "name": "Makeshift Events",
-              "description": "<p>Imagine this is your event system, creating the most unique and exciting events</p>",
-              "website": "https://www.lrptickets.co.uk/",
-              "terms": "<h2>In Booking For A Makeshift Events LRP ('The Organisers') Event, You Acknowledge And Agree:</h2>\r\n<ul>\r\n<li>Makeshift Events LRP or any persons so appointed by Makeshift Events LRP cannot be held personally liable for any injury or damage to any individual participating in any Makeshift Events LRP event as permitted by law.</li>\r\n<li>Makeshift Events LRP cannot be held responsible for any damage to, loss of, or theft of any personal or communal property during any event. Lost property can be handed in or collected from Games Control at the event and will be held for 1 year following the event by the Organisers</li>\r\n<li>LRP is a potentially dangerous hobby and I will act in a reasonable and safe manner during any LRP event and follow any and all reasonable instructions provided by the Organisers.</li>\r\n<li>I understand and agree that Makeshift Events LRP reserves the right to refuse admission or participation in any event or part of an event to any individual at any time. The Organisers are not obliged to give any reason or explanation for such a decision, but one may be supplied after following the event if requested in writing.</li>\r\n<li>Metal weapons or tools are NOT to be brought onto site. Only LRP safe weapons can be used subject to checking at Games Control. Any unsafe weapons should be returned to your vehicle or stored by Games Control.</li>\r\n<li>Any non-combat props should be presented for a safety check on registration.</li>\r\n<li>To comply with the LRP system rules as relevant to the event, the rules system in effect (for example Lorien Trust) to be made clear on the booking page.</li>\r\n<li>No controlled substances other than legitimately prescribed drugs will be tolerated on site.</li>\r\n<li>The Organisers will expel any individual engaged in illegal, defamatory, or dangerous practices during the event and the relevant authorities may be contacted. Individuals expelled from the event as a result of breach of these terms and conditions shall not be entitled to a refund.</li>\r\n<li>Only individuals authorised by the event Organiser may act as or hold themselves out to be (whether by act or omission) referees, marshals or directors of plot (as relevant) at Makeshift Events LRP run events.</li>\r\n<li>Bookings may be cancelled within 28 days of receipt of payment, and no later than 14 days prior to the event date. Outside of this 28-day period any cancellation may be subject to a &pound;5 cancellation fee at the Organisers&rsquo; discretion. In lieu of a refund the Organisers may allow the booking to be transferred to another player, or deferred to another event run by Makeshift Events LRP.</li>\r\n<li>The decision of the Organisers is final in all disputes.</li>\r\n</ul>\r\n<h2>By Using This Website, You Acknowledge That</h2>\r\n<p>Your details will be stored and used for the purposes of booking and administering events run by Makeshift Events LRP, in line with our&nbsp;<a href=\"https://events.tarantulafaction.com/privacy.php\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a></p>",
-              "systemRef": "makeshiftEvents",
-              "active": true,
-              "customFields": []
-        }).save();
+        "img": {
+            "filename": "lrpEvents/n9wzcogl0o0lco8q5v1m",
+            "url": "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702297296/lrpEvents/n9wzcogl0o0lco8q5v1m.png"
+            },
+            "customTools": [],
+            "name": "Makeshift Events",
+            "description": "<p>Imagine this is your event system, creating the most unique and exciting events</p>",
+            "website": "https://www.lrptickets.co.uk/",
+            "terms": "<h2>In Booking For A Makeshift Events LRP ('The Organisers') Event, You Acknowledge And Agree:</h2>\r\n<ul>\r\n<li>Makeshift Events LRP or any persons so appointed by Makeshift Events LRP cannot be held personally liable for any injury or damage to any individual participating in any Makeshift Events LRP event as permitted by law.</li>\r\n<li>Makeshift Events LRP cannot be held responsible for any damage to, loss of, or theft of any personal or communal property during any event. Lost property can be handed in or collected from Games Control at the event and will be held for 1 year following the event by the Organisers</li>\r\n<li>LRP is a potentially dangerous hobby and I will act in a reasonable and safe manner during any LRP event and follow any and all reasonable instructions provided by the Organisers.</li>\r\n<li>I understand and agree that Makeshift Events LRP reserves the right to refuse admission or participation in any event or part of an event to any individual at any time. The Organisers are not obliged to give any reason or explanation for such a decision, but one may be supplied after following the event if requested in writing.</li>\r\n<li>Metal weapons or tools are NOT to be brought onto site. Only LRP safe weapons can be used subject to checking at Games Control. Any unsafe weapons should be returned to your vehicle or stored by Games Control.</li>\r\n<li>Any non-combat props should be presented for a safety check on registration.</li>\r\n<li>To comply with the LRP system rules as relevant to the event, the rules system in effect (for example Lorien Trust) to be made clear on the booking page.</li>\r\n<li>No controlled substances other than legitimately prescribed drugs will be tolerated on site.</li>\r\n<li>The Organisers will expel any individual engaged in illegal, defamatory, or dangerous practices during the event and the relevant authorities may be contacted. Individuals expelled from the event as a result of breach of these terms and conditions shall not be entitled to a refund.</li>\r\n<li>Only individuals authorised by the event Organiser may act as or hold themselves out to be (whether by act or omission) referees, marshals or directors of plot (as relevant) at Makeshift Events LRP run events.</li>\r\n<li>Bookings may be cancelled within 28 days of receipt of payment, and no later than 14 days prior to the event date. Outside of this 28-day period any cancellation may be subject to a &pound;5 cancellation fee at the Organisers&rsquo; discretion. In lieu of a refund the Organisers may allow the booking to be transferred to another player, or deferred to another event run by Makeshift Events LRP.</li>\r\n<li>The decision of the Organisers is final in all disputes.</li>\r\n</ul>\r\n<h2>By Using This Website, You Acknowledge That</h2>\r\n<p>Your details will be stored and used for the purposes of booking and administering events run by Makeshift Events LRP, in line with our&nbsp;<a href=\"https://events.tarantulafaction.com/privacy.php\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a></p>",
+            "systemRef": "makeshiftEvents",
+            "active": true,
+            "customFields": []
+    }).save();
 
-        const demoEventHost = await new eventHost({
-            eventSystem: demoEventSystem._id,
-            name: 'Makeshift Events',
-            display: false,
-            img: {
-                filename: "lrpEvents/rqwsrr29nwiobfnw3y9m",
-                url: "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326644/lrpEvents/rqwsrr29nwiobfnw3y9m.png"
-                },
-            contactAddress: 'enquiries@lrptickets.co.uk',
-            paypalAddress: 'enquiries@lrptickets.co.uk'
-        }).save();
+    const demoEventHost = await new eventHost({
+        eventSystem: demoEventSystem._id,
+        name: 'Makeshift Events',
+        display: false,
+        img: {
+            filename: "lrpEvents/rqwsrr29nwiobfnw3y9m",
+            url: "https://res.cloudinary.com/dapc3dsxv/image/upload/v1702326644/lrpEvents/rqwsrr29nwiobfnw3y9m.png"
+            },
+        contactAddress: 'enquiries@lrptickets.co.uk',
+        paypalAddress: 'enquiries@lrptickets.co.uk'
+    }).save();
 
     for (f of faq) {
         await new FAQ(f).save();
+    }
+
+    for (let index = 0; index < 50; index++) {
+        const newUser = await new User({
+            firstName: '',
+            surname: '',
+            dateCreated: new Date(),
+            isAdmin: false,
+            isEventHost: false,
+            displayBookings: index % 2 ? ture : false,
+            verified: true,
+            role: 'user',
+        }).save();
     }
 }
 
