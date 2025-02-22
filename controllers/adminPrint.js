@@ -128,7 +128,7 @@ module.exports.attendeesEventToCSV = async (req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
 
     if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
-        let csv = 'Player Firstname,Player Surname,Email,Booking Type'
+        let csv = 'Player Firstname,Player Surname,Email,Booking Type,Character Name'
         
         // Add custom fields - seperated to build in order
         let playerFields = event.eventHost.eventSystem.customFields.filter(a => a.section == 'player');
@@ -148,7 +148,7 @@ module.exports.attendeesEventToCSV = async (req, res, next) => {
                 let playerData = attendee.user[event.eventHost.eventSystem.systemRef];
                 let characterData = attendee.user[event.eventHost.eventSystem.systemRef]?.character;
 
-                csv += `"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${attendee.ticketType}"`
+                csv += `"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.username}","${attendee.ticketType}","${characterData.characterName}"`
 
                 for (field of playerFields) {
                     let fieldData = '';

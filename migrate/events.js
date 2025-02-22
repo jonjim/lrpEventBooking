@@ -4,6 +4,7 @@ const EventTicket = require('../models/eventTicket')
 const { insertImage } = require('./utils.js');
 //const { dateOutput, timeOutput, currencyOutput } = require('../utils/generic');
 const datesBetween = require('dates-between');
+
 const KEBAB_REGEX = /\p{Lu}/gu;
 const JON_REGEX = /[^A-Z0-9]/ig;
 const kebabCase = (str, keepLeadingDash = true) => {
@@ -118,24 +119,27 @@ module.exports = async function importEvents() {
                 for (eventTicket of lrpEvent.eventTickets) {
                     try {
                         const eventTicketsRequest = new mssql.Request()
-                        .input('legacyId', mssql.VarChar, eventTicket._id)
-                        .input('eventId', mssql.Int, eventResult.recordset[0].Id)
-                        .input('ticketType', mssql.VarChar, eventTicket.ticketType)
-                        .input('description', mssql.Text, eventTicket.description)
-                        .input('availableFrom', mssql.DateTime, eventTicket.availableFrom)
-                        .input('availableTo', mssql.DateTime, eventTicket.availableTo)
-                        .input('cost', mssql.Numeric, eventTicket.cost)
-                        .input('caterer', mssql.VarChar, eventTicket.cater)
-                        .input('available', mssql.Bit, eventTicket.available ? 1 : 0)
-                        const eventTicketResult = eventTicketsRequest.query`INSERT INTO event_tickets (legacyId,eventId,ticketType,description,availableFrom,availableTo,cost,caterer,available) OUTPUT INSERTED.Id VALUES (@legacyId,@eventId,@ticketType,@description,@availableFrom,@availableTo,@cost,@caterer,@available)`
+                            .input('legacyId', mssql.VarChar, eventTicket._id)
+                            .input('eventId', mssql.Int, eventResult.recordset[0].Id)
+                            .input('ticketType', mssql.VarChar, eventTicket.ticketType)
+                            .input('description', mssql.Text, eventTicket.description)
+                            .input('availableFrom', mssql.DateTime, eventTicket.availableFrom)
+                            .input('availableTo', mssql.DateTime, eventTicket.availableTo)
+                            .input('cost', mssql.Numeric, eventTicket.cost)
+                            .input('caterer', mssql.VarChar, eventTicket.cater)
+                            .input('available', mssql.Bit, eventTicket.available ? 1 : 0);
+                        const eventTicketResult = await eventTicketsRequest.query`INSERT INTO event_tickets (legacyId,eventId,ticketType,description,availableFrom,availableTo,cost,caterer,available) OUTPUT INSERTED.Id VALUES (@legacyId,@eventId,@ticketType,@description,@availableFrom,@availableTo,@cost,@caterer,@available)`
                         console.log(`   Added ticket: ${eventTicket.description}`)
                     }
                     catch (error) {
                         if (error.message.includes('duplicate key')) {
                             console.log(`   ${eventTicket.description} already exists`);
                         }
-                        else 
-                        console.log(error.message)
+                        else {
+                            console.log('Event ticket error: ', error.message)
+                            console.log(eventTicket)
+                            throw error;
+                        }
                     }
                 }
                 console.log('   Parsing catering options for ' + lrpEvent.name);
