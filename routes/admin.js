@@ -122,6 +122,9 @@ router.route('/events/:id/print/dietary')
 
 router.route('/events/:id/csv/attendees')
     .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.attendeesEventToCSV))
+
+router.route('/events/:id/csv/emergency')
+    .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.emergencyContactsCSV))
     
 router.route('/events/:id/csv/dietary')
     .get(isLoggedIn, isEventHost, catchAsync(adminPrintController.dietaryEventToCSV))

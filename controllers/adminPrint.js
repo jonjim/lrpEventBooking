@@ -105,6 +105,26 @@ module.exports.dietaryEventToCSV = async (req, res, next) => {
     }
 }
 
+module.exports.emergencyContactsCSV = async (req,res,next) => {
+    const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'attendees', populate: { path: 'booking' } });
+    if (req.user.eventHosts.filter(a => a._id.equals(event.eventHost._id)).length > 0 || ['admin', 'superAdmin'].includes(req.user.role)) {
+        let csv = 'Player Firstname,Player Surname,Emergency Contact,Relation,Details\n'
+        for (attendee of event.attendees) {
+            if (attendee.user) {
+                if (attendee.user.emergencyContactName){
+                    try {
+                        csv += `"${attendee.user.firstname}","${attendee.user.surname}","${attendee.user.emergencyContactName}","${attendee.user.emergencyContactRelation}","${attendee.user.emergencyContactNumber}"\n`
+                    }
+                    catch (ex) {
+                        console.log(req.user._id,ex)
+                    }
+                }
+            }
+        }
+        return res.attachment(`${event.name} Emergency Contacts.csv`).send(csv);
+    }
+}
+
 module.exports.attendeesEvent = async(req, res, next) => {
     const event = await Event.findById(req.params.id).populate('eventHost').populate({ path: 'attendees', populate: { path: 'user' } }).populate({ path: 'eventHost', populate: { path: 'eventSystem' } });
 

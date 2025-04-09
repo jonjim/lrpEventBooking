@@ -59,6 +59,11 @@
 					Dietary Details (CSV Format) <small class="badge bg-info rounded-pill my-auto"><i class="bi bi-filetype-csv"></i></small>
 				</div>
 			</a>
+			<a class="list-group-item list-group-item-action" title="Includes a cover page for your attendee's privacy" href="/admin/events/<%= event._id %>/csv/emergency">
+				<div class="d-flex w-100 justify-content-between">
+					Emergency Contacts (CSV Format) <small class="badge bg-info rounded-pill my-auto"><i class="bi bi-filetype-csv"></i></small>
+				</div>
+			</a>
 			<a href="/admin/events/<%= event._id %>/encounters/print?preview=true" class="list-group-item list-group-item-action" title="Generate a PDF report of your planned encounters">Encounter Book</a>
 			<% if (event.eventHost.eventSystem.systemRef == 'lorienTrust') { %>
 			<a href="/admin/events/<%= event._id %>/print/pid" class="list-group-item list-group-item-action">Player ID's CSV</a>
