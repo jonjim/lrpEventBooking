@@ -19,9 +19,9 @@ module.exports = async function importEventHosts() {
                     .input('eventSystemId', mssql.Int, systemLookup.recordset[0].id)
                     .input('imgId', mssql.Int, img)
                     .input('contactAddress', mssql.VarChar, eventHost.contactAddress)
-                    .input('paypalAddress', mssql.VarChar, eventHost._id)
-                    .input('paypalPercentage', mssql.Numeric, eventHost.paypalPercentage)
-                    .input('paypalFixedFee', mssql.Numeric, eventHost.paypalFixedFee)
+                    .input('paypalAddress', mssql.VarChar, eventHost.paypalAddress)
+                    .input('paypalPercentage', mssql.Numeric(18,2), eventHost.paypalPercentage)
+                    .input('paypalFixedFee', mssql.Numeric(18,2), eventHost.paypalFixedFee)
                     .input('terms', mssql.Text, eventHost.terms)
                     .input('webhookDiscord', mssql.VarChar, eventHost.webhooks?.discord);
                 const hostResult = await hostRequest.query`INSERT INTO event_hosts (legacyId,name,description,display,eventSystemId,imgId,contactAddress,paypalAddress,paypalPercentage,paypalFixedFee,terms,webhookDiscord) OUTPUT INSERTED.Id VALUES (@legacyId,@name,@description,@display,@eventSystemId,@imgId,@contactAddress,@paypalAddress,@paypalPercentage,@paypalFixedFee,@terms,@webhookDiscord)`;

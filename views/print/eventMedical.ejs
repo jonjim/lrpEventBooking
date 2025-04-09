@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 <% for (attendee of event.attendees.sort((a,b) => ('' + a.surname).localeCompare(b.surname) || ('' + a.firstname).localeCompare(b.firstname))){ %>
-                    <% if (attendee.user.medicalInfo && attendee.user.medicalInfo != '') { %>
+                    <% if (attendee.user?.medicalInfo && attendee.user?.medicalInfo != '') { %>
                         <tr scope="row">
                             <td width="250px">
                                 <%= attendee.surname %>,

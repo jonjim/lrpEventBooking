@@ -39,8 +39,8 @@ module.exports = async function importEvents() {
                 const imgInsert = lrpEvent.img?.url ? await insertImage(lrpEvent.img.url, lrpEvent.img.filename) : null;
                 const ogInsert = lrpEvent.ogCard?.url ? await insertImage(lrpEvent.ogCard.url, '') : null;
                 const registrationFeeRequest = new mssql.Request()
-                    .input('feeValue', mssql.Numeric, lrpEvent.registrationFee.value)
-                    .input('amountPaid', mssql.Numeric, lrpEvent.registrationFee.amountPaid)
+                    .input('feeValue', mssql.Numeric(18,2), lrpEvent.registrationFee.value)
+                    .input('amountPaid', mssql.Numeric(18,2), lrpEvent.registrationFee.amountPaid)
                     .input('datePaid', mssql.DateTime, lrpEvent.registrationFee.datePaid)
                     .input('paypalPaymentId', mssql.VarChar, lrpEvent.registrationFee.paypalPaymentId)
                     .input('paypalPayer', mssql.VarChar, lrpEvent.registrationFee.paypalPayer);
@@ -98,12 +98,12 @@ module.exports = async function importEvents() {
                 try {
                     const eventFinancialsRequest = new mssql.Request()
                         .input('eventId', mssql.Int, eventResult.recordset[0].Id)
-                        .input('siteFee', mssql.Numeric, lrpEvent.financials.siteFee)
-                        .input('insurance', mssql.Numeric, lrpEvent.financials.insurance)
-                        .input('sanctioningFee', mssql.Numeric, lrpEvent.financials.sanctioningFee)
-                        .input('props', mssql.Numeric, lrpEvent.financials.props)
-                        .input('admin', mssql.Numeric, lrpEvent.financials.admin)
-                        .input('otherCosts', mssql.Numeric, lrpEvent.financials.otherCosts)
+                        .input('siteFee', mssql.Numeric(18,2), lrpEvent.financials.siteFee)
+                        .input('insurance', mssql.Numeric(18,2), lrpEvent.financials.insurance)
+                        .input('sanctioningFee', mssql.Numeric(18,2), lrpEvent.financials.sanctioningFee)
+                        .input('props', mssql.Numeric(18,2), lrpEvent.financials.props)
+                        .input('admin', mssql.Numeric(18,2), lrpEvent.financials.admin)
+                        .input('otherCosts', mssql.Numeric(18,2), lrpEvent.financials.otherCosts)
                     const eventFinancialsResult = await eventFinancialsRequest.query`INSERT INTO events_financials (eventId,siteFee,insurance,sanctioningFee,props,admin,otherCosts) OUTPUT INSERTED.Id VALUES (@eventId,@siteFee,@insurance,@sanctioningFee,@props,@admin,@otherCosts)`
                     console.log(`   ${lrpEvent.name} financials inserted`)
                 }
@@ -125,7 +125,7 @@ module.exports = async function importEvents() {
                             .input('description', mssql.Text, eventTicket.description)
                             .input('availableFrom', mssql.DateTime, eventTicket.availableFrom)
                             .input('availableTo', mssql.DateTime, eventTicket.availableTo)
-                            .input('cost', mssql.Numeric, eventTicket.cost)
+                            .input('cost', mssql.Numeric(18,2), eventTicket.cost)
                             .input('caterer', mssql.VarChar, eventTicket.cater)
                             .input('available', mssql.Bit, eventTicket.available ? 1 : 0);
                         const eventTicketResult = await eventTicketsRequest.query`INSERT INTO event_tickets (legacyId,eventId,ticketType,description,availableFrom,availableTo,cost,caterer,available) OUTPUT INSERTED.Id VALUES (@legacyId,@eventId,@ticketType,@description,@availableFrom,@availableTo,@cost,@caterer,@available)`
@@ -151,7 +151,7 @@ module.exports = async function importEvents() {
                         .input('catererContact', mssql.VarChar, lrpEvent.catering.catererContact)
                         .input('notes', mssql.Text, lrpEvent.catering.notes)
                         .input('choiceRequired', mssql.Bit, lrpEvent.catering.choiceRequired ? 1 : 0)
-                        .input('cost', mssql.Numeric, lrpEvent.catering.cost)
+                        .input('cost', mssql.Numeric(18,2), lrpEvent.catering.cost)
                         .input('bookingsClose', mssql.DateTime, lrpEvent.catering.bookingsClose)
                     const eventCateringResult = await eventCateringRequest.query`INSERT INTO events_catering (eventId,display,caterer,catererContact,notes,choiceRequired,cost,bookingsClose) OUTPUT INSERTED.Id VALUES (@eventId,@display,@caterer,@catererContact,@notes,@choiceRequired,@cost,@bookingsClose)`
 
