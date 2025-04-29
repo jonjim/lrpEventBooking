@@ -90,7 +90,10 @@ passport.use(new GoogleStrategy({
         callbackURL: `${process.env.ROOT_URL}/auth/google/callback`
     },
     async function(accessToken, refreshToken, profile, done) {
-        const findUser = await Auth.find({ googleId: profile.id });
+        const findUser = await Auth.find({ $or: [
+            { googleId: profile.id },
+            { username: profile.emails[0].value ? profile.emails[0].value : '' }
+        ]})
         if (findUser.length === 0) {
             const newUser = await new Auth({
                 googleId: profile.id,
@@ -102,6 +105,9 @@ passport.use(new GoogleStrategy({
             await newUser.save();
             return done(null, newUser);
         } else {
+            if (findUser[0].googleId === undefined || findUser[0].googleId === ''){
+                await Auth.findByIdAndUpdate(findUser[0]._id, { googleId: profile.id});
+            }
             return done(null, findUser);
         }
     }
@@ -109,20 +115,30 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
         clientID: process.env.FACEBOOK_APP_ID,
         clientSecret: process.env.FACEBOOK_APP_SECRET,
-        callbackURL: `${process.env.ROOT_URL}/auth/facebook/callback`
+        callbackURL: `${process.env.ROOT_URL}/auth/facebook/callback`,
+        profileFields: ['id', 'displayName', 'emails']
     },
     async function(accessToken, refreshToken, profile, done) {
-        const findUser = await Auth.find({ facebookId: profile.id });
+        const findUser = await Auth.find({ $or: [
+            { facebookId: profile.id },
+            { username: profile.emails[0].value ? profile.emails[0].value : '' }
+        ]
+    })
         if (findUser.length === 0) {
+            let splitName = profile.displayName.split(' ');
             const newUser = await new Auth({
                 facebookId: profile.id,
-                firstname: profile.displayName,
-                username: profile.email ? profile.email : '',
+                firstname: splitName[0],
+                surname: splitName[splitName.length - 1],
+                username: profile.emails[0].value ? profile.emails[0].value : '',
                 role: 'user'
             });
             await newUser.save();
             return done(null, newUser);
         } else {
+            if (findUser[0].facebookId === undefined || findUser[0].facebookId === ''){
+                await Auth.findByIdAndUpdate(findUser[0]._id, { facebookId: profile.id});
+            }
             return done(null, findUser);
         }
     }
