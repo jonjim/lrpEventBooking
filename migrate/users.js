@@ -35,6 +35,16 @@ module.exports = async function importUsers(systemFields) {
                 const userId = userResponse.recordset[0].Id;
                 console.log("   Inserted user: " + user.username);
 
+                if (user.role === 'admin' || user.role === 'superAdmin') {
+                    const permissionRequest = new mssql.Request()
+                    .input('userId', mssql.Int, userId)
+                    .input('permission', mssql.VarChar, user.role);
+                    const permissionResponse = await permissionRequest.query`INSERT INTO users_permissions (userId,permission) VALUES (@userId,@permission)`;
+                    const permissionResponse2 = await permissionRequest.query`INSERT INTO users_permissions (userId,permission) VALUES (@userId,'preview')`;
+                    console.log("       Added user permission: " + user.role);
+                    console.log("       Added user permission: preview");
+                }
+
                 if (user.eventHosts) {
                     user.eventHosts.forEach(async eventHost => {
                         const hostQuery = (await mssql.query`SELECT id, name FROM event_hosts WHERE legacyId=${eventHost._id}`).recordset[0];
