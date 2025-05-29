@@ -1,6 +1,13 @@
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
+const { useAzureMonitor, AzureMonitorOpenTelemetryOptions } = require('@azure/monitor-opentelemetry');
+const options = {
+  azureMonitorExporterOptions: {
+    connectionString: process.env.APP_INSIGHTS
+  }
+};
+useAzureMonitor(options);
 
 const mongoose = require('mongoose');
 const express = require('express');
@@ -27,7 +34,6 @@ const monsterRouter = require('./routes/monsters')
 
 const emailService = require('./utils/email');
 const ExpressError = require('./utils/ExpressError')
-
 
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URL)
