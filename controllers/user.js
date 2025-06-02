@@ -75,12 +75,12 @@ module.exports.payEventBooking = async(req, res, next) => {
             if (eventBooking.event.staffSpaces === 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) return res.render('events/full', { title: 'No spaces available', eventBooking })
             break;
     }
-
+    console.log()
     if (eventBooking.paid && eventBooking.totalDue == eventBooking.totalPaid) {
         req.flash('error', `Your event booking for ${ eventBooking.event.name } has already been fully paid`);
         return res.redirect('/account/bookings');
     } else
-        return res.render('events/pay', { title: `Pay for ${eventBooking.event.name}`, eventBooking });
+        return res.render('events/pay', { title: `Pay for ${eventBooking.event.name}`, eventBooking, payeeAddress: eventBooking.event.eventHost.paypalAddress });
 }
 
 function Object_assign (target, ...sources) {

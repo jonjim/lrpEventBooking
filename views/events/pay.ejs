@@ -69,6 +69,7 @@
   </div>
 </div>
 
-<script src="https://www.paypal.com/sdk/js?client-id=AcZBxEtVxq308mof8Cb7uFmiM8CmzmlRX3e3TF1OhAx8RzRfDFxF-dp0OQYEMPbgNf7-qqw5pj96EyNq&currency=GBP"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=<%= process.env.PAYPAL_SANDBOX == 'true' ? process.env.PAYPAL_SANDBOX_CLIENT_ID : process.env.PAYPAL_CLIENT_ID %>&currency=GBP&merchant-id=<%= payeeAddress %>"></script>
+
 <script src="/js/paypal.js"></script>
 <script src="/js/eventLogo.js"></script>

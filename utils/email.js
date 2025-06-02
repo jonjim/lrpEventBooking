@@ -77,7 +77,7 @@ async function sendAzureEmail(addr,subject,content,attachment,fileName){
         },
         attachments: []
       };
-      if (attachment){
+      if (attachment && attachment !== null){
         message.attachments.push(         
          {
             name: fileName,
