@@ -3,22 +3,19 @@ const User = require('../models/user');
 const { insertCustomField } = require('./utils.js');
 
 module.exports = async function importUsers(systemFields) {
-    const users = await User.find();
+    const users = await User.find().populate('eventHosts').populate('eventSystems');
     console.log('Importing users');
     let counter = 0;
     for (user of users) {
         try {
             if (user.username) {
                 const userRequest = new mssql.Request()
-                    .input('legacyId', mssql.VarChar, user._id)
                     .input('email', mssql.NVarChar, user.username)
                     .input('firstname', mssql.VarChar, user.firstname)
                     .input('surname', mssql.VarChar, user.surname)
                     .input('role', mssql.VarChar, user.role)
                     .input('dob', mssql.Date, user.dob)
-                    .input('emergencyContactName', mssql.VarChar, user.emergencyContactName)
-                    .input('emergencyContactNumber', mssql.VarChar, user.emergencyContactNumber)
-                    .input('emergencyContactRelation', mssql.VarChar, user.emergencyContactRelation)
+                    
                     .input('medicalInfo', mssql.Text, user.medicalInfo)
                     .input('allergyDietary', mssql.Text, user.allergyDietary)
                     .input('verificationCode', mssql.VarChar, user.verifyCode)
@@ -31,38 +28,59 @@ module.exports = async function importUsers(systemFields) {
                     .input('dateCreated', mssql.DateTime, user.dateCreated)
                     .input('salt', mssql.Text, user.salt)
                     .input('hash', mssql.Text, user.hash);
-                const userResponse = await userRequest.query`INSERT INTO users (legacyId,email,firstname,surname,role,dob,emergencyContactName,emergencyContactNumber,emergencyContactRelation,medicalInfo,allergyDietary,verificationCode,resetPassword,verified,authString,googleId,facebookId,displayBookings,dateCreated,salt,hash) OUTPUT INSERTED.Id VALUES (@legacyId,@email,@firstname,@surname,@role,@dob,@emergencyContactName,@emergencyContactNumber,@emergencyContactRelation,@medicalInfo,@allergyDietary,@verificationCode,@resetPassword,@verified,@authString,@googleId,@facebookId,@displayBookings,@dateCreated,@salt,@hash)`;
-                const userId = userResponse.recordset[0].Id;
+                const emergencyContactRequest = new mssql.Request()
+                    .input('emergencyContactName', mssql.VarChar, user.emergencyContactName)
+                    .input('emergencyContactNumber', mssql.VarChar, user.emergencyContactNumber)
+                    .input('emergencyContactRelation', mssql.VarChar, user.emergencyContactRelation);
+
+                const userResponse = await userRequest.query`INSERT INTO [Users].[Dat_Account] (email,firstname,surname,dob,medicalInfo,allergyDietary,verificationCode,resetPassword,verified,authString,googleId,facebookId,displayBookings,dateCreated,salt,hash) OUTPUT INSERTED.AccountID VALUES (@email,@firstname,@surname,@dob,@medicalInfo,@allergyDietary,@verificationCode,@resetPassword,@verified,@authString,@googleId,@facebookId,@displayBookings,@dateCreated,@salt,@hash)`;
+                userId = userResponse.recordset[0].AccountID;
                 console.log("   Inserted user: " + user.username);
+                
+                if (user.emergencyContactName){
+                    emergencyContactRequest.input('userId', mssql.Int,userId)
+                    await emergencyContactRequest.query`INSERT INTO [Users].[Dat_Emergency_Contacts] ([AccountID],[Name],[Details],[Relation]) VALUES (@userId, @emergencyContactName, @emergencyContactNumber, @emergencyContactRelation)`
+                }
 
                 if (user.role === 'admin' || user.role === 'superAdmin') {
+                    const role = user.role ==='admin' ? 'Admin' : 'Super Admin';
                     const permissionRequest = new mssql.Request()
-                    .input('userId', mssql.Int, userId)
-                    .input('permission', mssql.VarChar, user.role);
-                    const permissionResponse = await permissionRequest.query`INSERT INTO users_permissions (userId,permission) VALUES (@userId,@permission)`;
-                    const permissionResponse2 = await permissionRequest.query`INSERT INTO users_permissions (userId,permission) VALUES (@userId,'preview')`;
+                    .input('AccountId', mssql.Int, userId)
+                    .input('Permission', mssql.VarChar, role);
+                    const permissionResponse = await permissionRequest.query`INSERT INTO [Users].[Lnk_Users_Permissions] (AccountID,PermissionID)
+                    SELECT @AccountID, PermissionID
+                    FROM [Config].[Ref_Permissions]
+                    WHERE [Name]= @Permission`;
+                    const permissionResponse2 = await permissionRequest.query`INSERT INTO [Users].[Lnk_Users_Permissions] (AccountID,PermissionID)
+                    SELECT @AccountID, PermissionID
+                    FROM [Config].[Ref_Permissions]
+                    WHERE [Name]= 'Preview'`;
                     console.log("       Added user permission: " + user.role);
                     console.log("       Added user permission: preview");
                 }
 
                 if (user.eventHosts) {
                     user.eventHosts.forEach(async eventHost => {
-                        const hostQuery = (await mssql.query`SELECT id, name FROM event_hosts WHERE legacyId=${eventHost._id}`).recordset[0];
                         const hostRequest = new mssql.Request()
-                            .input('userId', mssql.Int, userId)
-                            .input('eventHostId', mssql.Int, hostQuery.id);
-                        const hostResult = await hostRequest.query`INSERT INTO users_event_hosts ([userId],eventHostId) OUTPUT INSERTED.Id VALUES (@userId,@eventHostId)`;
-                        console.log(`       Added permission for user and event host: ${hostQuery.name}`);
+                            .input('AccountID', mssql.Int, userId)
+                            .input('HostName', mssql.VarChar, eventHost.name);
+                        const hostResult = await hostRequest.query`INSERT INTO [Users].[Lnk_Users_Hosts] (AccountID,HostID)
+                        SELECT @AccountID, HostID
+                        FROM [Systems].[Dat_Hosts] 
+                        WHERE [Name]=@HostName`;
+                        console.log(`       Added permission for user and event host: ${eventHost.name}`);
                     });
                 }
                 if (user.eventSystems) {
                     user.eventSystems.forEach(async eventSystem => {
-                        const systemQuery = (await mssql.query`SELECT id, name FROM event_systems WHERE legacyId=${eventSystem._id}`).recordset[0];
                         const systemRequest = new mssql.Request()
-                            .input('userId', mssql.Int, userId)
-                            .input('eventSystemId', mssql.Int, systemQuery.id);
-                        const systemResult = await systemRequest.query`INSERT INTO users_event_systems ([userId],eventSystemId) OUTPUT INSERTED.Id VALUES (@userId,@eventSystemId)`;
-                        console.log(`       Added permission for user and event system: ${systemQuery.name}`);
+                            .input('AccountID', mssql.Int, userId)
+                            .input('SystemName', mssql.VarChar, eventSystem.name);
+                        const systemResult = await systemRequest.query`INSERT INTO [Users].[Lnk_Users_Systems] (AccountID,SystemID)
+                        SELECT @AccountID, SystemID
+                        FROM [Systems].[Dat_Systems] 
+                        WHERE [Name]=@SystemName`;
+                        console.log(`       Added permission for user and event system: ${eventSystem.name}`);
                     });
                 }
             

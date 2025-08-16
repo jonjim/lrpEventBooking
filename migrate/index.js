@@ -25,6 +25,7 @@ mongoose.connect(process.env.MONGODB_URL)
                     await importSiteConfig();
                     await importFAQ();
                     const eventSystemFields = await importEventSystems();
+                    console.log(eventSystemFields)
                     await importEventHosts();
                     await importEvents();
                     await importUsers(eventSystemFields);

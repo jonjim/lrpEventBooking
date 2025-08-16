@@ -9,14 +9,26 @@ module.exports = async function importFAQ() {
         for (faq of faqs) {
             try {
                 const request = new mssql.Request()
-                    .input('legacyId', mssql.VarChar, faq._id)
-                    .input('question', mssql.Text, faq.question)
-                    .input('answer', mssql.Text, faq.answer)
+                    .input('question', mssql.VarChar, faq.question)
+                    .input('answer', mssql.VarChar, faq.answer)
                     .input('display', mssql.Bit, faq.display ? 1 : 0);
-                const result = await request.query`INSERT INTO faqs (legacyId, question, answer, display) OUTPUT INSERTED.Id VALUES (@legacyId,@question,@answer,@display)`;
-                const faqId = result.recordset[0].Id;
-                console.log("   Inserted FAQ ID: " + faqId);
-                counter++;
+                const faqLookup = await request.query`SELECT [FaqID] FROM [Website].[Dat_Faqs] WHERE [Question]=@Question`;
+
+                if (faqLookup.rowsAffected < 1){
+                    const result = await request.query`INSERT INTO [Website].[Dat_Faqs] (Question, Answer, Display) OUTPUT INSERTED.FaqID VALUES (@question,@answer,@display)`;
+                    const faqId = result.recordset[0].FaqID;
+                    console.log("   Inserted FAQ ID: " + faqId + ' - ' + faq.question);
+                    counter++;
+                }
+                else{
+                    const request = new mssql.Request()
+                        .input('faqId', mssql.Int, faqLookup.recordset[0].FaqID)
+                        .input('answer', mssql.VarChar, faq.answer)
+                        .input('display', mssql.Bit, faq.display ? 1 : 0);
+                    const result = await request.query`UPDATE [Website].[Dat_Faqs] SET [Answer]=@answer, [Display]=@display WHERE [FaqID]=@faqId`;
+                    console.log("   Updated FAQ ID: " + faqLookup.recordset[0].FaqID + ' - ' + faq.question);
+                    counter++;
+                }
             }
             catch (error) {
                 if (error.message.includes('duplicate key')) {

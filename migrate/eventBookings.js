@@ -31,7 +31,14 @@ module.exports = async function importEventBookings() {
                     .input('firstname', mssql.VarChar, eventBooking.firstname)
                     .input('surname', mssql.VarChar, eventBooking.surname)
                     .input('originalUserId', mssql.Int, eventBooking.originalUser ? (originalUserId?.recordset.length > 0 ? originalUserId.recordset[0].id : null) : null);
-                const eventBookingResult = await eventBookingRequest.query`INSERT INTO event_bookings (legacyId,[userId],eventId,bookingMade,bookingPaid,paid,payOnGate,inQueue,totalDue,totalPaid,paypalOrderId,paypalPaymentId,paypalReferenceId,paypalPayer,displayBooking,firstname,surname,originalUserId) OUTPUT INSERTED.Id VALUES (@legacyId,@userId,@eventId,@bookingMade,@bookingPaid,@paid,@payOnGate,@inQueue,@totalDue,@totalPaid,@paypalOrderId,@paypalPaymentId,@paypalReferenceId,@paypalPayer,@displayBooking,@firstname,@surname,@originalUserId)`;
+                const eventBookingResult = await eventBookingRequest.query`INSERT INTO [Events].[Dat_Bookings]
+                    (BookingMade,Paid,PayOnGate,InQueue,TotalDue,TotalPaid,DisplayBooking)
+                    OUTPUT INSERTED.BookingID
+                    VALUES (@bookingMade,@paid,@payOnGate,@inQueue,@totalDue,@totalPaid,@displayBooking);
+
+                    INSERT INTO [Events].[Lnk_Account_Booking]
+                    (AccountID,BookingID,[Date],FirstName,Surname,DisplayName)
+                    VALUES (@userId,@@IDENTITY,@firstName,@surname,@displayName)`;
 
                 console.log(`   Inserted event booking for ${eventId.recordset[0].name} - ${eventBooking.firstname} ${eventBooking.surname}`);
                 const eventBookingId = eventBookingResult.recordset[0].Id;
@@ -49,12 +56,17 @@ module.exports = async function importEventBookings() {
                 if (eventBooking.cateringChoices.length > 0) {
                     eventBooking.cateringChoices.forEach(async cateringChoice => {
                         const day = dayArray.find(x => x.dayName == cateringChoice.day);
-                        const mealId = await mssql.query`SELECT [ecmo].[id],[option],[ecm].[id] AS [mealId] FROM [dbo].[events_catering_meals_options] ecmo INNER JOIN [dbo].[events_catering_meals] ecm ON ecm.id = ecmo.mealId WHERE [ecm].[date]=${day.date} AND [ecm].[name]=${cateringChoice.meal} AND [ecmo].[option]=${cateringChoice.choice}`;
 
                         const eventCateringRequest = new mssql.Request()
-                            .input('eventBookingId', mssql.Int, eventBookingId)
-                            .input('option', mssql.Int, mealId.recordset[0].id);
-                        const eventCateringResult = eventCateringRequest.query`INSERT INTO event_booking_catering (eventBookingId,[optionId]) VALUES (@eventBookingId,@option)`;
+                            .input('BookingID', mssql.Int, eventBookingId)
+                            .input('Date', mssql.Date, day.date)
+                            .input('Meal', mssql.VarChar, cateringChoice.meal);
+                        const eventCateringResult = eventCateringRequest.query`INSERT INTO [Events].[Lnk_Booking_Catering_Option] 
+                            (BookingID,OptionID)
+                            SELECT @BookingID,EDCO.OptionID FROM [Events].[Dat_Catering_Options]  EDCO
+                            INNER JOIN [Events].[Dat_Catering_Meals] EDCM ON EDCM.CateringID = EDCO.CateringID
+                            INNER JOIN [Events].[Dat_Catering] EDC ON EDC.CateringID = EDCO.CateringID
+                            WHERE EDCM.[Date]=@date AND EDCM.[Name]=@meal`;
                     })
                     console.log(`       Inserted catering choices for ${eventId.recordset[0].name} - ${eventBooking.firstname} ${eventBooking.surname}`);
                 }

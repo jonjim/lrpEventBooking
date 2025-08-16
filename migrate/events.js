@@ -23,19 +23,20 @@ const kebabed = (str) => {
 }
 
 module.exports = async function importEvents() {
-    const events = await Event.find().populate('eventTickets');
+    const paymentIdRef = await mssql.query`SELECT PaymentProviderFieldID FROM [Payments].[Ref_Payment_Provider_Fields] WHERE [Name]='Payment ID'`
+    const events = await Event.find().populate('eventTickets').populate('eventHost');
     console.log('Importing Events');
     let counter = 0;
     if (events) {
         for (lrpEvent of events) {
             try {
+                const eventName = lrpEvent.name.toLowerCase().replace(/[^A-Z0-9]+/ig, "-");
                 //const systemLookup = await mssql.query`SELECT id, name FROM event_systems WHERE legacyId=${event.eventSystem}`;
-                const eventLookup = await mssql.query`SELECT * FROM events WHERE legacyID=${lrpEvent._id}`;
+                const eventLookup = await mssql.query`SELECT * FROM [Events].[Dat_Events] WHERE EventLink='${eventName}'`;
                 if (eventLookup?.recordset?.length > 0) {
                     console.log(`   ${lrpEvent.name} already exists`);
                     continue;
                 }
-                const hostLookup = await mssql.query`SELECT id, name FROM event_hosts WHERE legacyId=${lrpEvent.eventHost}`;
                 const imgInsert = lrpEvent.img?.url ? await insertImage(lrpEvent.img.url, lrpEvent.img.filename) : null;
                 const ogInsert = lrpEvent.ogCard?.url ? await insertImage(lrpEvent.ogCard.url, '') : null;
                 const registrationFeeRequest = new mssql.Request()
@@ -43,68 +44,79 @@ module.exports = async function importEvents() {
                     .input('amountPaid', mssql.Numeric(18,2), lrpEvent.registrationFee.amountPaid)
                     .input('datePaid', mssql.DateTime, lrpEvent.registrationFee.datePaid)
                     .input('paypalPaymentId', mssql.VarChar, lrpEvent.registrationFee.paypalPaymentId)
-                    .input('paypalPayer', mssql.VarChar, lrpEvent.registrationFee.paypalPayer);
-                const registrationFeeResult = await registrationFeeRequest.query`INSERT INTO registration_fees (feeValue,amountPaid,datePaid,paypalPaymentId,paypalPayer) OUTPUT INSERTED.Id VALUES (@feeValue,@amountPaid,@datePaid,@paypalPaymentId,@paypalPayer)`
+                    .input('paypalPayer', mssql.VarChar, lrpEvent.registrationFee.paypalPayer)
+                    .input('paymentProviderFieldID', mssql.Int, paymentIdRef.recordset[0].PaymentProviderFieldID);
+                const registrationFeeResult = await registrationFeeRequest.query`INSERT INTO [Events].[Dat_Registration_Fees] (feeValue,amountPaid,datePaid) OUTPUT INSERTED.RegistrationFeeID VALUES (@feeValue,@amountPaid,@datePaid)`
                 console.log(`   ${lrpEvent.name} registration fee inserted`);
+                if (lrpEvent.registrationFee.paypalPaymentId){
+                    const paymentId = await registrationFeeRequest.query`INSERT INTO [Payments].[Dat_Payments] (Value,Date,Payee) OUTPUT INSERTED.PaymentID VALUES (@amountPaid,@datePaid,@paypalPayer)`;
+                    await registrationFeeRequest.query`INSERT INTO [Payments].[Lnk_Payment_Data] ([PaymentID],[PaymentProviderFieldID],[Value]) VALUES (${paymentId.recordset[0].PaymentID},@paymentProviderFieldID,@paypalPaymentId)`
+                    console.log(`       Inserted payment: ${lrpEvent.registrationFee.paypalPaymentId}`)
+                }
 
                 const eventRequest = new mssql.Request()
-                    .input('legacyId', mssql.VarChar, lrpEvent._id)
-                    .input('name', mssql.VarChar, lrpEvent.name)
-                    .input('eventLink', mssql.VarChar,Math.floor(Math.random() * (9999 - 1000) + 1000) + '-' + lrpEvent.name.toLowerCase().replace(/[^A-Z0-9]+/ig, "-"))
-                    .input('created', mssql.DateTime, lrpEvent.created)
-                    .input('eventStart', mssql.DateTime, lrpEvent.eventStart)
-                    .input('eventEnd', mssql.DateTime, lrpEvent.eventEnd)
-                    .input('visible', mssql.Bit, lrpEvent.visible ? 1 : 0)
-                    .input('cancelled', mssql.Bit, lrpEvent.cancelled ? 1 : 0)
-                    .input('eventHostId', mssql.Int, hostLookup.recordset[0].id)
-                    .input('registrationFeeId', mssql.Int, registrationFeeResult.recordset[0].id)
-                    .input('location', mssql.VarChar, lrpEvent.location)
-                    .input('locationWeb', mssql.VarChar, lrpEvent.locationWeb)
-                    .input('externalBooking', mssql.VarChar, lrpEvent.externalBooking)
-                    .input('icInvitation', mssql.Text, lrpEvent.icInvitation)
-                    .input('fullDescription', mssql.Text, lrpEvent.fullDescription)
-                    .input('promoDescription', mssql.Text, lrpEvent.promoDescription)
-                    .input('bunksAvailable', mssql.Bit, lrpEvent.bunksAvailable ? 1 : 0)
-                    .input('allowBookings', mssql.Bit, lrpEvent.allowBookings ? 1 : 0)
-                    .input('overflowQueue', mssql.Bit, lrpEvent.overflowQueue ? 1 : 0)
-                    .input('bookingsOpen', mssql.Bit, lrpEvent.bookingsOpen ? 1 : 0)
-                    .input('webhooksEmail', mssql.Bit, lrpEvent.webhooks.email ? 1 : 0)
-                    .input('webhooksDiscord', mssql.Bit, lrpEvent.webhooks.discord ? 1 : 0)
-                    .input('imgId', mssql.Int, imgInsert)
-                    .input('ogCardId', mssql.Int, ogInsert);
-                const eventResult = await eventRequest.query`INSERT INTO events (legacyId,name,eventLink,created,eventStart,eventEnd,visible,cancelled,eventHostId,registrationFeeId,location,locationWeb,externalBooking,icInvitation,fullDescription,promoDescription,bunksAvailable,allowBookings,overflowQueue,bookingsOpen,webhooksEmail,webhooksDiscord,imgId,ogCardId) OUTPUT INSERTED.Id VALUES (@legacyId,@name,@eventLink,@created,@eventStart,@eventEnd,@visible,@cancelled,@eventHostId,@registrationFeeId,@location,@locationWeb,@externalBooking,@icInvitation,@fullDescription,@promoDescription,@bunksAvailable,@allowBookings,@overflowQueue,@bookingsOpen,@webhooksEmail,@webhooksDiscord,@imgId,@ogCardId)`
+                    .input('HostName', mssql.VarChar, lrpEvent.eventHost.name)
+                    .input('ImageID', mssql.Int, imgInsert)
+                    .input('OGCardId', mssql.Int, ogInsert)
+                    .input('RegistrationFeeId', mssql.Int, registrationFeeResult.recordset[0].id)
+                    .input('EventLink', mssql.VarChar,Math.floor(Math.random() * (9999 - 1000) + 1000) + '-' + eventName)
+                    .input('Name', mssql.VarChar, lrpEvent.name)
+                    .input('Created', mssql.DateTime, lrpEvent.created)
+                    .input('EventStart', mssql.DateTime, lrpEvent.eventStart)
+                    .input('EventEnd', mssql.DateTime, lrpEvent.eventEnd)
+                    .input('Visible', mssql.Bit, lrpEvent.visible ? 1 : 0)
+                    .input('Cancelled', mssql.Bit, lrpEvent.cancelled ? 1 : 0)
+                    .input('Location', mssql.VarChar, lrpEvent.location)
+                    .input('LocationWeb', mssql.VarChar, lrpEvent.locationWeb)
+                    .input('ExternalBooking', mssql.VarChar, lrpEvent.externalBooking)
+                    .input('IcInvitation', mssql.Text, lrpEvent.icInvitation)
+                    .input('FullDescription', mssql.Text, lrpEvent.fullDescription)
+                    .input('PromoDescription', mssql.Text, lrpEvent.promoDescription)
+                    .input('BunksAvailable', mssql.Bit, lrpEvent.bunksAvailable ? 1 : 0)
+                    .input('AllowBookings', mssql.Bit, lrpEvent.allowBookings ? 1 : 0)
+                    .input('OverflowQueue', mssql.Bit, lrpEvent.overflowQueue ? 1 : 0)
+                    .input('BookingsOpen', mssql.Bit, lrpEvent.bookingsOpen ? 1 : 0)
+                    .input('WebhooksEmail', mssql.Bit, lrpEvent.webhooks.email ? 1 : 0)
+                    .input('WebhooksDiscord', mssql.Bit, lrpEvent.webhooks.discord ? 1 : 0)
+                    
+                const eventResult = await eventRequest.query`INSERT INTO [Events].[Dat_Events] ([SystemID],[HostID],[ImageID],[OGCardID],[RegistrationFeeID],[EventLink],[Name],[Created],[EventStart],[EventEnd],[Visible],[Cancelled],[Location],[LocationWeb],[ExternalBooking],[IcInvitation],[FullDescription],[PromoDescription],[BunksAvailable],[AllowBookings],[OverflowQueue],[BookingsOpen],[WebhooksEmail],[WebhooksDiscord])
+                OUTPUT INSERTED.EventID 
+                SELECT SDS.[SystemID], SDH.[HostID], @ImageID, @OGCardID, @RegistrationFeeID, @EventLink, @Name, @Created, @EventStart, @EventEnd, @Visible, @Cancelled, @Location, @LocationWeb, @ExternalBooking, @IcInvitation, @FullDescription, @PromoDescription, @BunksAvailable, @AllowBookings, @OverflowQueue, @BookingsOpen, @WebhooksEmail, @WebhooksDiscord
+                FROM [Systems].[Dat_Hosts] SDH
+                    LEFT JOIN [Systems].[Dat_Systems] SDS ON SDH.[SystemID] = SDS.[SystemID]
+                WHERE SDH.[Name] = @HostName`
                 console.log(`   ${lrpEvent.name} inserted`);
                 
-                try {
-                    const eventLimitsRequest = new mssql.Request()
-                        .input('eventId', mssql.Int, eventResult.recordset[0].Id)
-                        .input('playerLimit', mssql.Int, lrpEvent.limits.playerLimit)
-                        .input('playerBunkLimit', mssql.Int, lrpEvent.limits.playerBunkLimit)
-                        .input('monsterLimit', mssql.Int, lrpEvent.limits.monsterLimit)
-                        .input('monsterBunkLimit', mssql.Int, lrpEvent.limits.monsterBunkLimit)
-                        .input('staffLimit', mssql.Int, lrpEvent.limits.staffLimit)
-                        .input('staffBunkLimit', mssql.Int, lrpEvent.limits.staffBunkLimit)
-                    const eventLimitsResult = await eventLimitsRequest.query`INSERT INTO events_limits (eventId,playerLimit,playerbunkLimit,monsterLimit,monsterBunkLimit,staffLimit,staffBunkLimit) OUTPUT INSERTED.Id VALUES (@eventId,@playerLimit,@playerbunkLimit,@monsterLimit,@monsterBunkLimit,@staffLimit,@staffBunkLimit)`
-                    console.log(`   ${lrpEvent.name} limits inserted`)
-                }
-                catch (error) {
-                    if (error.message.includes('duplicate key')) {
-                        console.log(`   ${lrpEvent.name} limits already exists`);
-                    }
-                    else 
-                    console.log(error.message)    
-                }
+                // try {
+                //     const eventLimitsRequest = new mssql.Request()
+                //         .input('eventId', mssql.Int, eventResult.recordset[0].Id)
+                //         .input('playerLimit', mssql.Int, lrpEvent.limits.playerLimit)
+                //         .input('playerBunkLimit', mssql.Int, lrpEvent.limits.playerBunkLimit)
+                //         .input('monsterLimit', mssql.Int, lrpEvent.limits.monsterLimit)
+                //         .input('monsterBunkLimit', mssql.Int, lrpEvent.limits.monsterBunkLimit)
+                //         .input('staffLimit', mssql.Int, lrpEvent.limits.staffLimit)
+                //         .input('staffBunkLimit', mssql.Int, lrpEvent.limits.staffBunkLimit)
+                //     const eventLimitsResult = await eventLimitsRequest.query`INSERT INTO events_limits (eventId,playerLimit,playerbunkLimit,monsterLimit,monsterBunkLimit,staffLimit,staffBunkLimit) OUTPUT INSERTED.Id VALUES (@eventId,@playerLimit,@playerbunkLimit,@monsterLimit,@monsterBunkLimit,@staffLimit,@staffBunkLimit)`
+                //     console.log(`   ${lrpEvent.name} limits inserted`)
+                // }
+                // catch (error) {
+                //     if (error.message.includes('duplicate key')) {
+                //         console.log(`   ${lrpEvent.name} limits already exists`);
+                //     }
+                //     else 
+                //     console.log(error.message)    
+                // }
 
                 try {
                     const eventFinancialsRequest = new mssql.Request()
-                        .input('eventId', mssql.Int, eventResult.recordset[0].Id)
+                        .input('eventId', mssql.Int, eventResult.recordset[0].EventID)
                         .input('siteFee', mssql.Numeric(18,2), lrpEvent.financials.siteFee)
                         .input('insurance', mssql.Numeric(18,2), lrpEvent.financials.insurance)
                         .input('sanctioningFee', mssql.Numeric(18,2), lrpEvent.financials.sanctioningFee)
                         .input('props', mssql.Numeric(18,2), lrpEvent.financials.props)
                         .input('admin', mssql.Numeric(18,2), lrpEvent.financials.admin)
                         .input('otherCosts', mssql.Numeric(18,2), lrpEvent.financials.otherCosts)
-                    const eventFinancialsResult = await eventFinancialsRequest.query`INSERT INTO events_financials (eventId,siteFee,insurance,sanctioningFee,props,admin,otherCosts) OUTPUT INSERTED.Id VALUES (@eventId,@siteFee,@insurance,@sanctioningFee,@props,@admin,@otherCosts)`
+                    const eventFinancialsResult = await eventFinancialsRequest.query`INSERT INTO [Events].[Dat_Financials] (EventID,SiteFee,Insurance,SanctioningFee,Props,Admin,OtherCosts) VALUES (@eventId,@siteFee,@insurance,@sanctioningFee,@props,@admin,@otherCosts)`
                     console.log(`   ${lrpEvent.name} financials inserted`)
                 }
                 catch (error) {
@@ -119,16 +131,19 @@ module.exports = async function importEvents() {
                 for (eventTicket of lrpEvent.eventTickets) {
                     try {
                         const eventTicketsRequest = new mssql.Request()
-                            .input('legacyId', mssql.VarChar, eventTicket._id)
-                            .input('eventId', mssql.Int, eventResult.recordset[0].Id)
-                            .input('ticketType', mssql.VarChar, eventTicket.ticketType)
-                            .input('description', mssql.Text, eventTicket.description)
-                            .input('availableFrom', mssql.DateTime, eventTicket.availableFrom)
-                            .input('availableTo', mssql.DateTime, eventTicket.availableTo)
-                            .input('cost', mssql.Numeric(18,2), eventTicket.cost)
-                            .input('caterer', mssql.VarChar, eventTicket.cater)
-                            .input('available', mssql.Bit, eventTicket.available ? 1 : 0);
-                        const eventTicketResult = await eventTicketsRequest.query`INSERT INTO event_tickets (legacyId,eventId,ticketType,description,availableFrom,availableTo,cost,caterer,available) OUTPUT INSERTED.Id VALUES (@legacyId,@eventId,@ticketType,@description,@availableFrom,@availableTo,@cost,@caterer,@available)`
+                            .input('EventID', mssql.Int, eventResult.recordset[0].EventID)
+                            .input('TicketType', mssql.VarChar, eventTicket.ticketType)
+                            .input('Description', mssql.Text, eventTicket.description)
+                            .input('AvailableFrom', mssql.DateTime, eventTicket.availableFrom)
+                            .input('AvailableTo', mssql.DateTime, eventTicket.availableTo)
+                            .input('Cost', mssql.Numeric(18,2), eventTicket.cost)
+                            .input('Caterer', mssql.VarChar, eventTicket.cater)
+                            .input('Available', mssql.Bit, eventTicket.available ? 1 : 0);
+                        const eventTicketResult = await eventTicketsRequest.query`INSERT INTO [Events].[Dat_Tickets] ([EventID],[TicketTypeID],[Name],[Description],[Restrictions],[AvailableFrom],[AvailableTo],[Cost],[Caterer],[Available])
+                        OUTPUT INSERTED.TicketID
+                        SELECT @EventID, CRTT.TicketTypeID, CRTT.[Name], @Description, null, @AvailableFrom, @AvailableTo, @Cost, @Caterer, @Available
+                        FROM [Config].[Ref_Ticket_Types] CRTT
+                        WHERE CRTT.[Name] = @TicketType`
                         console.log(`   Added ticket: ${eventTicket.description}`)
                     }
                     catch (error) {
@@ -153,7 +168,7 @@ module.exports = async function importEvents() {
                         .input('choiceRequired', mssql.Bit, lrpEvent.catering.choiceRequired ? 1 : 0)
                         .input('cost', mssql.Numeric(18,2), lrpEvent.catering.cost)
                         .input('bookingsClose', mssql.DateTime, lrpEvent.catering.bookingsClose)
-                    const eventCateringResult = await eventCateringRequest.query`INSERT INTO events_catering (eventId,display,caterer,catererContact,notes,choiceRequired,cost,bookingsClose) OUTPUT INSERTED.Id VALUES (@eventId,@display,@caterer,@catererContact,@notes,@choiceRequired,@cost,@bookingsClose)`
+                    const eventCateringResult = await eventCateringRequest.query`INSERT INTO [Events].[Dat_Catering] (eventId,display,caterer,catererContact,notes,choiceRequired,cost,bookingsClose) OUTPUT INSERTED.CateringID VALUES (@eventId,@display,@caterer,@catererContact,@notes,@choiceRequired,@cost,@bookingsClose)`
 
                     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                     const dateArray = datesBetween(new Date(lrpEvent.eventStart), new Date(lrpEvent.eventEnd));
@@ -173,16 +188,17 @@ module.exports = async function importEvents() {
                                 for (meal of keys) {
                                     try {
                                         const eventCateringMenuRequest = new mssql.Request()
-                                            .input('eventCateringId', mssql.Int, eventCateringResult.recordset[0].Id)
+                                            .input('eventCateringId', mssql.Int, eventCateringResult.recordset[0].CateringID)
                                             .input('name', mssql.VarChar, eventCatering.menu[eventMenu.dayName].meals[meal].name)
                                             .input('date', mssql.DateTime, new Date(eventMenu.date));
-                                        const eventCateringMenuResponse = await eventCateringMenuRequest.query`INSERT INTO events_catering_meals (eventsCateringId,name,date) OUTPUT INSERTED.Id VALUES (@eventCateringId,@name,@date)`
+                                        const eventCateringMenuResponse = await eventCateringMenuRequest.query`INSERT INTO [Events].[Dat_Catering_Meals] (CateringID,name,date) OUTPUT INSERTED.MealID VALUES (@eventCateringId,@name,@date)`
 
                                         for (mealOption of eventCatering.menu[eventMenu.dayName].meals[meal].options) {
                                             const eventCateringMenuOptionRequest = new mssql.Request()
-                                                .input('meal', mssql.Int, eventCateringMenuResponse.recordset[0].Id)
+                                                .input('cateringId', mssql.Int, eventCateringResult.recordset[0].CateringID)
+                                                .input('meal', mssql.Int, eventCateringMenuResponse.recordset[0].MealID)
                                                 .input('option', mssql.VarChar, mealOption);
-                                            const eventCateringMenuOptionResponse = await eventCateringMenuOptionRequest.query`INSERT INTO events_catering_meals_options (mealId,[option]) OUTPUT INSERTED.Id VALUES (@meal,@option)`
+                                            const eventCateringMenuOptionResponse = await eventCateringMenuOptionRequest.query`INSERT INTO [Events].[Dat_Catering_Options] (CateringID,MealID,[option]) OUTPUT INSERTED.OptionID VALUES (@cateringId,@meal,@option)`
                                         }
                                     }
                                     catch (error) {
@@ -234,7 +250,7 @@ module.exports = async function importEvents() {
                             .input('camping', mssql.Text, lrpEvent.returnPack?.camping)
                             .input('bunks', mssql.Text, lrpEvent.returnPack?.bunks)
                             .input('otherNotes', mssql.Text, lrpEvent.returnPack?.otherNotes)
-                        const eventReturnPackResult = await eventReturnPackRequest.query`INSERT INTO events_return_pack (eventId,arrivalTimeIn,dailyTimeIn,dailyTimeOut,departureTimeOut,timeInOutNotes,arrivalTime,departureTime,arrivalDepartureNotes,gamesOperations,plotActuation,firstAid,referees,otherStaff,parking,camping,bunks,otherNotes) OUTPUT INSERTED.Id VALUES (@eventId,@arrivalTimeIn,@dailyTimeIn,@dailyTimeOut,@departureTimeOut,@timeInOutNotes,@arrivalTime,@departureTime,@arrivalDepartureNotes,@gamesOperations,@plotActuation,@firstAid,@referees,@otherStaff,@parking,@camping,@bunks,@otherNotes)`
+                        const eventReturnPackResult = await eventReturnPackRequest.query`INSERT INTO [Events].[Dat_Return_Pack] (eventId,arrivalTimeIn,dailyTimeIn,dailyTimeOut,departureTimeOut,timeInOutNotes,arrivalTime,departureTime,arrivalDepartureNotes,gamesOperations,plotActuation,firstAid,referees,otherStaff,parking,camping,bunks,otherNotes) OUTPUT INSERTED.ReturnPackID VALUES (@eventId,@arrivalTimeIn,@dailyTimeIn,@dailyTimeOut,@departureTimeOut,@timeInOutNotes,@arrivalTime,@departureTime,@arrivalDepartureNotes,@gamesOperations,@plotActuation,@firstAid,@referees,@otherStaff,@parking,@camping,@bunks,@otherNotes)`
                         console.log(`   ${lrpEvent.name} return pack inserted`)
                     }
                     catch (error) {
