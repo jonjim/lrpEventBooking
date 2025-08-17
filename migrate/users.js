@@ -22,8 +22,6 @@ module.exports = async function importUsers(systemFields) {
                     .input('resetPassword', mssql.VarChar, user.resetPassword)
                     .input('verified', mssql.Bit, user.verified ? 1 : 0)
                     .input('authString', mssql.VarChar, user.authString)
-                    .input('googleId', mssql.VarChar, user.googleId)
-                    .input('facebookId', mssql.VarChar, user.facebookId)
                     .input('displayBookings', mssql.Bit, user.displayBookings ? 1 : 0)
                     .input('dateCreated', mssql.DateTime, user.dateCreated)
                     .input('salt', mssql.Text, user.salt)
@@ -33,7 +31,7 @@ module.exports = async function importUsers(systemFields) {
                     .input('emergencyContactNumber', mssql.VarChar, user.emergencyContactNumber)
                     .input('emergencyContactRelation', mssql.VarChar, user.emergencyContactRelation);
 
-                const userResponse = await userRequest.query`INSERT INTO [Users].[Dat_Account] (email,firstname,surname,dob,medicalInfo,allergyDietary,verificationCode,resetPassword,verified,authString,googleId,facebookId,displayBookings,dateCreated,salt,hash) OUTPUT INSERTED.AccountID VALUES (@email,@firstname,@surname,@dob,@medicalInfo,@allergyDietary,@verificationCode,@resetPassword,@verified,@authString,@googleId,@facebookId,@displayBookings,@dateCreated,@salt,@hash)`;
+                const userResponse = await userRequest.query`INSERT INTO [Users].[Dat_Account] (email,firstname,surname,dob,medicalInfo,allergyDietary,verificationCode,resetPassword,verified,authString,displayBookings,dateCreated,salt,hash) OUTPUT INSERTED.AccountID VALUES (@email,@firstname,@surname,@dob,@medicalInfo,@allergyDietary,@verificationCode,@resetPassword,@verified,@authString,@displayBookings,@dateCreated,@salt,@hash)`;
                 userId = userResponse.recordset[0].AccountID;
                 console.log("   Inserted user: " + user.username);
                 
@@ -83,6 +81,21 @@ module.exports = async function importUsers(systemFields) {
                         console.log(`       Added permission for user and event system: ${eventSystem.name}`);
                     });
                 }
+                const authProviderQuery = new mssql.Request()
+                .input('AccountID', mssql.Int, userId)
+                if (user.facebookId){
+                    authProviderQuery.input('facebookId', mssql.VarChar, user.facebookId)
+                    await authProviderQuery.query`INSERT INTO [Users].[Lnk_Account_Auth] (AccountID,AuthProviderID,[Value])
+                    SELECT AuthProviderID, @AccountID, @facebookId
+                    FROM [Config].[Ref_Auth_Providers] WHERE [Name] = 'Facebook'`
+                }
+                if (user.googleId){
+                    authProviderQuery.input('googleId', mssql.VarChar, user.googleId)
+                    await authProviderQuery.query`INSERT INTO [Users].[Lnk_Account_Auth] (AccountID,AuthProviderID,[Value])
+                    SELECT AuthProviderID, @AccountID, @googleId
+                    FROM [Config].[Ref_Auth_Providers] WHERE [Name] = 'Google'`
+                }
+
             
                 if (user.lorienTrust) {
                     if (user.lorienTrust.characterSkills)
