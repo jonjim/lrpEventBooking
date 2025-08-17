@@ -24,15 +24,10 @@ async function insertImage(url, filename) {
                  .input('CustomFieldId', mssql.Int, characterSkillField)
                  .input('Value', mssql.VarChar, value.toString())
              const result = await request.query`INSERT INTO [Users].[Lnk_User_Custom_Fields] ([AccountId],CustomFieldId,Value) VALUES (@userId,@CustomFieldId,@value)`;
-             return result.recordset[0].CustomFieldId
+             
          }
     }
     catch (error) {
-        console.log({
-            user: user,
-            field: characterSkillField,
-            value: value
-        })
         console.log(error.message);
     }
 }

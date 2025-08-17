@@ -130,20 +130,63 @@ module.exports = async function importEvents() {
                 console.log('   Parsing event tickets for ' + lrpEvent.name);
                 for (eventTicket of lrpEvent.eventTickets) {
                     try {
+                        let ticketType;
+                        let ticketLimit;
+                        switch (eventTicket.ticketType){
+                            case 'player':
+                                ticketType = 'Player';
+                                ticketLimit = lrpEvent.limits.playerLimit;
+                                break;
+                            case 'playerChild':
+                                ticketType = 'Player (Under 16)';
+                                ticketLimit = lrpEvent.limits.playerLimit;
+                                break;
+                            case 'monster':
+                                ticketType = 'Crew';
+                                ticketLimit = lrpEvent.limits.monsterLimit;
+                                break;
+                            case 'monsterChild':
+                                ticketType = 'Crew (Under 16)';
+                                ticketLimit = lrpEvent.limits.monsterLimit;
+                                break;
+                            case 'staff':
+                                ticketType = 'Staff';
+                                ticketLimit = lrpEvent.limits.staffLimit;
+                                break;
+                            case 'playerBunk':
+                            case 'monsterBunk':
+                            case 'staffBunk':
+                                ticketType = 'Bunk';
+                                ticketLimit = lrpEvent.limits.monsterBunkLimit;
+                                break;
+                            case 'mealTicket':
+                                ticketType = 'Meal';
+                                ticketLimit = null;
+                                break;
+                            case 'mealTicketChild':
+                                ticketType = 'Meal (Under 16)';
+                                ticketLimit = null;
+                                break;
+                        }
                         const eventTicketsRequest = new mssql.Request()
                             .input('EventID', mssql.Int, eventResult.recordset[0].EventID)
-                            .input('TicketType', mssql.VarChar, eventTicket.ticketType)
+                            .input('TicketType', mssql.VarChar, ticketType)
                             .input('Description', mssql.Text, eventTicket.description)
                             .input('AvailableFrom', mssql.DateTime, eventTicket.availableFrom)
                             .input('AvailableTo', mssql.DateTime, eventTicket.availableTo)
                             .input('Cost', mssql.Numeric(18,2), eventTicket.cost)
                             .input('Caterer', mssql.VarChar, eventTicket.cater)
-                            .input('Available', mssql.Bit, eventTicket.available ? 1 : 0);
+                            .input('Available', mssql.Bit, eventTicket.available ? 1 : 0)
+                            .input('TicketLimit', mssql.Int, ticketLimit);
                         const eventTicketResult = await eventTicketsRequest.query`INSERT INTO [Events].[Dat_Tickets] ([EventID],[TicketTypeID],[Name],[Description],[Restrictions],[AvailableFrom],[AvailableTo],[Cost],[Caterer],[Available])
                         OUTPUT INSERTED.TicketID
                         SELECT @EventID, CRTT.TicketTypeID, CRTT.[Name], @Description, null, @AvailableFrom, @AvailableTo, @Cost, @Caterer, @Available
                         FROM [Config].[Ref_Ticket_Types] CRTT
-                        WHERE CRTT.[Name] = @TicketType`
+                        WHERE CRTT.[Name] = @TicketType;
+                        
+                        IF @TicketLimit IS NOT NULL
+                        INSERT INTO [Events].[Dat_Ticket_Limits] (TicketID,[Value])
+                        VALUES (@@IDENTITY,@ticketLimit)`;
                         console.log(`   Added ticket: ${eventTicket.description}`)
                     }
                     catch (error) {
@@ -160,7 +203,7 @@ module.exports = async function importEvents() {
                 console.log('   Parsing catering options for ' + lrpEvent.name);
                 try {
                     const eventCateringRequest = new mssql.Request()
-                        .input('eventId', mssql.Int, eventResult.recordset[0].Id)
+                        .input('eventId', mssql.Int, eventResult.recordset[0].EventID)
                         .input('display', mssql.Bit, lrpEvent.catering.display ? 1 : 0)
                         .input('caterer', mssql.VarChar, lrpEvent.catering.caterer)
                         .input('catererContact', mssql.VarChar, lrpEvent.catering.catererContact)

@@ -7,12 +7,12 @@ const lorienTrustFields = {
     occupationalSkillsId: undefined,
     characterName: undefined,
     faction: undefined,
-    race: undefined,
     playerId: undefined,
     refMarshal: undefined,
     claw: undefined,
     bow: undefined,
     marketing: undefined,
+    race: undefined
 }
 
 const eldritchDaysFields = {
@@ -130,6 +130,15 @@ module.exports = async function importEventSystems() {
                         description: '',
                         display: true
                     });
+                    eventSystem.customFields.push({
+                        label: 'Race',
+                        name: 'race',
+                        type: 'text',
+                        required: false,
+                        section: 'character',
+                        description: 'Your character race',
+                        display: true
+                    })
                 }
                 console.log('       Parsing custom fields for ' + eventSystem.name);
                 if (eventSystem.customFields) {
@@ -155,12 +164,12 @@ module.exports = async function importEventSystems() {
                                 if (field.name == 'characterSkills') lorienTrustFields.characterSkillsId = fieldId;
                                 if (field.name == 'occupationalSkills') lorienTrustFields.occupationalSkillsId = fieldId;
                                 if (field.name == 'faction') lorienTrustFields.faction = fieldId;
-                                if (field.name == 'race') lorienTrustFields.race = fieldId;
                                 if (field.name == 'playerId') lorienTrustFields.playerId = fieldId;
                                 if (field.name == 'refereeMarshalNumber') lorienTrustFields.refMarshal = fieldId;
                                 if (field.name == 'clawCompetency') lorienTrustFields.claw = fieldId;
                                 if (field.name == 'bowCompetency') lorienTrustFields.bow = fieldId;
                                 if (field.name == 'marketing') lorienTrustFields.marketing = fieldId;
+                                if (field.name == 'race') lorienTrustFields.race = fieldId;
                             }
 
                             if (eventSystem.systemRef == 'eldritchDays') {
@@ -193,7 +202,7 @@ module.exports = async function importEventSystems() {
                                 if (field.name == 'accessibilityNeeds') jaegerFields.accessibilityNeeds = fieldId;
                                 if (field.name == 'promotionalPhotoConsent') jaegerFields.promotionalPhotoConsent = fieldId;
                                 if (field.name == 'backstory') jaegerFields.backstory = fieldId;
-                                if (field.name == 'nationofOrigin') jaegerFields.nationOfOrigin = fieldId;
+                                if (field.name == 'nationOfOrigin') jaegerFields.nationOfOrigin = fieldId;
                                 if (field.name == 'jaegerhaus') jaegerFields.jaegerhaus = fieldId;
                                 if (field.name == 'doYouRequireAWristband') jaegerFields.doYouRequireAWristband = fieldId;
                                 if (field.name == 'icPronouns') jaegerFields.icPronouns = fieldId;
