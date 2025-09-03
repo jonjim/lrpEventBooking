@@ -3,7 +3,7 @@ const EventBooking = require('../models/eventBooking');
 const datesBetween = require('dates-between');
 
 module.exports = async function importEventBookings() {
-    const eventBookings = await EventBooking.find().populate('event').populate('user').populate('originalUser');
+    const eventBookings = await EventBooking.find().populate('event').populate('user').populate('originalUser').populate('eventTickets');
     console.log('Importing event bookings');
     let counter = 0;
     if (eventBookings) {
@@ -14,7 +14,7 @@ module.exports = async function importEventBookings() {
                 //const eventId = await mssql.query`SELECT id,name,eventStart,eventEnd FROM events WHERE legacyId=${eventBooking.event}`;
                 const eventBookingRequest = new mssql.Request()
                     //.input('legacyId', mssql.VarChar, eventBooking._id)
-                    .input('userId', mssql.Int, userId?.recordset?.length > 0 ? userId.recordset[0].id : null)
+                    .input('userId', mssql.Int, userId?.recordset?.length > 0 ? userId.recordset[0].AccountID : null)
                     .input('eventName', mssql.VarChar, eventBooking.event.name)
                     .input('bookingMade', mssql.DateTime, eventBooking.bookingMade)
                     .input('bookingPaid', mssql.DateTime, eventBooking.bookingPaid)
@@ -30,14 +30,14 @@ module.exports = async function importEventBookings() {
                     .input('displayBooking', mssql.Bit, eventBooking.displayBooking ? 1 : 0)
                     .input('firstname', mssql.VarChar, eventBooking.firstname)
                     .input('surname', mssql.VarChar, eventBooking.surname)
-                    .input('originalUserId', mssql.Int, eventBooking.originalUser ? (originalUserId?.recordset.length > 0 ? originalUserId.recordset[0].id : null) : null)
+                    .input('originalUserId', mssql.Int, eventBooking.originalUser ? (originalUserId?.recordset.length > 0 ? originalUserId.recordset[0].AccountID : null) : null)
                     .input('transferDate', mssql.DateTime, eventBooking.bookingMade + 1);
                 
                 const eventBookingResult = await eventBookingRequest.query`INSERT INTO [Events].[Dat_Bookings]
                     (BookingMade,Paid,PayOnGate,InQueue,TotalDue,TotalPaid,DisplayBooking)
                     OUTPUT INSERTED.BookingID
                     VALUES (@bookingMade,@paid,@payOnGate,@inQueue,@totalDue,@totalPaid,@displayBooking)`;
-                eventBookingRequest.input('BookingID', mssql.Int, eventBookingResult.recordsets[0].BookingID);
+                eventBookingRequest.input('BookingID', mssql.Int, eventBookingResult.recordset[0].BookingID);
                 if (eventBooking.originalUser){
                     await eventBookingRequest.query`
                     INSERT INTO [Events].[Lnk_Account_Booking]
@@ -93,20 +93,60 @@ module.exports = async function importEventBookings() {
                     })
                     console.log(`       Inserted catering choices for ${eventBooking.event.name} - ${eventBooking.firstname} ${eventBooking.surname}`);
                 }
+                
                 eventBooking.eventTickets.forEach(async eventTicket => {
-                    //const eventTicketId = await mssql.query`SELECT id FROM event_tickets WHERE legacyId=${eventTicket._id}`
+                    try{
+                        let ticketType;
+                        switch (eventTicket.ticketType){
+                            case 'player':
+                                ticketType = 'Player';
+                                break;
+                            case 'playerChild':
+                                ticketType = 'Player (Under 16)';
+                                break;
+                            case 'monster':
+                                ticketType = 'Crew';
+                                break;
+                            case 'monsterChild':
+                                ticketType = 'Crew (Under 16)';
+                                break;
+                            case 'staff':
+                                ticketType = 'Staff';
+                                break;
+                            case 'playerBunk':
+                            case 'monsterBunk':
+                            case 'staffBunk':
+                                ticketType = 'Bunk';
+                                break;
+                            case 'mealTicket':
+                                ticketType = 'Meal';
+                                break;
+                            case 'mealTicketChild':
+                                ticketType = 'Meal (Under 16)';
+                                break;
+                        }
                     const eventTicketRequest = new mssql.Request()
                         .input('BookingID', mssql.Int, eventBookingId)
-                        .input('ticketName', mssql.VarChar, eventTicket.name)
-                        .input('eventName', mssql.VarChar, eventBooking.event.name);
-                    const eventTicketResult = eventTicketRequest.query`INSERT INTO [Events].[Lnk_Booking_Tickets] 
+                        .input('ticketName', mssql.VarChar, ticketType)
+                        .input('eventName', mssql.VarChar, eventBooking.event.name)
+                        .input('cost', mssql.Numeric(5,2), eventTicket.cost);
+                    const eventTicketResult = await eventTicketRequest.query`INSERT INTO [Events].[Lnk_Booking_Tickets] 
                         (BookingID,TicketID)
                         SELECT @BookingID,TicketID 
                         FROM [Events].[Dat_Tickets] EDT
                             INNER JOIN [Events].[Dat_Events] EDE ON EDE.EventID = EDT.EventID
-                        WHERE EDT.[Name]=@ticketName AND EDE.[Name]=@eventName`;
+                        WHERE EDT.[Name]=@ticketName AND EDE.[Name]=@eventName AND EDT.Cost=@cost`;
+                    console.log(`   Inserted event tickets for ${eventBooking.event.name} - ${ticketType} - ${eventBooking.firstname} ${eventBooking.surname}`);
+                    }
+                    catch(error){
+                        console.error('Failed to insert ticket')
+                        console.error(eventBookingId)
+                        console.error(eventTicket.name)
+                        console.error(eventBooking.event.name)
+
+                    }
                 })
-                console.log(`   Inserted event tickets for ${eventBooking.event.name} - ${eventBooking.firstname} ${eventBooking.surname}`);
+                
             }
             catch (error) {
                 if (error.message.includes('duplicate key')) {

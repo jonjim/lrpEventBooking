@@ -84,15 +84,15 @@ module.exports = async function importUsers(systemFields) {
                 const authProviderQuery = new mssql.Request()
                 .input('AccountID', mssql.Int, userId)
                 if (user.facebookId){
-                    authProviderQuery.input('facebookId', mssql.VarChar, user.facebookId)
+                    authProviderQuery.input('facebookId', mssql.VarChar, user.facebookId.toString())
                     await authProviderQuery.query`INSERT INTO [Users].[Lnk_Account_Auth] (AccountID,AuthProviderID,[Value])
-                    SELECT AuthProviderID, @AccountID, @facebookId
+                    SELECT @AccountID, AuthProviderID, @facebookId
                     FROM [Config].[Ref_Auth_Providers] WHERE [Name] = 'Facebook'`
                 }
                 if (user.googleId){
-                    authProviderQuery.input('googleId', mssql.VarChar, user.googleId)
+                    authProviderQuery.input('googleId', mssql.VarChar, user.googleId.toString())
                     await authProviderQuery.query`INSERT INTO [Users].[Lnk_Account_Auth] (AccountID,AuthProviderID,[Value])
-                    SELECT AuthProviderID, @AccountID, @googleId
+                    SELECT @AccountID, AuthProviderID, @googleId
                     FROM [Config].[Ref_Auth_Providers] WHERE [Name] = 'Google'`
                 }
 
