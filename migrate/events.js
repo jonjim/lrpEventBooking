@@ -48,11 +48,7 @@ module.exports = async function importEvents() {
                     .input('paymentProviderFieldID', mssql.Int, paymentIdRef.recordset[0].PaymentProviderFieldID);
                 const registrationFeeResult = await registrationFeeRequest.query`INSERT INTO [Events].[Dat_Registration_Fees] (feeValue,amountPaid,datePaid) OUTPUT INSERTED.RegistrationFeeID VALUES (@feeValue,@amountPaid,@datePaid)`
                 console.log(`   ${lrpEvent.name} registration fee inserted`);
-                if (lrpEvent.registrationFee.paypalPaymentId){
-                    const paymentId = await registrationFeeRequest.query`INSERT INTO [Payments].[Dat_Payments] (Value,Date,Payee) OUTPUT INSERTED.PaymentID VALUES (@amountPaid,@datePaid,@paypalPayer)`;
-                    await registrationFeeRequest.query`INSERT INTO [Payments].[Lnk_Payment_Data] ([PaymentID],[PaymentProviderFieldID],[Value]) VALUES (${paymentId.recordset[0].PaymentID},@paymentProviderFieldID,@paypalPaymentId)`
-                    console.log(`       Inserted payment: ${lrpEvent.registrationFee.paypalPaymentId}`)
-                }
+
 
                 const eventRequest = new mssql.Request()
                     .input('HostName', mssql.VarChar, lrpEvent.eventHost.name)
@@ -78,14 +74,30 @@ module.exports = async function importEvents() {
                     .input('BookingsOpen', mssql.Bit, lrpEvent.bookingsOpen ? 1 : 0)
                     .input('WebhooksEmail', mssql.Bit, lrpEvent.webhooks.email ? 1 : 0)
                     .input('WebhooksDiscord', mssql.Bit, lrpEvent.webhooks.discord ? 1 : 0)
+                    .input('RegistrationFee', mssql.Numeric, lrpEvent.registrationFee.value)
                     
-                const eventResult = await eventRequest.query`INSERT INTO [Events].[Dat_Events] ([SystemID],[HostID],[ImageID],[OGCardID],[RegistrationFeeID],[EventLink],[Name],[Created],[EventStart],[EventEnd],[Visible],[Cancelled],[Location],[LocationWeb],[ExternalBooking],[IcInvitation],[FullDescription],[PromoDescription],[BunksAvailable],[AllowBookings],[OverflowQueue],[BookingsOpen],[WebhooksEmail],[WebhooksDiscord])
+                const eventResult = await eventRequest.query`INSERT INTO [Events].[Dat_Events] ([SystemID],[HostID],[ImageID],[OGCardID],[EventLink],[Name],[Created],[EventStart],[EventEnd],[Visible],[Cancelled],[Location],[LocationWeb],[ExternalBooking],[IcInvitation],[FullDescription],[PromoDescription],[BunksAvailable],[AllowBookings],[OverflowQueue],[BookingsOpen],[WebhooksEmail],[WebhooksDiscord],[RegistrationFee])
                 OUTPUT INSERTED.EventID 
-                SELECT SDS.[SystemID], SDH.[HostID], @ImageID, @OGCardID, @RegistrationFeeID, @EventLink, @Name, @Created, @EventStart, @EventEnd, @Visible, @Cancelled, @Location, @LocationWeb, @ExternalBooking, @IcInvitation, @FullDescription, @PromoDescription, @BunksAvailable, @AllowBookings, @OverflowQueue, @BookingsOpen, @WebhooksEmail, @WebhooksDiscord
+                SELECT SDS.[SystemID], SDH.[HostID], @ImageID, @OGCardID, @EventLink, @Name, @Created, @EventStart, @EventEnd, @Visible, @Cancelled, @Location, @LocationWeb, @ExternalBooking, @IcInvitation, @FullDescription, @PromoDescription, @BunksAvailable, @AllowBookings, @OverflowQueue, @BookingsOpen, @WebhooksEmail, @WebhooksDiscord, @RegistrationFee
                 FROM [Systems].[Dat_Hosts] SDH
                     LEFT JOIN [Systems].[Dat_Systems] SDS ON SDH.[SystemID] = SDS.[SystemID]
                 WHERE SDH.[Name] = @HostName`
                 console.log(`   ${lrpEvent.name} inserted`);
+                if (lrpEvent.registrationFee.paypalPaymentId){
+                    const registrationFeeRequest = new mssql.Request()
+                        .input('EventID', mssql.Int, eventResult.recordset[0].EventID)
+                        .input('feeValue', mssql.Numeric(18,2), lrpEvent.registrationFee.value)
+                        .input('amountPaid', mssql.Numeric(18,2), lrpEvent.registrationFee.amountPaid)
+                        .input('datePaid', mssql.DateTime, lrpEvent.registrationFee.datePaid)
+                        .input('paypalPaymentId', mssql.VarChar, lrpEvent.registrationFee.paypalPaymentId)
+                        .input('paypalPayer', mssql.VarChar, lrpEvent.registrationFee.paypalPayer)
+                        .input('paymentProviderFieldID', mssql.Int, paymentIdRef.recordset[0].PaymentProviderFieldID);
+                    const paymentId = await registrationFeeRequest.query`INSERT INTO [Payments].[Dat_Payments] (Value,Date,Payee) OUTPUT INSERTED.PaymentID VALUES (@amountPaid,@datePaid,@paypalPayer)`;
+                    registrationFeeRequest.input('PaymentID', mssql.Int,  paymentId.recordset[0].PaymentID);
+                    await registrationFeeRequest.query`INSERT INTO [Payments].[Lnk_Payment_Data] ([PaymentID],[PaymentProviderFieldID],[Value]) VALUES (@PaymentID,@paymentProviderFieldID,@paypalPaymentId)`
+                    await registrationFeeRequest.query`INSERT INTO [Payments].[Lnk_Event_Payment] ([EventID],[PaymentID]) VALUES (@EventID,@PaymentID)`
+                    console.log(`       Inserted registration payment: ${lrpEvent.registrationFee.paypalPaymentId}`)
+                }
                 
                 // try {
                 //     const eventLimitsRequest = new mssql.Request()

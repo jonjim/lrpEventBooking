@@ -38,7 +38,7 @@ module.exports = async function importEventBookings() {
                     OUTPUT INSERTED.BookingID
                     VALUES (@bookingMade,@paid,@payOnGate,@inQueue,@totalDue,@totalPaid,@displayBooking)`;
                 eventBookingRequest.input('BookingID', mssql.Int, eventBookingResult.recordset[0].BookingID);
-                if (eventBooking.originalUser){
+                if (eventBooking.originalUser != eventBooking.user && originalUserId.recordset[0].AccountID != userId.recordset[0].AccountID){
                     await eventBookingRequest.query`
                     INSERT INTO [Events].[Lnk_Account_Booking]
                     (AccountID,BookingID,[Date],FirstName,Surname,DisplayName)
@@ -65,6 +65,32 @@ module.exports = async function importEventBookings() {
 
                 console.log(`   Inserted event booking for ${eventBooking.event.name} - ${eventBooking.firstname} ${eventBooking.surname}`);
                 const eventBookingId = eventBookingResult.recordset[0].BookingID;
+
+                if (eventBooking.paid){
+                    const insertPaymentRequest = new mssql.Request()
+                        .input('BookingID', mssql.Int, eventBookingId)
+                        .input('TotalPaid', mssql.Numeric, eventBooking.totalPaid)
+                        .input('PaypalOrderId', mssql.VarChar, eventBooking.paypalOrderId)
+                        .input('PaypalPaymentId', mssql.VarChar, eventBooking.paypalPaymentId)
+                        .input('PaypalReferenceId', mssql.VarChar, eventBooking.paypalReferenceId)
+                        .input('PaypalPayer', mssql.VarChar, eventBooking.paypalPayer)
+                        .input('PaymentProvider', mssql.Int, eventBooking.paypalPaymentId ? 1 : 4)
+                        .input('BookingPaid', mssql.DateTime, eventBooking.bookingPaid)
+                        .input('AccountId', mssql.Int, userId?.recordset?.length > 0 ? userId.recordset[0].AccountID : null)
+                    const insertPaymentResponse = await insertPaymentRequest.query`
+                        INSERT INTO [Payments].[Dat_Payments] ([PaymentProviderID],[Value],[Date],[Payee])
+                        OUTPUT INSERTED.PaymentID
+                        VALUES (@PaymentProvider,@TotalPaid,@BookingPaid,@PaypalPayer)`
+                    insertPaymentRequest.input('PaymentID', mssql.Int, insertPaymentResponse.recordset[0].PaymentID)
+                    const insertPaymentBookingLink = await insertPaymentRequest.query`INSERT INTO [Payments].[Lnk_Booking_Payment] (BookingID,PaymentID) VALUES (@BookingID, @PaymentID)`
+                    const insertPaymentUserLink = await insertPaymentRequest.query`INSERT INTO [Payments].[Lnk_Payments_User] (AccountID,PaymentID) VALUES (@AccountID, @PaymentID)`
+                    const insertPaymentData = await insertPaymentRequest.query`
+                        INSERT INTO [Payments].[Lnk_Payment_Data] ([PaymentID],[PaymentProviderFieldID],[Value])
+                        VALUES 
+                        (@PaymentID,1,@PaypalOrderId),
+                        (@PaymentID,2,@PaypalPaymentId),
+                        (@PaymentID,3,@PaypalReferenceId)`
+                }
 
                 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 const dateArray = datesBetween(new Date(eventBooking.event.eventStart), new Date(eventBooking.event.eventEnd));
@@ -101,27 +127,27 @@ module.exports = async function importEventBookings() {
                             case 'player':
                                 ticketType = 'Player';
                                 break;
-                            case 'playerChild':
+                            case 'playerchild':
                                 ticketType = 'Player (Under 16)';
                                 break;
                             case 'monster':
                                 ticketType = 'Crew';
                                 break;
-                            case 'monsterChild':
+                            case 'monsterchild':
                                 ticketType = 'Crew (Under 16)';
                                 break;
                             case 'staff':
                                 ticketType = 'Staff';
                                 break;
-                            case 'playerBunk':
-                            case 'monsterBunk':
-                            case 'staffBunk':
+                            case 'playerbunk':
+                            case 'monsterbunk':
+                            case 'staffbunk':
                                 ticketType = 'Bunk';
                                 break;
-                            case 'mealTicket':
+                            case 'mealticket':
                                 ticketType = 'Meal';
                                 break;
-                            case 'mealTicketChild':
+                            case 'mealticketchild':
                                 ticketType = 'Meal (Under 16)';
                                 break;
                         }
