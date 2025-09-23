@@ -39,22 +39,22 @@ module.exports = async function importEvents() {
                 }
                 const imgInsert = lrpEvent.img?.url ? await insertImage(lrpEvent.img.url, lrpEvent.img.filename) : null;
                 const ogInsert = lrpEvent.ogCard?.url ? await insertImage(lrpEvent.ogCard.url, '') : null;
-                const registrationFeeRequest = new mssql.Request()
-                    .input('feeValue', mssql.Numeric(18,2), lrpEvent.registrationFee.value)
-                    .input('amountPaid', mssql.Numeric(18,2), lrpEvent.registrationFee.amountPaid)
-                    .input('datePaid', mssql.DateTime, lrpEvent.registrationFee.datePaid)
-                    .input('paypalPaymentId', mssql.VarChar, lrpEvent.registrationFee.paypalPaymentId)
-                    .input('paypalPayer', mssql.VarChar, lrpEvent.registrationFee.paypalPayer)
-                    .input('paymentProviderFieldID', mssql.Int, paymentIdRef.recordset[0].PaymentProviderFieldID);
-                const registrationFeeResult = await registrationFeeRequest.query`INSERT INTO [Events].[Dat_Registration_Fees] (feeValue,amountPaid,datePaid) OUTPUT INSERTED.RegistrationFeeID VALUES (@feeValue,@amountPaid,@datePaid)`
-                console.log(`   ${lrpEvent.name} registration fee inserted`);
+                // const registrationFeeRequest = new mssql.Request()
+                //     .input('feeValue', mssql.Numeric(18,2), lrpEvent.registrationFee.value)
+                //     .input('amountPaid', mssql.Numeric(18,2), lrpEvent.registrationFee.amountPaid)
+                //     .input('datePaid', mssql.DateTime, lrpEvent.registrationFee.datePaid)
+                //     .input('paypalPaymentId', mssql.VarChar, lrpEvent.registrationFee.paypalPaymentId)
+                //     .input('paypalPayer', mssql.VarChar, lrpEvent.registrationFee.paypalPayer)
+                //     .input('paymentProviderFieldID', mssql.Int, paymentIdRef.recordset[0].PaymentProviderFieldID);
+                // const registrationFeeResult = await registrationFeeRequest.query`INSERT INTO [Events].[Dat_Registration_Fees] (feeValue,amountPaid,datePaid) OUTPUT INSERTED.RegistrationFeeID VALUES (@feeValue,@amountPaid,@datePaid)`
+                // console.log(`   ${lrpEvent.name} registration fee inserted`);
 
 
                 const eventRequest = new mssql.Request()
                     .input('HostName', mssql.VarChar, lrpEvent.eventHost.name)
                     .input('ImageID', mssql.Int, imgInsert)
                     .input('OGCardId', mssql.Int, ogInsert)
-                    .input('RegistrationFeeId', mssql.Int, registrationFeeResult.recordset[0].id)
+                    // .input('RegistrationFeeId', mssql.Int, registrationFeeResult.recordset[0].id)
                     .input('EventLink', mssql.VarChar,Math.floor(Math.random() * (9999 - 1000) + 1000) + '-' + eventName)
                     .input('Name', mssql.VarChar, lrpEvent.name)
                     .input('Created', mssql.DateTime, lrpEvent.created)

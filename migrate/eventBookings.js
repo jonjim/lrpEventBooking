@@ -38,7 +38,7 @@ module.exports = async function importEventBookings() {
                     OUTPUT INSERTED.BookingID
                     VALUES (@bookingMade,@paid,@payOnGate,@inQueue,@totalDue,@totalPaid,@displayBooking)`;
                 eventBookingRequest.input('BookingID', mssql.Int, eventBookingResult.recordset[0].BookingID);
-                if (eventBooking.originalUser != eventBooking.user && originalUserId.recordset[0].AccountID != userId.recordset[0].AccountID){
+                if (eventBooking.originalUser._id != eventBooking.user._id){
                     await eventBookingRequest.query`
                     INSERT INTO [Events].[Lnk_Account_Booking]
                     (AccountID,BookingID,[Date],FirstName,Surname,DisplayName)

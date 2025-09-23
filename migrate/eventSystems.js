@@ -160,10 +160,22 @@ module.exports = async function importEventSystems() {
 
                             const fieldId = customFieldResult.recordset[0].CustomFieldID;
                             if (eventSystem.systemRef == 'lorienTrust') {
-                                if (field.name == 'characterName') lorienTrustFields.characterName = fieldId;
+                                if (field.name == 'characterName') {
+                                    lorienTrustFields.characterName = fieldId;
+                                    const displayFieldRequest = new mssql.Request()
+                                        .input('eventSystemId', mssql.Int, eventSystemId)
+                                        .input('fieldId', mssql.Int, fieldId)
+                                    await displayFieldRequest.query`INSERT INTO [Systems].[Lnk_Display_Fields] (SystemID,CustomFieldID) VALUES (@eventSystemId,@fieldId)`
+                                }
                                 if (field.name == 'characterSkills') lorienTrustFields.characterSkillsId = fieldId;
                                 if (field.name == 'occupationalSkills') lorienTrustFields.occupationalSkillsId = fieldId;
-                                if (field.name == 'faction') lorienTrustFields.faction = fieldId;
+                                if (field.name == 'faction') {
+                                    lorienTrustFields.faction = fieldId;
+                                    const displayFieldRequest = new mssql.Request()
+                                        .input('eventSystemId', mssql.Int, eventSystemId)
+                                        .input('fieldId', mssql.Int, fieldId)
+                                    await displayFieldRequest.query`INSERT INTO [Systems].[Lnk_Display_Fields] (SystemID,CustomFieldID) VALUES (@eventSystemId,@fieldId)`
+                                }
                                 if (field.name == 'playerId') lorienTrustFields.playerId = fieldId;
                                 if (field.name == 'refereeMarshalNumber') lorienTrustFields.refMarshal = fieldId;
                                 if (field.name == 'clawCompetency') lorienTrustFields.claw = fieldId;
@@ -173,7 +185,13 @@ module.exports = async function importEventSystems() {
                             }
 
                             if (eventSystem.systemRef == 'eldritchDays') {
-                                if (field.name == 'characterName') eldritchDaysFields.characterName = fieldId;
+                                if (field.name == 'characterName') {
+                                    eldritchDaysFields.characterName = fieldId;
+                                    const displayFieldRequest = new mssql.Request()
+                                        .input('eventSystemId', mssql.Int, eventSystemId)
+                                        .input('fieldId', mssql.Int, fieldId)
+                                    await displayFieldRequest.query`INSERT INTO [Systems].[Lnk_Display_Fields] (SystemID,CustomFieldID) VALUES (@eventSystemId,@fieldId)`
+                                }
                                 if (field.name == 'playerId') eldritchDaysFields.playerId = fieldId;
                                 if (field.name == 'marketing') eldritchDaysFields.marketing = fieldId;
                             }
@@ -189,7 +207,13 @@ module.exports = async function importEventSystems() {
                             }
 
                             if (eventSystem.systemRef == 'jaegerLarp') {
-                                if (field.name == 'characterName') jaegerFields.characterName = fieldId;
+                                if (field.name == 'characterName') {
+                                     jaegerFields.characterName = fieldId;
+                                     const displayFieldRequest = new mssql.Request()
+                                        .input('eventSystemId', mssql.Int, eventSystemId)
+                                        .input('fieldId', mssql.Int, fieldId)
+                                    await displayFieldRequest.query`INSERT INTO [Systems].[Lnk_Display_Fields] (SystemID,CustomFieldID) VALUES (@eventSystemId,@fieldId)`
+                                }
                                 if (field.name == 'module') {
                                     if (field.label == "module 1") jaegerFields.module1 = fieldId;
                                     if (field.label == "module 2") jaegerFields.module2 = fieldId;
