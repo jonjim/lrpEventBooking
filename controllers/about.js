@@ -23,6 +23,11 @@ module.exports.terms = async(req, res, next) => {
     res.render('about/terms', { title: 'Terms & Conditions', config: config[0] });
 };
 
+module.exports.appropriateUse = async(req, res, next) => {
+    const config = await siteConfig.find();
+    res.render('about/appropriateUse', { title: 'Appropriate Use Policy', config: config[0] });
+};
+
 module.exports.faq = async(req, res, next) => {
     const faq = await FAQ.find();
     res.render('about/faq', { title: `Frequently Asked Questions`, faq });

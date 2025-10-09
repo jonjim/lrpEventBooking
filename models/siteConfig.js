@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const siteConfigSchema = new mongoose.Schema({
     privacyPolicy: String,
     terms: String,
+    appropriateUse: String,
     techContactName: String,
     techContactEmail: String,
     paypalPercentage: Number,

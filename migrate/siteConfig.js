@@ -37,6 +37,7 @@ module.exports = async function importSiteConfig() {
         console.log('Importing site pages')
         await importPageContent('Terms & Conditions',config.terms);
         await importPageContent('Privacy Policy', config.privacyPolicy);
+        await importPageContent('Appropriate Use Policy', config.appropriateUse);
 
     }
     else{

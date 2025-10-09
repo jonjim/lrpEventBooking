@@ -12,6 +12,14 @@
                         <textarea class="form-control" name="privacyPolicy" id="privacyPolicy" cols="30" rows="2"><%= config.privacyPolicy %></textarea>
                     </div>
                 </div>
+                <div class="card shadow  py-3 px-3 mb-3">
+                    <div class="card-header bg-white">
+                        <h4>Appropriate Use Policy</h4>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" name="appropriateUse" id="appropriateUse" cols="30" rows="2"><%= config.appropriateUse %></textarea>
+                    </div>
+                </div>
             </div>
             <div class="col">
                 <div class="card shadow  py-3 px-3 mb-3">
@@ -24,8 +32,6 @@
                 </div>
                 <button type="submit" class="btn btn-success">Update</button>
             </div>
-
-
         </div>
     </form>
     <script src="/js/adminAbout.js"></script>

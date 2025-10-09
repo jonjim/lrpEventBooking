@@ -43,13 +43,7 @@ module.exports = async function importEventBookings() {
                     INSERT INTO [Events].[Lnk_Account_Booking]
                     (AccountID,BookingID,[Date],FirstName,Surname,DisplayName)
                     SELECT [AccountID], @BookingID, @bookingMade, [Firstname], [Surname], CONCAT([Firstname],' ',[Surname])
-                    FROM [Users].[Dat_Account] WHERE [AccountID]=@originalUserId
-                    
-                    INSERT INTO [Events].[Lnk_Event_Booking]
-                    (EventID,BookingID)
-                    SELECT EventID, @BookingID 
-                    FROM [Events].[Dat_Events]
-                    WHERE [Name]=@eventName`;
+                    FROM [Users].[Dat_Account] WHERE [AccountID]=@originalUserId`
                 }
 
                 await eventBookingRequest.query`

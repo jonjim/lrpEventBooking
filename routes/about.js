@@ -13,6 +13,9 @@ router.route('/privacy')
 router.route('/terms')
     .get(catchAsync(controller.terms))
 
+router.route('/appropriate-use-policy')
+    .get(catchAsync(controller.appropriateUse))
+
 router.route('/faq')
     .get(catchAsync(controller.faq))
 

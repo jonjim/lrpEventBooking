@@ -43,6 +43,7 @@ module.exports.policiesUpdate = async(req, res, next) => {
     const config = await siteConfig.find();
     config[0].privacyPolicy = req.body.privacyPolicy;
     config[0].terms = req.body.terms;
+    config[0].appropriateUse = req.body.appropriateUse;
     config[0].save();
     req.flash('success', 'Site policies have been updated');
     res.render('admin/about/policies', { title: 'Edit Site Policies', config: config[0] });
