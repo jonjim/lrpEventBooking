@@ -48,16 +48,17 @@
                         <div>
                           <input type="text" class="form-control" name="catering[menu][<%= dayNames[new Date(d).getDay()] %>][meals][<%= meal %>][name]" placeholder="Breakfast, Lunch, Dinner, etc..." value="<%= catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].name %>">
                         </div>
-                        <div id="options<%= meal %>" class="ms-4">
-                          <% for (option of catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].options){ %>
-                            <% let optionId = Date.now().toString(36) + Math.random().toString(36).substr(2); %>
-                            <div id="<%= optionId %>" class="input-group">
-                              <a href="#" class="link-danger input-group-text" onclick="delMealOption('options<%=meal %>','<%= optionId %>')"><i class="bi bi-trash3-fill"></i></a>
-                              <input class="form-control form-control-sm" name="catering[menu][<%= dayNames[new Date(d).getDay()] %>][meals][<%= meal %>][options]" placeholder="Food option (V,GF)" value="<%= option %>">
-                            </div>
-                            
-                          <% } %>
-                        </div>
+                        <% if (catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].options) { %>
+                          <div id="options<%= meal %>" class="ms-4">
+                            <% for (option of catering.menu[dayNames[new Date(d).getDay()]]?.meals[meal].options){ %>
+                              <% let optionId = Date.now().toString(36) + Math.random().toString(36).substr(2); %>
+                              <div id="<%= optionId %>" class="input-group">
+                                <a href="#" class="link-danger input-group-text" onclick="delMealOption('options<%=meal %>','<%= optionId %>')"><i class="bi bi-trash3-fill"></i></a>
+                                <input class="form-control form-control-sm" name="catering[menu][<%= dayNames[new Date(d).getDay()] %>][meals][<%= meal %>][options]" placeholder="Food option (V,GF)" value="<%= option %>">
+                              </div>
+                            <% } %>
+                          </div>
+                        <% } %>
                         <div class="row">
                           <div class="col">
                             <a href="#" class="link-dark mt-0" onclick="addMealOption('options<%= meal %>','<%=  dayNames[new Date(d).getDay()] %>','<%= meal %>')">Add Meal Option</a>
