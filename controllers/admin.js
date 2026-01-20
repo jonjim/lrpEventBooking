@@ -202,7 +202,8 @@ module.exports.eventSystemDelImg = async(req, res, next) => {
 
 module.exports.eventSystemUpdate = async (req, res, next) => {
     req.body.active = typeof req.body.active != 'undefined' ? req.body.active == 'on' ? true : false : false;
-    if (req.body.customTools != '') req.body.customTools = req.body.customTools.split(',');
+    console.log(req.body)
+    if (req.body.customTools && req.body.customTools != '') req.body.customTools = req.body.customTools.split(',');
     else req.body.customTools = undefined;
     const eventSystem = await EventSystems.findByIdAndUpdate(req.params.id, {...req.body }, { new: true });
     if (req.file) {
