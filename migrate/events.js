@@ -30,9 +30,9 @@ module.exports = async function importEvents() {
     if (events) {
         for (lrpEvent of events) {
             try {
-                const eventName = lrpEvent.name.toLowerCase().replace(/[^A-Z0-9]+/ig, "-");
+                const eventName = lrpEvent.name.trim().toLowerCase().replace(/[^A-Z0-9]+/ig, "-");
                 //const systemLookup = await mssql.query`SELECT id, name FROM event_systems WHERE legacyId=${event.eventSystem}`;
-                const eventLookup = await mssql.query`SELECT * FROM [Events].[Dat_Events] WHERE EventLink='${eventName}'`;
+                const eventLookup = await mssql.query`SELECT * FROM [Events].[Dat_Events] WHERE EventLink LIKE CONCAT('%-','${eventName}')`;
                 if (eventLookup?.recordset?.length > 0) {
                     console.log(`   ${lrpEvent.name} already exists`);
                     continue;
@@ -56,7 +56,7 @@ module.exports = async function importEvents() {
                     .input('OGCardId', mssql.Int, ogInsert)
                     // .input('RegistrationFeeId', mssql.Int, registrationFeeResult.recordset[0].id)
                     .input('EventLink', mssql.VarChar,Math.floor(Math.random() * (9999 - 1000) + 1000) + '-' + eventName)
-                    .input('Name', mssql.VarChar, lrpEvent.name)
+                    .input('Name', mssql.VarChar, lrpEvent.name.trim())
                     .input('Created', mssql.DateTime, lrpEvent.created)
                     .input('EventStart', mssql.DateTime, lrpEvent.eventStart)
                     .input('EventEnd', mssql.DateTime, lrpEvent.eventEnd)
