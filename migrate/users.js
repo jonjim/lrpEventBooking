@@ -25,20 +25,26 @@ module.exports = async function importUsers(systemFields) {
                     .input('displayBookings', mssql.Bit, user.displayBookings ? 1 : 0)
                     .input('dateCreated', mssql.DateTime, user.dateCreated)
                     .input('salt', mssql.Text, user.salt)
-                    .input('hash', mssql.Text, user.hash);
-                const emergencyContactRequest = new mssql.Request()
+                    .input('hash', mssql.Text, user.hash)
                     .input('emergencyContactName', mssql.VarChar, user.emergencyContactName)
                     .input('emergencyContactNumber', mssql.VarChar, user.emergencyContactNumber)
                     .input('emergencyContactRelation', mssql.VarChar, user.emergencyContactRelation);
+                
+                regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
-                const userResponse = await userRequest.query`INSERT INTO [Users].[Dat_Account] (email,firstname,surname,dob,medicalInfo,allergyDietary,verificationCode,resetPassword,verified,authString,displayBookings,dateCreated,salt,hash) OUTPUT INSERTED.AccountID VALUES (@email,@firstname,@surname,@dob,@medicalInfo,@allergyDietary,@verificationCode,@resetPassword,@verified,@authString,@displayBookings,@dateCreated,@salt,@hash)`;
+                if (!regexp.test(user.username)){
+                    console.error("   Invalid E-mail Address: " + user.username)
+                    continue;
+                }
+
+                const userResponse = await userRequest.query`INSERT INTO [Users].[Dat_Account] (email,firstname,surname,dob,medicalInfo,allergyDietary,EmergencyContactName,EmergencyContactInfo,EmergencyContactRelation,verificationCode,resetPassword,verified,authString,displayBookings,dateCreated,salt,hash) OUTPUT INSERTED.AccountID VALUES (@email,@firstname,@surname,@dob,@medicalInfo,@allergyDietary,@emergencyContactName, @emergencyContactNumber, @emergencyContactRelation, @verificationCode,@resetPassword,@verified,@authString,@displayBookings,@dateCreated,@salt,@hash)`;
                 userId = userResponse.recordset[0].AccountID;
                 console.log("   Inserted user: " + user.username);
                 
-                if (user.emergencyContactName){
-                    emergencyContactRequest.input('userId', mssql.Int,userId)
-                    await emergencyContactRequest.query`INSERT INTO [Users].[Dat_Emergency_Contacts] ([AccountID],[Name],[Details],[Relation]) VALUES (@userId, @emergencyContactName, @emergencyContactNumber, @emergencyContactRelation)`
-                }
+                // if (user.emergencyContactName){
+                //     emergencyContactRequest.input('userId', mssql.Int,userId)
+                //     await emergencyContactRequest.query`INSERT INTO [Users].[Dat_Emergency_Contacts] ([AccountID],[Name],[Details],[Relation]) VALUES (@userId, @emergencyContactName, @emergencyContactNumber, @emergencyContactRelation)`
+                // }
 
                 if (user.role === 'admin' || user.role === 'superAdmin') {
                     const role = user.role ==='admin' ? 'Admin' : 'Super Admin';

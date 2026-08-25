@@ -4,7 +4,13 @@ if (process.env.NODE_ENV !== "production") {
 const { useAzureMonitor, AzureMonitorOpenTelemetryOptions } = require('@azure/monitor-opentelemetry');
 const options = {
   azureMonitorExporterOptions: {
-    connectionString: process.env.APP_INSIGHTS
+    connectionString: process.env.APP_INSIGHTS,
+    samplingRatio: 1,
+    instrumentationOptions: {
+    // Instrumentations generating traces
+    http: { enabled: true },
+    mongoDb: { enabled: true }
+  },
   }
 };
 useAzureMonitor(options);
