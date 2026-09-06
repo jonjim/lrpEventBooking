@@ -175,6 +175,13 @@ module.exports.createEventBooking = async(req, res, next) => {
 
     let event = await Event.findById(req.params.id,{strict:false}).populate('eventHost').populate({path: 'eventHost', populate:{ path: 'eventSystem'}});
 
+    if (tickets.some(x => x.ticketType === 'player')){
+        var characterLookup = await systemCheck(req,res, event.eventHost.eventSystem, user);
+        if (!characterLookup){
+            return res.redirect(`/events/${event._id}/book`)
+        }
+    }
+
     const booking = await new EventBooking({
         event: req.params.id,
         totalDue: tickets.reduce((acc, t) => acc + t.cost, 0),
@@ -195,6 +202,10 @@ module.exports.createEventBooking = async(req, res, next) => {
         booking.paid = (booking.bookingType == 'player' && event.playerSpaces > 0) || (booking.bookingType == 'monster' && event.monsterSpaces > 0) || (booking.bookingType == 'staff' && event.staffSpaces > 0) ? true : false;
         booking.displayBooking = user.displayBookings;
         booking.bookingPaid = Date.now()
+    }
+
+    if (event.bookingNote){
+        booking.bookingNote = req.body.bookingNote
     }
 
     await booking.save();

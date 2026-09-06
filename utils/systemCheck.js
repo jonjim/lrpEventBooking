@@ -6,29 +6,33 @@ async function systemCheck(req, res, system, user) {
     if (typeof systemData?.customFields === 'undefined') {
         if (typeof systemData?.character?.characterName === 'undefined' || systemData?.character?.characterName === '') {
             req.flash('error', `${prefix} ${system.name} Character Name is required to play this event`);
-            req.session.returnTo = req.originalUrl;
-            return res.redirect(`/account?system=${system.systemRef}`)
+            // req.session.returnTo = req.originalUrl;
+            // return res.redirect(`/account?system=${system.systemRef}`)
+            return false;
         }
         else return true;
     }
     for (field of systemData.customFields.filter(a => a.required)) {
         if (typeof systemData?.character?.characterName === 'undefined' || systemData?.character?.characterName === '') {
             req.flash('error', `${prefix} ${system.name} Character Name is required to play this event`);
-            req.session.returnTo = req.originalUrl;
-            return res.redirect(`/account?system=${system.systemRef}`)
+            // req.session.returnTo = req.originalUrl;
+            // return res.redirect(`/account?system=${system.systemRef}`)
+            return false;
         }
         if (field.section === 'player') {
             if (typeof systemData?.[field.name] === 'undefined' || systemData?.[field.name] === '') {
                 req.flash('error', `${system.name} ${field.label} is required to play this event`);
-                req.session.returnTo = req.originalUrl;
-                return res.redirect(`/account?system=${system.systemRef}`)
+                // req.session.returnTo = req.originalUrl;
+                // return res.redirect(`/account?system=${system.systemRef}`)
+                return false;
             }
         }
         else if (field.section === 'character') {
             if (typeof systemData?.character?.[field.name] === 'undefined' || systemData?.character?.[field.name] === '') {
                 req.flash('error', `${system.name} ${field.label} is required to play this event`);
-                req.session.returnTo = req.originalUrl;
-                return res.redirect(`/account?system=${system.systemRef}`)
+                // req.session.returnTo = req.originalUrl;
+                // return res.redirect(`/account?system=${system.systemRef}`)
+                return false;
             }
         }
     }
@@ -49,13 +53,15 @@ async function attendeeUpdate(eventSystem,eventBooking) {
         const systemData = userRecord[systemRecord.systemRef];
         //const characterData = eventBooking.user[eventSystem.systemRef]; 
         attendeeData.user = eventBooking.user;
-        attendeeData.icName = systemData.character.characterName;
-        if (typeof eventSystem.customFields !== 'undefined') {
-            for (field of eventSystem.customFields.filter(a => a.display)) {
-                if (field.section === 'player')
-                    attendeeData[field.name] = systemData[field.name];
-                else if (field.section === 'character')
-                    attendeeData[field.name] = systemData.character[field.name];
+        if (systemData?.character){
+            attendeeData.icName = systemData.character?.characterName ?? '';
+            if (typeof eventSystem.customFields !== 'undefined') {
+                for (field of eventSystem.customFields.filter(a => a.display)) {
+                    if (field.section === 'player')
+                        attendeeData[field.name] = systemData[field.name];
+                    else if (field.section === 'character')
+                        attendeeData[field.name] = systemData.character[field.name];
+                }
             }
         }
     }

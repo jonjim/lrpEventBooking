@@ -95,7 +95,7 @@
                     <p><a href="#" onclick="document.getElementById('deleteRebook').submit()" class="alert-link">Click here</a> to delete this booking and re-book.</p>
                     <form id="deleteRebook" action="/events/booking/<%= eventBooking._id %>?_method=DELETE&rebook=true" method="POST"></form>
                   </div>
-                  <% } else { %>
+                  <% } else if (eventBooking.payOnGate || eventBooking.inQueue || !((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff'))) { %>
                   <p id="result-message"></p>
                   <div id="paypal-button-container"></div>
                   <% } %>

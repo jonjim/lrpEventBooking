@@ -50,6 +50,12 @@
                                     </tr>
                                     <% }} %>
                                 <% } %>
+								<% if (eventBooking.bookingNote) { %> 
+									<tr>
+										<td class="fw-bold">Booking Note</td>
+										<td><%= eventBooking.bookingNote %></td>
+									</tr>
+								<% } %>
 								<tr class="border-top">
 									<td class="fw-bold"><br/>Date Booked</td>
 									<td><br/><%= dateOutput(eventBooking.bookingMade) %> <%= timeOutput(eventBooking.bookingMade) %></td>

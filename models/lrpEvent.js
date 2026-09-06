@@ -65,6 +65,8 @@ const lrpEventSchema = new mongoose.Schema({
     promoDescription: String,
     bunksAvailable: Boolean,
     allowBookings: Boolean,
+    bookingNote: Boolean,
+    bookingNoteLabel: String,
     overflowQueue: {
         type: Boolean,
         default: true

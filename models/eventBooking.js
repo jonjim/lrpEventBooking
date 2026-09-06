@@ -56,7 +56,7 @@ const eventBookingSchema = new mongoose.Schema({
     playerId: Number,
     firstname: String,
     surname: String,
-    note: string
+    bookingNote: String
 }, {
     virtuals: {
         bookingType: {
