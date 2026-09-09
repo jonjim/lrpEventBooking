@@ -151,6 +151,20 @@ module.exports.updateEvent = async(req, res, next) => {
     res.redirect(`/events/${req.params.id}`)
 }
 
+module.exports.discordShare = async(req,res,next) => {
+    const { id } = req.params;
+    const event = await Event.findById(req.params.id).populate('eventTickets').populate('eventHost').populate({ path: 'eventHost', populate: { path: 'eventSystem' } })
+
+    if (res.locals.config.webhooks?.discord)
+        webhooks.discordWebhook(res, res.locals.config.webhooks.discord, event)
+    if (event.eventHost.webhooks?.discord)
+        webhooks.discordWebhook(res, updatedEvent.eventHost.webhooks.discord, event)
+    if (event.eventHost.eventSystem.webhooks?.discord)
+        webhooks.discordWebhook(res, updatedEvent.eventHost.eventSystem.webhooks.discord, event)
+    req.flash('success', `${event.name} shared to discord`);
+    res.redirect(`/events/${req.params.id}`)
+}
+
 module.exports.createEventTicket = async(req, res, next) => {
     const event = await Event.findById(req.params.id)
     res.render('admin/events/createEventTicket', { title: `Create Ticket for: ${event.name}`, event });

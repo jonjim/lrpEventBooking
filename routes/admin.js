@@ -88,6 +88,9 @@ router.route('/events/new')
 router.route('/events/:id/manage')
     .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.manageEvent))
 
+router.route('/events/:id/share')
+    .get(isLoggedIn, isEventHost, catchAsync(adminEventsController.discordShare))
+
 router.route('/events/:id/catering')
     .post(isLoggedIn, isEventHost, catchAsync(adminEventsController.catering))
 

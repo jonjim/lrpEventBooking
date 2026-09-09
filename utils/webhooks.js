@@ -21,8 +21,8 @@ module.exports.discordWebhook = async (res, webhook, lrpEvent) => {
                 description: new turndownService().turndown(lrpEvent.promoDescription),
                 fields: [
                     {
-                        name: `Event Date${new Date(lrpEvent.eventStart).toLocaleDateString() != new Date(lrpEvent.eventEnd).toLocaleDateString() ? 's' : ''}`,
-                        value: `${new Date(lrpEvent.eventStart).toLocaleDateString()}${new Date(lrpEvent.eventStart).toLocaleDateString() != new Date(lrpEvent.eventEnd).toLocaleDateString() ? ` - ${new Date(lrpEvent.eventEnd).toLocaleDateString()}` : ''}`,
+                        name: `Event Date${new Date(lrpEvent.eventStart).toLocaleDateString("en-GB") != new Date(lrpEvent.eventEnd).toLocaleDateString("en-GB") ? 's' : ''}`,
+                        value: `${new Date(lrpEvent.eventStart).toLocaleDateString("en-GB")}${new Date(lrpEvent.eventStart).toLocaleDateString("en-GB") != new Date(lrpEvent.eventEnd).toLocaleDateString("en-GB") ? ` - ${new Date(lrpEvent.eventEnd).toLocaleDateString("en-GB")}` : ''}`,
                         inline: true
                     },
                     {

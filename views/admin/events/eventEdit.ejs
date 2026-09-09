@@ -80,6 +80,11 @@ function toTitleCase(str) {
                   </div>
               </div>
               </div>
+            <% if (['superAdmin'].includes(currentUser.role)){ %>
+              <div class="mb-3">
+                <a href="/admin/events/<%= event._id %>/share">Admin Only: Share to Discord</a>
+              </div>
+              <% } %>
             <% if (['superAdmin'].includes(currentUser.role) && config.hostingCharge > 0){ %>
                 <div class="mb-3 row">
                   <div class="col-6 pt-2"><label for="registrationFee">Registration Fee</label></div>
