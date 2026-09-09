@@ -59,7 +59,7 @@
               <div class="mb-3 input-group" title="Discord Webhook">
                 <span class="input-group-text"><i class="bi bi-discord me-2"></i> Webhook</span>
                 <input type="url" name="webhooks[discord]" id="discordWebhook" value="<%= eventSystem.webhooks?.discord %>" class="form-control">
-                <div class="form-text">Link the website into a Discord Webhook to automatically post event adverts.</div>
+                <div class="form-text">Link the website into a Discord Webhook to automatically post event adverts. <a href="#" class="text-decoration-underline text-primary pe-auto" data-bs-toggle="modal" data-bs-target="#discordModal">Learn how to setup a Discord Webhook</a></div>
               </div>
               <% if (currentUser.role == 'superAdmin') { %>
               <div class="mb-3">
@@ -462,3 +462,4 @@
   </div>
 </div>
 <script src="/js/adminEventSystem.js"></script>
+<%- include('../modals/discord') %>
