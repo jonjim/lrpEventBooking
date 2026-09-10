@@ -158,9 +158,9 @@ module.exports.discordShare = async(req,res,next) => {
     if (res.locals.config.webhooks?.discord)
         webhooks.discordWebhook(res, res.locals.config.webhooks.discord, event)
     if (event.eventHost.webhooks?.discord)
-        webhooks.discordWebhook(res, updatedEvent.eventHost.webhooks.discord, event)
+        webhooks.discordWebhook(res, event.eventHost.webhooks.discord, event)
     if (event.eventHost.eventSystem.webhooks?.discord)
-        webhooks.discordWebhook(res, updatedEvent.eventHost.eventSystem.webhooks.discord, event)
+        webhooks.discordWebhook(res, event.eventHost.eventSystem.webhooks.discord, event)
     req.flash('success', `${event.name} shared to discord`);
     res.redirect(`/events/${req.params.id}`)
 }
@@ -232,10 +232,13 @@ module.exports.deleteBooking = async(req, res, next) => {
 }
 
 module.exports.addToQueue = async(req, res, next) => {
-    const booking = await eventBooking.findById(req.params.id).populate('event').populate({ path: 'event', populate: { path: 'eventHost' } });
+    const booking = await eventBooking.findById(req.params.id).populate('event').populate('eventTickets').populate('user').populate({ path: 'event', populate: { path: 'eventHost' } });
     // if ((['eventHost'].includes(req.user.role) && req.user.eventHosts.filter(a => a._id.equals(eventBooking.event.eventHost._id)).length > 0) || ['eventHost', 'admin', 'superAdmin'].includes(req.user.role)) {
     if (isEventAdmin(req.user, booking.event.eventHost._id, booking.event.eventHost.eventSystem._id)){
         await eventBooking.findByIdAndUpdate(req.params.id, { inQueue: true });
+        res.render('email/eventBooking', { booking: booking, title: 'Yay! We look forward to seeing you at this event!' }, async function(err, str) {
+            emailService.sendEmail(booking.user.username, `Your booking for ${booking.event.name} has been confirmed, pending payment`, str);
+        })
         res.redirect(`/admin/events/${booking.event._id}/manage`);
     } else {
         req.flash('error', `You don't have permission to delete that booking!`);
