@@ -33,7 +33,7 @@
                 <% } else { %>
                   <% if (new Date(eventBooking.event.eventEnd) < Date.now()) { %>
                     <i title="Event missed. This event is no longer available to book" class="bi bi-x-circle text-danger display-4"></i><br><span class="text-danger">Event missed</span>
-                  <% } else if (eventBooking.payOnGate || eventBooking.inQueue || !((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff'))) { %>
+                  <% } else if (eventBooking.payOnGate || eventBooking.inQueue || !((eventBooking.event.playerSpaces <= 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces <= 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces <= 0 && eventBooking.bookingType == 'staff'))) { %>
                     <a class="link-danger" href="/account/pay/<%= eventBooking._id %>"><i title="Payment Due" class="bi bi-exclamation-circle text-danger display-4"></i><br>Pay Now</a></span>
                   <% } %>
                 <% }%>

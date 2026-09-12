@@ -143,7 +143,7 @@
 							<form id="formCancel" action="/admin/bookings/<%= eventBooking._id %>/cancel" method="POST"></form>
 							<form id="formQueueAdd" action="/admin/bookings/<%= eventBooking._id %>/queue" method="POST"></form>
 							<form id="formQueueDel" action="/admin/bookings/<%= eventBooking._id %>/queue?_method=DELETE" method="POST"></form>
-							<% if (eventBooking.inQueue || (!eventBooking.paid && !((eventBooking.event.playerSpaces == 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces == 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces == 0 && eventBooking.bookingType == 'staff')))) { %>
+							<% if (eventBooking.inQueue || (!eventBooking.paid && !((eventBooking.event.playerSpaces <= 0 && eventBooking.bookingType == 'player') || (eventBooking.event.monsterSpaces <= 0 && eventBooking.bookingType == 'monster') || (eventBooking.event.staffSpaces <= 0 && eventBooking.bookingType == 'staff')))) { %>
 							<button id="btnPayCash" title="For marking a payment as recieved by any other means" class="btn btn-outline-success"><i class="bi bi-cash"></i> Pay by Cash</button>
 							<button id="btnPayGate" title="This method still allows a player to pay via PayPal" class="btn btn-outline-success"><i class="bi bi-door-open-fill"></i> Pay On Gate</button>
 							<% } else if(!eventBooking.paid && !eventBooking.payOnGate && eventBooking.event.overflowQueue) { %>

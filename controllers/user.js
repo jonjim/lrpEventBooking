@@ -66,16 +66,27 @@ module.exports.payEventBooking = async(req, res, next) => {
     const eventBooking = await EventBooking.findById(req.params.id).populate('event').populate({ path: 'event', populate: { path: 'eventHost' } }).populate('eventTickets').populate('user');
     switch (eventBooking.bookingType) {
         case 'player':
-            if (eventBooking.event.playerSpaces === 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) return res.render('events/full', { title: 'No spaces available', eventBooking })
+            if (eventBooking.event.playerSpaces <= 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) {
+                req.flash('error', 'Your booking is in a queue!');
+                return res.redirect(`/events/${eventBooking.event._id}`)
+                //return res.render('events/full', { title: 'No spaces available', event: eventBooking.event })
+            }
             break;
         case 'monster':
-            if (eventBooking.event.monsterSpaces === 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) return res.render('events/full', { title: 'No spaces available', eventBooking })
+            if (eventBooking.event.monsterSpaces <= 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) {
+                req.flash('error', 'Your booking is in a queue!');
+                return res.redirect(`/events/${eventBooking.event._id}`)
+                //return res.render('events/full', { title: 'No spaces available', event: eventBooking.event })
+            }
             break;
         case 'staff':
-            if (eventBooking.event.staffSpaces === 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false) return res.render('events/full', { title: 'No spaces available', eventBooking })
+            if (eventBooking.event.staffSpaces <= 0 && eventBooking.payOnGate == false && eventBooking.inQueue == false){
+                req.flash('error', 'Your booking is in a queue!');
+                return res.redirect(`/events/${eventBooking.event._id}`)
+                //return res.render('events/full', { title: 'No spaces available', event: eventBooking.event })
+            } 
             break;
     }
-    console.log()
     if (eventBooking.paid && eventBooking.totalDue == eventBooking.totalPaid) {
         req.flash('error', `Your event booking for ${ eventBooking.event.name } has already been fully paid`);
         return res.redirect('/account/bookings');

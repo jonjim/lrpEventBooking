@@ -247,7 +247,7 @@ return str.replace(/\w\S*/g, function(txt){
       </div>
     </div>
     <div id="bookinglist" class="row">
-      <% if (event.limits.playerLimit > 0){ %>
+      <% if (event.limits.playerLimit > 0 || event.playerSpaces < 0){ %>
       <div class="col">
         <h5 class="text-center">Player Bookings</h5>
         <div class="progress">
@@ -255,8 +255,11 @@ return str.replace(/\w\S*/g, function(txt){
           <div title="Breakeven at <%= breakevenPlayers %> players" class="progress-bar-marker" role="progressbar" style="width: <%= ((100 * breakevenPlayers) / event.limits.playerLimit) - (100 * (event.limits.playerLimit - event.playerSpaces) / event.limits.playerLimit)   %>%" aria-valuenow="46.573611111111106" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <p class="text-center lead mb-0">
-          <%= event.limits.playerLimit - event.playerSpaces %> /
-          <%= event.limits.playerLimit %>
+          <%
+          const queued = eventBookings.filter(x => x.inQueue === true && !x.paid && !x.payOnGate && x.bookingType == 'player').length
+          %>
+          
+          <%= event.limits.playerLimit - event.playerSpaces %> <% if (queued > 0) { %>(+<%= queued %>)<% }%> / <%= event.limits.playerLimit %>
         </p>
         <% if (event.limits.playerBunkLimit > 0) { %>
         <p class="text-center small">(Bunks:

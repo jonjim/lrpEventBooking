@@ -8,8 +8,8 @@
           <div class="card-body">
             <div class="img align-middle text-center ms-2">
               <% if (eventBooking.event.img.url || eventBooking.event.eventHost.img.url) { %>
-                <img id="eventImg" <% if (eventBooking.event.img.url) {%> aria-label="event-logo" <% } %> title="Hosted By <%= eventBooking.event.eventHost.name %>" class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img.url : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
-                <% if (eventBooking.event.img.url) { %><img style="left:65px" id="hostLogo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" title="Hosted By <%= event.eventHost.name %>" alt="">
+                <img id="eventImg" <% if (eventBooking.event.img.url) { %> aria-label="event-logo" <% } %> title="Hosted By <%= eventBooking.event.eventHost.name %>" class="rounded event-logo" src="<%= typeof eventBooking.event.img.url === 'undefined' ? eventBooking.event.eventHost.img.url : eventBooking.event.imgThumbnail %>" class="img-fluid rounded-start py-3 px-3" alt="...">
+                <% if (eventBooking.event.img.url) { %><img style="left:65px" id="hostLogo" src="<%= eventBooking.event.eventHost.img.url %>" class="host-logo-fade" title="Hosted By <%= eventBooking.event.eventHost.name %>" alt="">
                 <% } %>
                 <% } %>
             </div>
