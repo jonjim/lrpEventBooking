@@ -84,6 +84,14 @@ module.exports = async function importEventBookings() {
                         (@PaymentID,1,@PaypalOrderId),
                         (@PaymentID,2,@PaypalPaymentId),
                         (@PaymentID,3,@PaypalReferenceId)`
+                    const insertOrganiserLink = await insertPaymentRequest.query`INSERT INTO [Payments].[Lnk_Payment_Organiser] ([PaymentId], [OrganiserID])
+                        SELECT
+                            @PaymentID,
+                            eDE.[OrganiserID]
+                        FROM [Events].[Lnk_Event_Booking] eLEB
+                        INNER JOIN [Events].[Dat_Events] eDE
+                            ON eLEB.[EventID] = eDE.[EventID]
+                        WHERE eLEB.[BookingID] = @BookingID;`
                 }
 
                 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
