@@ -78,8 +78,9 @@ module.exports = async function importEventSystems() {
                     .input('systemRef', mssql.VarChar, eventSystem.systemRef)
                     .input('active', mssql.Bit, eventSystem.active ? 1 : 0)
                     .input('sanctioningFee', mssql.Float, eventSystem.sanctioningFee)
-                    .input('webhookDiscord', mssql.VarChar, eventSystem.webhooks.discord);
-                const result = await request.query`INSERT INTO [Systems].[Dat_Systems] (Name, Description, ImageId, Website, Facebook, Twitter, Instagram, Discord,Tiktok,Whatsapp,Snapchat,Terms,SystemRef,Active,SanctioningFee,WebhookDiscord) OUTPUT INSERTED.SystemID VALUES (@name,@description,@imgId,@website,@facebook,@twitter,@instagram,@discord,@tiktok,@whatsapp,@snapchat,@terms,@systemRef,@active,@sanctioningFee,@webhookDiscord)`;
+                    .input('webhookDiscord', mssql.VarChar, eventSystem.webhooks.discord)
+                    .input('visible', mssql.Bit, eventSystem.active ? 1 : 0);
+                const result = await request.query`INSERT INTO [Systems].[Dat_Systems] (Name, Description, ImageId, Website, Facebook, Twitter, Instagram, Discord,Tiktok,Whatsapp,Snapchat,Terms,SystemRef,Active,SanctioningFee,WebhookDiscord,Visible) OUTPUT INSERTED.SystemID VALUES (@name,@description,@imgId,@website,@facebook,@twitter,@instagram,@discord,@tiktok,@whatsapp,@snapchat,@terms,@systemRef,@active,@sanctioningFee,@webhookDiscord,@Visible)`;
                 const eventSystemId = result.recordset[0].SystemID;
                 console.log("   Inserted Event System " + eventSystem.name);
                 eventSystem.customFields.push({

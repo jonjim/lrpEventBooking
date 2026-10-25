@@ -75,24 +75,46 @@ module.exports = async function importEvents() {
                     .input('WebhooksEmail', mssql.Bit, lrpEvent.webhooks.email ? 1 : 0)
                     .input('WebhooksDiscord', mssql.Bit, lrpEvent.webhooks.discord ? 1 : 0)
                     .input('RegistrationFee', mssql.Numeric, lrpEvent.registrationFee.value)
+                    .input('ServiceCharge', mssql.Bit, 0)
                     
-                const eventResult = await eventRequest.query`INSERT INTO [Events].[Dat_Events] ([SystemID],[HostID],[ImageID],[OGCardID],[EventLink],[Name],[Created],[EventStart],[EventEnd],[Visible],[Cancelled],[Location],[LocationWeb],[ExternalBooking],[IcInvitation],[FullDescription],[PromoDescription],[BunksAvailable],[AllowBookings],[OverflowQueue],[BookingsOpen],[WebhooksEmail],[WebhooksDiscord],[RegistrationFee])
+                const eventResult = await eventRequest.query`INSERT INTO [Events].[Dat_Events] ([SystemID],[HostID],[ImageID],[OGCardID],[EventLink],[Name],[Created],[EventStart],[EventEnd],[Visible],[Cancelled],[Location],[LocationWeb],[ExternalBooking],[IcInvitation],[FullDescription],[PromoDescription],[BunksAvailable],[AllowBookings],[OverflowQueue],[BookingsOpen],[WebhooksEmail],[WebhooksDiscord],[RegistrationFee],[ServiceCharge])
                 OUTPUT INSERTED.EventID 
-                SELECT SDS.[SystemID], SDH.[HostID], @ImageID, @OGCardID, @EventLink, @Name, @Created, @EventStart, @EventEnd, @Visible, @Cancelled, @Location, @LocationWeb, @ExternalBooking, @IcInvitation, @FullDescription, @PromoDescription, @BunksAvailable, @AllowBookings, @OverflowQueue, @BookingsOpen, @WebhooksEmail, @WebhooksDiscord, @RegistrationFee
+                SELECT SDS.[SystemID], SDH.[HostID], @ImageID, @OGCardID, @EventLink, @Name, @Created, @EventStart, @EventEnd, @Visible, @Cancelled, @Location, @LocationWeb, @ExternalBooking, @IcInvitation, @FullDescription, @PromoDescription, @BunksAvailable, @AllowBookings, @OverflowQueue, @BookingsOpen, @WebhooksEmail, @WebhooksDiscord, @RegistrationFee, @ServiceCharge
                 FROM [Systems].[Dat_Hosts] SDH
                     LEFT JOIN [Systems].[Dat_Systems] SDS ON SDH.[SystemID] = SDS.[SystemID]
                 WHERE SDH.[Name] = @HostName`
                 console.log(`   ${lrpEvent.name} inserted`);
+
+                const limitRequest = new mssql.Request()
+                    .input('EventID', mssql.Int, eventResult.recordset[0].EventID)
+                    .input('playerLimit', mssql.Int, lrpEvent.limits.playerLimit)
+                    .input('crewLimit', mssql.Int, lrpEvent.limits.monsterLimit)
+                    .input('staffLimit', mssql.Int, lrpEvent.limits.staffLimit)
+                await limitRequest.query`INSERT INTO [Events].[Dat_Limits] ([EventID],[TicketGroupID],[Value])
+                SELECT @EventID, [TicketGroupID], @playerLimit
+                FROM [Config].[Ref_Ticket_Groups]
+                WHERE [Name]='Player'`;
+                await limitRequest.query`INSERT INTO [Events].[Dat_Limits] ([EventID],[TicketGroupID],[Value])
+                SELECT @EventID, [TicketGroupID], @crewLimit
+                FROM [Config].[Ref_Ticket_Groups]
+                WHERE [Name]='Crew'`;
+                await limitRequest.query`INSERT INTO [Events].[Dat_Limits] ([EventID],[TicketGroupID],[Value])
+                SELECT @EventID, [TicketGroupID], @staffLimit
+                FROM [Config].[Ref_Ticket_Groups]
+                WHERE [Name]='Staff'`;
+                console.log(`       Inserted event registration limits`)
+                
+
                 if (lrpEvent.registrationFee.paypalPaymentId){
                     const registrationFeeRequest = new mssql.Request()
                         .input('EventID', mssql.Int, eventResult.recordset[0].EventID)
                         .input('feeValue', mssql.Numeric(18,2), lrpEvent.registrationFee.value)
-                        .input('amountPaid', mssql.Numeric(18,2), lrpEvent.registrationFee.amountPaid)
+                        .input('amountPaid', mssql.Numeric(18,2), lrpEvent.registrationFee.totalPaid)
                         .input('datePaid', mssql.DateTime, lrpEvent.registrationFee.datePaid)
                         .input('paypalPaymentId', mssql.VarChar, lrpEvent.registrationFee.paypalPaymentId)
                         .input('paypalPayer', mssql.VarChar, lrpEvent.registrationFee.paypalPayer)
                         .input('paymentProviderFieldID', mssql.Int, paymentIdRef.recordset[0].PaymentProviderFieldID);
-                    const paymentId = await registrationFeeRequest.query`INSERT INTO [Payments].[Dat_Payments] (Value,Date,Payee) OUTPUT INSERTED.PaymentID VALUES (@amountPaid,@datePaid,@paypalPayer)`;
+                    const paymentId = await registrationFeeRequest.query`INSERT INTO [Payments].[Dat_Payments] (Value,Date,Payee,PaymentProviderID) OUTPUT INSERTED.PaymentID VALUES (@amountPaid,@datePaid,@paypalPayer,1)`;
                     registrationFeeRequest.input('PaymentID', mssql.Int,  paymentId.recordset[0].PaymentID);
                     await registrationFeeRequest.query`INSERT INTO [Payments].[Lnk_Payment_Data] ([PaymentID],[PaymentProviderFieldID],[Value]) VALUES (@PaymentID,@paymentProviderFieldID,@paypalPaymentId)`
                     await registrationFeeRequest.query`INSERT INTO [Payments].[Lnk_Event_Payment] ([EventID],[PaymentID]) VALUES (@EventID,@PaymentID)`
@@ -147,23 +169,23 @@ module.exports = async function importEvents() {
                         switch (eventTicket.ticketType){
                             case 'player':
                                 ticketType = 'Player';
-                                ticketLimit = lrpEvent.limits.playerLimit;
+                                ticketLimit = Math.floor(lrpEvent.limits.playerLimit / (lrpEvent.eventTickets.filter(x => x.ticketType === 'player').length ?? 1));
                                 break;
                             case 'playerChild':
                                 ticketType = 'Player (Under 16)';
-                                ticketLimit = lrpEvent.limits.playerLimit;
+                                ticketLimit = lrpEvent;
                                 break;
                             case 'monster':
                                 ticketType = 'Crew';
-                                ticketLimit = lrpEvent.limits.monsterLimit;
+                                ticketLimit = lrpEvent.limits.monsterLimit ;
                                 break;
                             case 'monsterChild':
                                 ticketType = 'Crew (Under 16)';
-                                ticketLimit = lrpEvent.limits.monsterLimit;
+                                ticketLimit = lrpEvent.limits.monsterLimit ;
                                 break;
                             case 'staff':
                                 ticketType = 'Staff';
-                                ticketLimit = lrpEvent.limits.staffLimit;
+                                ticketLimit = lrpEvent.limits.staffLimit ;
                                 break;
                             case 'playerBunk':
                             case 'monsterBunk':
